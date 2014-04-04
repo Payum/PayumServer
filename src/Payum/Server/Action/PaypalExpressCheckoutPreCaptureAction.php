@@ -3,9 +3,9 @@ namespace Payum\Server\Action;
 
 use Payum\Core\Action\PaymentAwareAction;
 use Payum\Core\Bridge\Spl\ArrayObject;
-use Payum\Core\Request\SecuredCaptureRequest;
+use Payum\Server\Request\PrepareCaptureRequest;
 
-class PaypalExpressCheckoutCaptureAction extends PaymentAwareAction
+class PaypalExpressCheckoutPreCaptureAction extends PaymentAwareAction
 {
     /**
      * {@inheritDoc}
@@ -13,11 +13,8 @@ class PaypalExpressCheckoutCaptureAction extends PaymentAwareAction
     public function execute($request)
     {
         $model = ArrayObject::ensureArrayObject($request->getModel());
-
         $model['RETURNURL'] = $request->getToken()->getTargetUrl();
         $model['CANCELURL'] = $request->getToken()->getTargetUrl();
-
-        $this->payment->execute($request);
     }
 
     /**
@@ -25,15 +22,9 @@ class PaypalExpressCheckoutCaptureAction extends PaymentAwareAction
      */
     public function supports($request)
     {
-        if (false == $request instanceof SecuredCaptureRequest) {
-            return false;
-        }
-
-        $model = $request->getModel();
-        if (false == $model instanceof \ArrayAccess) {
-            return false;
-        }
-
-        return false == isset($model['RETURNURL']);
+        return
+            $request instanceof PrepareCaptureRequest &&
+            $request->getModel() instanceof \ArrayAccess
+        ;
     }
 }
