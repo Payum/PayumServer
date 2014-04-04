@@ -1,0 +1,15 @@
+#AuthName "RemixCV"
+#AuthType Basic
+#AuthUserFile /home/remixcv/www/shared/.htpasswd
+#AuthGroupFile /dev/null
+#require valid-user
+
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+
+    RewriteRule ^v/[^/]*/((:?images|styles|css|scripts|js|bundles)/.*)$ $1 [QSA]
+
+    RewriteCond %{REQUEST_FILENAME} !-f
+
+    RewriteRule ^(.*)$ index.php [QSA,L]
+</IfModule>

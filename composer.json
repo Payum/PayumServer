@@ -1,0 +1,37 @@
+{
+    "name": "payum/payum-server",
+    "type": "project",
+    "description": "Payment as a service. Install and do payments just after",
+    "homepage": "http://payum.forma-dev.com",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Kotlyar Maksim",
+            "email": "kotlyar.maksim@gmail.com"
+        },
+        {
+            "name":     "Payum project",
+            "homepage": "http://payum.forma-dev.com/"
+        },
+        {
+            "name":     "Community contributions",
+            "homepage": "https://github.com/Payum/PayumServer/contributors"
+        }
+    ],
+    "require": {
+        "silex/silex": "~1.2",
+        "payum/payum": "0.8.*"
+    },
+    "config": {
+        "bin-dir": "bin"
+    },
+    "autoload": {
+        "psr-0": { "Payum\\Server": "src/" }
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-master": "0.8-dev"
+        }
+    }
+}
+
