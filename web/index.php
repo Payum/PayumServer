@@ -10,6 +10,7 @@ use Payum\Core\Request\BinaryMaskStatusRequest;
 use Payum\Core\Request\RedirectUrlInteractiveRequest;
 use Payum\Core\Request\SecuredCaptureRequest;
 use Payum\Core\Security\GenericTokenFactoryInterface;
+use Payum\Core\Security\SensitiveValue;
 use Payum\Core\Security\TokenInterface;
 use Payum\Paypal\ExpressCheckout\Nvp\PaymentFactory;
 use Payum\Paypal\ExpressCheckout\Nvp\Api;
@@ -102,7 +103,7 @@ $app->get('/capture/{payum_token}', function (Application $app, Request $request
     return $app->redirect($token->getAfterUrl());
 })->bind('capture');
 
-$app->post('/{name}', function (Application $app, Request $request, $name) {
+$app->post('/api/payment', function (Application $app, Request $request) {
     if ('json' !== $request->getContentType()) {
         $app->abort(400, 'The request content type is invalid.');
     }
@@ -110,6 +111,22 @@ $app->post('/{name}', function (Application $app, Request $request, $name) {
     $rawDetails = json_decode($request->getContent(), true);
     if (null ===  $rawDetails) {
         $app->abort(400, 'The request content is not valid json.');
+    }
+    if (empty($rawDetails['meta']['name'])) {
+        $app->abort(400, 'The payment name must be set to meta.name.');
+    }
+    $name = $rawDetails['meta']['name'];
+
+    if (empty($rawDetails['meta']['purchase_after_url'])) {
+        $app->abort(400, 'The purchase after url has to be set to  meta.purchase_after_url.');
+    }
+    $afterUrl = $rawDetails['meta']['purchase_after_url'];
+
+    if (empty($rawDetails['payment'])) {
+        $app->abort(400, 'The payment details has to be set to payment.');
+    }
+    if (false == is_array($rawDetails['payment'])) {
+        $app->abort(400, 'The payment details has to be an array');
     }
 
     /** @var RegistryInterface $payum */
@@ -124,18 +141,22 @@ $app->post('/{name}', function (Application $app, Request $request, $name) {
 
     $storage->updateModel($details);
 
-    $captureToken = $tokenFactory->createCaptureToken($name, $details, 'done');
-    $getToken = $tokenFactory->createToken($name, $details, 'payment_get', array('name' => $name));
+    $captureToken = $tokenFactory->createCaptureToken($name, $details, $afterUrl);
+    $getToken = $tokenFactory->createToken($name, $details, 'payment_get');
 
-    return json_encode(array(
-        '_links' => array(
-            'purchase' => $captureToken->getTargetUrl(),
-            'get' => $getToken->getTargetUrl(),
-        )
-    ), JSON_PRETTY_PRINT);
+    $meta = $details['meta'];
+    $meta['links'] = array(
+        'purchase' => new SensitiveValue($captureToken->getTargetUrl()),
+        'get' => $getToken->getTargetUrl(),
+    );
+    $details['meta'] = $meta;
+
+    $storage->updateModel($details);
+
+    return json_encode(iterator_to_array($details), JSON_PRETTY_PRINT);
 })->bind('payment_create');
 
-$app->get('/{name}/{payum_token}', function (Application $app, Request $request) {
+$app->get('/api/payment/{payum_token}', function (Application $app, Request $request) {
     /** @var TokenInterface $token */
     $token = $app['payum.security.http_request_verifier']->verify($request);
 

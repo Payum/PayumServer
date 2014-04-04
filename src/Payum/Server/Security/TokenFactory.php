@@ -36,6 +36,10 @@ class TokenFactory extends AbstractGenericTokenFactory
      */
     protected function generateUrl($path, array $parameters = array())
     {
+        if (0 === strpos($path, 'http')) {
+            return $path;
+        }
+
         return $this->urlGenerator->generate($path, $parameters, $absolute = true);
     }
 }
