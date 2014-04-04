@@ -177,7 +177,7 @@ $app->get('/api/payment/{payum_token}', function (Application $app, Request $req
     $storage = $payum->getStorageForClass($app['payum.model.payment_details_class'], $token->getPaymentName());
     $storage->updateModel($details);
 
-    return json_encode(iterator_to_array($details));
+    return json_encode(iterator_to_array($details), JSON_PRETTY_PRINT);
 })->bind('payment_get');
 
 $app->run();
