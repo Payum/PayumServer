@@ -24,13 +24,18 @@ use Symfony\Component\HttpFoundation\Request;
 
 $app = new Application;
 $app['debug'] = true;
+$app['payum.storage_dir'] = __DIR__.'/../storage';
 $app['payum.model.payment_details_class'] = 'Payum\Server\Model\PaymentDetails';
 $app['payum.model.security_token_class'] = 'Payum\Server\Model\SecurityToken';
 
 $app->register(new UrlGeneratorServiceProvider());
 
 $app['payum.security.token_storage'] = $app->share(function($app) {
-    return new FilesystemStorage(sys_get_temp_dir(), $app['payum.model.security_token_class'], 'hash');
+    return new FilesystemStorage(
+        $app['payum.storage_dir'],
+        $app['payum.model.security_token_class'],
+        'hash'
+    );
 });
 
 $app['payum.security.http_request_verifier'] = $app->share(function($app) {
@@ -52,7 +57,7 @@ $app['payum'] = $app->share(function($app) {
 
     $storages = array(
         'paypal' => array(
-            $detailsClass => new FilesystemStorage(sys_get_temp_dir(), $detailsClass)
+            $detailsClass => new FilesystemStorage($app['payum.storage_dir'], $detailsClass)
         )
     );
 
