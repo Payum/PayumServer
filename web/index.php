@@ -16,15 +16,18 @@ use Payum\Paypal\ExpressCheckout\Nvp\PaymentFactory;
 use Payum\Paypal\ExpressCheckout\Nvp\Api;
 use Payum\Core\Registry\SimpleRegistry;
 use Payum\Core\Storage\FilesystemStorage;
-use Payum\Server\Action\PaypalExpressCheckoutCaptureAction;
+use Payum\Server\Action\PaypalExpressCheckoutPreCaptureAction;
+use Payum\Server\Request\PrepareCaptureRequest;
 use Payum\Server\Security\HttpRequestVerifier;
 use Payum\Server\Security\TokenFactory;
 use Silex\Application;
 use Silex\Provider\UrlGeneratorServiceProvider;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Yaml\Yaml;
 
 $app = new Application;
 $app['debug'] = true;
+$app['payum.config'] = Yaml::parse(file_get_contents(__DIR__.'/../payum.yml'));
 $app['payum.storage_dir'] = __DIR__.'/../storage';
 $app['payum.model.payment_details_class'] = 'Payum\Server\Model\PaymentDetails';
 $app['payum.model.security_token_class'] = 'Payum\Server\Model\SecurityToken';
@@ -48,7 +51,7 @@ $app['payum.security.token_factory'] = $app->share(function($app) {
         $app['url_generator'],
         $app['payum.security.token_storage'],
         $app['payum'],
-        'capture',
+        'purchase',
         'notify'
     );
 });
@@ -58,21 +61,22 @@ $app['payum'] = $app->share(function($app) {
 
     $storages = array(
         'paypal' => array(
-            $detailsClass => new FilesystemStorage($app['payum.storage_dir'], $detailsClass)
+            $detailsClass => new FilesystemStorage($app['payum.storage_dir'], $detailsClass, 'id')
         )
     );
 
+    $config = $app['payum.config'];
+
     $payments = array(
         'paypal' => PaymentFactory::create(new Api(new Curl, array(
-                'username' => 'EDIT ME',
-                'password' => 'EDIT ME',
-                'signature' => 'EDIT ME',
-                'sandbox' => true
-            )
-        ))
+            'username' => $config['paypal']['username'],
+            'password' => $config['paypal']['password'],
+            'signature' => $config['paypal']['signature'],
+            'sandbox' => $config['paypal']['sandbox']
+        ))),
     );
 
-    $payments['paypal']->addAction(new PaypalExpressCheckoutCaptureAction, true);
+    $payments['paypal']->addAction(new PaypalExpressCheckoutPreCaptureAction, true);
 
     return new SimpleRegistry($payments, $storages, null, null);
 });
@@ -83,7 +87,7 @@ $app->get('/', function (Application $app) {
     }
 });
 
-$app->get('/capture/{payum_token}', function (Application $app, Request $request) {
+$app->get('/purchase/{payum_token}', function (Application $app, Request $request) {
     /** @var TokenInterface $token */
     $token = $app['payum.security.http_request_verifier']->verify($request);
 
@@ -92,6 +96,8 @@ $app->get('/capture/{payum_token}', function (Application $app, Request $request
 
     try {
         $payment = $payum->getPayment($token->getPaymentName());
+
+        $payment->execute(new PrepareCaptureRequest($token));
         $payment->execute(new SecuredCaptureRequest($token));
 
     } catch (RedirectUrlInteractiveRequest $e) {
@@ -101,7 +107,7 @@ $app->get('/capture/{payum_token}', function (Application $app, Request $request
     $app['payum.security.http_request_verifier']->invalidate($token);
 
     return $app->redirect($token->getAfterUrl());
-})->bind('capture');
+})->bind('purchase');
 
 $app->post('/api/payment', function (Application $app, Request $request) {
     if ('json' !== $request->getContentType()) {
@@ -122,13 +128,6 @@ $app->post('/api/payment', function (Application $app, Request $request) {
     }
     $afterUrl = $rawDetails['meta']['purchase_after_url'];
 
-    if (empty($rawDetails['payment'])) {
-        $app->abort(400, 'The payment details has to be set to payment.');
-    }
-    if (false == is_array($rawDetails['payment'])) {
-        $app->abort(400, 'The payment details has to be an array');
-    }
-
     /** @var RegistryInterface $payum */
     $payum = $app['payum'];
     /** @var GenericTokenFactoryInterface $tokenFactory */
@@ -146,12 +145,16 @@ $app->post('/api/payment', function (Application $app, Request $request) {
 
     $meta = $details['meta'];
     $meta['links'] = array(
-        'purchase' => new SensitiveValue($captureToken->getTargetUrl()),
+        'purchase' => null,
         'get' => $getToken->getTargetUrl(),
     );
     $details['meta'] = $meta;
 
     $storage->updateModel($details);
+
+    $meta = $details['meta'];
+    $meta['links']['purchase'] = $captureToken->getTargetUrl();
+    $details['meta'] = $meta;
 
     return json_encode(iterator_to_array($details), JSON_PRETTY_PRINT);
 })->bind('payment_create');
@@ -166,14 +169,15 @@ $app->get('/api/payment/{payum_token}', function (Application $app, Request $req
     $status = new BinaryMaskStatusRequest($token);
     $payum->getPayment($token->getPaymentName())->execute($status);
 
-    return json_encode(array(
-        'payment' => iterator_to_array($status->getModel()),
-        'status' => $status->getStatus(),
-    ));
-})->bind('payment_get');
+    $details = $status->getModel();
+    $meta = $details['meta'];
+    $meta['status'] = $status->getStatus();
+    $details['meta'] = $meta;
 
-$app->get('/done', function () {
-    return 'Done';
-})->bind('done');
+    $storage = $payum->getStorageForClass($app['payum.model.payment_details_class'], $token->getPaymentName());
+    $storage->updateModel($details);
+
+    return json_encode(iterator_to_array($details));
+})->bind('payment_get');
 
 $app->run();

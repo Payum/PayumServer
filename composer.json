@@ -20,6 +20,7 @@
     ],
     "require": {
         "silex/silex": "~1.2",
+        "symfony/yaml": "~2",
         "payum/payum": "0.8.*"
     },
     "config": {
