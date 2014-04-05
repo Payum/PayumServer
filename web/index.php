@@ -101,10 +101,8 @@ $app['payum'] = $app->share(function($app) {
     return new SimpleRegistry($payments, $storages, null, null);
 });
 
-$app->get('/', function (Application $app) {
-    if ($app['debug']) {
-        return nl2br(file_get_contents('https://gist.githubusercontent.com/makasim/9543453/raw/2599127ba8c51106a9c15b7aded21f90f842d312/usecase.md'));
-    }
+$app->get('/', function () {
+    return nl2br(file_get_contents(__DIR__.'/../README.md'));
 });
 
 $app->get('/purchase/{payum_token}', function (Application $app, Request $request) {
