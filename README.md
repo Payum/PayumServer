@@ -1,6 +1,17 @@
 # Payum Server
 
-Run your payment server.
+The idea of the service is to **get rid** of routine work. Whenever a developer has a task to integrate a payment they have to do same things:
+
+* Think of payment abstractions, controllers, configurations.
+* Integrate a payment with your favorite framework.
+* Ways to integrate payments with your bussness layer.
+* Correct handling of instant payment notifactions or callbacks.
+* Storing payment details.
+* Secured data handling.
+* Security issues.
+* Status calculation.
+
+The service would allow to solve most of the mentioned tasks. Now you can install your own server or play with [online](server.payum.forma-dev.com) one
 
 ## Installation
 
@@ -33,7 +44,7 @@ First create a paypal payment:
 $ curl \
    -X POST \
    -H "Content-Type: application/json" \
-   http://dev.payum-server.com/api/payment \
+   http://server.payum.forma-dev.com/api/payment \
    -d  '{ "PAYMENTREQUEST_0_CURRENCYCODE": "USD", "PAYMENTREQUEST_0_AMT": 10, "meta": { "name": "paypal", "purchase_after_url": "http://google.com" } }';
 
 
@@ -44,8 +55,8 @@ $ curl \
         "name": "paypal",
         "purchase_after_url": "http:\/\/google.com",
         "links": {
-            "purchase": "http:\/\/dev.payum-server.com\/purchase\/jVMf78-uodhGS7YyFk9u4Qv6oftuVm_9T3Bmh1c2NNk?sensitive=W10%3D",
-            "get": "http:\/\/dev.payum-server.com\/api\/payment\/P0T-8J50KwJCNWk6vquJaxtBtgwemA4kwXeaNBGMm4Q"
+            "purchase": "http:\/\/server.payum.forma-dev.com\/purchase\/xTmxk99oBja6NYHpt4-pFsOjC9xo4nqmQILP9MJU8AQ?sensitive=W10%3D",
+            "get": "http:\/\/server.payum.forma-dev.com\/api\/payment\/Z6vEaRNuNpPkpZFiNbQ-LyQyh24Bgp6pXqwvRg13vz0"
         }
     }
 }
@@ -59,7 +70,7 @@ or a stripe one:
 $ curl \
    -X POST \
    -H "Content-Type: application/json" \
-   http://dev.payum-server.com/api/payment \
+   http://server.payum.forma-dev.com/api/payment \
    -d  '{ "amount": 0.10, "currency": "USD", "card": { "number": "5555556778250000", "cvv": 123, "expiryMonth": 6, "expiryYear": 16, "firstName": "foo", "lastName": "bar" }, "meta": { "name": "stripe", "purchase_after_url": "http://google.com" } }'
 
 {
@@ -72,8 +83,8 @@ $ curl \
         "name": "stripe",
         "purchase_after_url": "http:\/\/google.com",
         "links": {
-            "purchase": "http:\/\/dev.payum-server.com\/purchase\/oXV3RJeJmJJDZMQbGQPmMyLYs9eUjtOGDdyLIdR2FT0?sensitive=eyJjYXJkIjp7Im51bWJlciI6IjU1NTU1NTY3NzgyNTAwMDAiLCJjdnYiOjEyMywiZXhwaXJ5TW9udGgiOjYsImV4cGlyeVllYXIiOjE2LCJmaXJzdE5hbWUiOiJmb28iLCJsYXN0TmFtZSI6ImJhciJ9fQ%3D%3D",
-            "get": "http:\/\/dev.payum-server.com\/api\/payment\/WOFJgK-VrsxXsZu8sMHP0NsSridaWz-aiLO99XJxVlk"
+            "purchase": "http:\/\/server.payum.forma-dev.com\/purchase\/8Mny5xfWWJOUdS7XFgGX7xEFoVcTfDMlqm4Ud_5Jkzo?sensitive=eyJjYXJkIjp7Im51bWJlciI6IjU1NTU1NTY3NzgyNTAwMDAiLCJjdnYiOjEyMywiZXhwaXJ5TW9udGgiOjYsImV4cGlyeVllYXIiOjE2LCJmaXJzdE5hbWUiOiJmb28iLCJsYXN0TmFtZSI6ImJhciJ9fQ%3D%3D",
+            "get": "http:\/\/server.payum.forma-dev.com\/api\/payment\/gntU9dFlz7oWj0hBdu6U_sAS9RJaI4a80-QA2Tp83OM"
         }
     }
 }
