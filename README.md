@@ -23,7 +23,7 @@ $ cp payum.yml.dist payum.yml
 $ php -S 127.0.0.1:8000 web/index.php
 ```
 
-_**Note**: Never use built in web server on production. Set apache or nginx server.
+_**Note**: Never use built in web server on production. Set apache or nginx server._
 
 ## Use
 
@@ -51,7 +51,7 @@ $ curl \
 }
 ```
 
-_**Note**: Do not store purchase url. Use it immediately.
+_**Note**: Do not store purchase url. Use it immediately._
 
 or a stripe one:
 
@@ -79,7 +79,7 @@ $ curl \
 }
 ```
 
-_**Note**: Do not store purchase url. Use it immediately.
+_**Note**: Do not store purchase url. Use it immediately._
 
 Redirect user to purchase. After users will be redirected back to purchase_after_url.
 
