@@ -4,11 +4,12 @@ namespace Payum\Server;
 require_once __DIR__.'/../vendor/autoload.php';
 
 use Buzz\Client\Curl;
+use Omnipay\Common\GatewayFactory;
 use Payum\Core\Bridge\Spl\ArrayObject;
 use Payum\Core\Registry\RegistryInterface;
 use Payum\Core\Request\BinaryMaskStatusRequest;
 use Payum\Core\Request\RedirectUrlInteractiveRequest;
-use Payum\Core\Request\SecuredCaptureRequest;
+use Payum\Server\Request\SecuredCaptureRequest;
 use Payum\Core\Security\GenericTokenFactoryInterface;
 use Payum\Core\Security\SensitiveValue;
 use Payum\Core\Security\TokenInterface;
@@ -16,10 +17,15 @@ use Payum\Paypal\ExpressCheckout\Nvp\PaymentFactory;
 use Payum\Paypal\ExpressCheckout\Nvp\Api;
 use Payum\Core\Registry\SimpleRegistry;
 use Payum\Core\Storage\FilesystemStorage;
-use Payum\Server\Action\PaypalExpressCheckoutPreCaptureAction;
-use Payum\Server\Request\PrepareCaptureRequest;
+use Payum\Server\Action\GetSensitiveValuesAction;
+use Payum\Server\Action\OmnipayStripeCaptureAction;
+use Payum\Server\Action\OmnipayStripeSensitiveKeysAction;
+use Payum\Server\Action\PaypalExpressCheckoutCaptureAction;
+use Payum\Server\Action\VoidGetSensitiveKeysAction;
+use Payum\Server\Request\GetSensitiveKeysRequest;
 use Payum\Server\Security\HttpRequestVerifier;
 use Payum\Server\Security\TokenFactory;
+use Payum\OmnipayBridge\PaymentFactory as OmnipayPaymentFactory;
 use Silex\Application;
 use Silex\Provider\UrlGeneratorServiceProvider;
 use Symfony\Component\HttpFoundation\Request;
@@ -57,15 +63,23 @@ $app['payum.security.token_factory'] = $app->share(function($app) {
 });
 
 $app['payum'] = $app->share(function($app) {
+    $config = $app['payum.config'];
+
     $detailsClass = $app['payum.model.payment_details_class'];
+
+    $stripeGateway = GatewayFactory::create('Stripe');
+    $stripeGateway->setApiKey($config['stripe']['secret_key']);
+    $stripeGateway->setTestMode($config['stripe']['sandbox']);
 
     $storages = array(
         'paypal' => array(
             $detailsClass => new FilesystemStorage($app['payum.storage_dir'], $detailsClass, 'id')
+        ),
+        'stripe' => array(
+            $detailsClass => new FilesystemStorage($app['payum.storage_dir'], $detailsClass, 'id')
         )
     );
 
-    $config = $app['payum.config'];
 
     $payments = array(
         'paypal' => PaymentFactory::create(new Api(new Curl, array(
@@ -74,9 +88,15 @@ $app['payum'] = $app->share(function($app) {
             'signature' => $config['paypal']['signature'],
             'sandbox' => $config['paypal']['sandbox']
         ))),
+        'stripe' => OmnipayPaymentFactory::create($stripeGateway)
     );
 
-    $payments['paypal']->addAction(new PaypalExpressCheckoutPreCaptureAction, true);
+    $payments['paypal']->addAction(new PaypalExpressCheckoutCaptureAction, true);
+    $payments['paypal']->addAction(new VoidGetSensitiveKeysAction, true);
+
+    $payments['stripe']->addAction(new OmnipayStripeCaptureAction, true);
+    $payments['stripe']->addAction(new OmnipayStripeSensitiveKeysAction, true);
+    $payments['stripe']->addAction(new GetSensitiveValuesAction($app['request']), true);
 
     return new SimpleRegistry($payments, $storages, null, null);
 });
@@ -96,10 +116,7 @@ $app->get('/purchase/{payum_token}', function (Application $app, Request $reques
 
     try {
         $payment = $payum->getPayment($token->getPaymentName());
-
-        $payment->execute(new PrepareCaptureRequest($token));
         $payment->execute(new SecuredCaptureRequest($token));
-
     } catch (RedirectUrlInteractiveRequest $e) {
         return $app->redirect($e->getUrl());
     }
@@ -134,13 +151,28 @@ $app->post('/api/payment', function (Application $app, Request $request) {
     $tokenFactory = $app['payum.security.token_factory'];
 
     $storage = $payum->getStorageForClass($app['payum.model.payment_details_class'], $name);
-    $details = $storage->createModel();
 
+    $details = $storage->createModel();
     ArrayObject::ensureArrayObject($details)->replace($rawDetails);
+
+    $sensitiveKeys = new GetSensitiveKeysRequest;
+    $payum->getPayment($name)->execute($sensitiveKeys);
+
+    $sensitiveValues = array();
+    foreach ($sensitiveKeys->getKeys() as $sensitiveKey) {
+        if (isset($details[$sensitiveKey])) {
+            $sensitiveValues[$sensitiveKey] = $details[$sensitiveKey];
+            $details[$sensitiveKey] = new SensitiveValue($details[$sensitiveKey]);
+        }
+    }
 
     $storage->updateModel($details);
 
-    $captureToken = $tokenFactory->createCaptureToken($name, $details, $afterUrl);
+    $purchaseParameters = array_filter(array(
+        'sensitive' => base64_encode(json_encode($sensitiveValues))
+    ));
+    $captureToken = $tokenFactory->createToken($name, $details, 'purchase', $purchaseParameters, $afterUrl);
+
     $getToken = $tokenFactory->createToken($name, $details, 'payment_get');
 
     $meta = $details['meta'];

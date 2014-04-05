@@ -3,3 +3,7 @@ paypal:
     password: EDIT ME
     signature: EDIT ME
     sandbox: true
+
+stripe:
+     secret_key: EDIT ME
+     sandbox: true
