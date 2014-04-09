@@ -8,7 +8,7 @@ use Payum\Core\Security\GenericTokenFactoryInterface;
 use Payum\Core\Security\HttpRequestVerifierInterface;
 use Payum\Core\Security\SensitiveValue;
 use Payum\Core\Storage\StorageInterface;
-use Payum\Server\Request\GetSensitiveKeysRequest;
+use Payum\Server\Request\ProtectedDetailsRequest;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
@@ -93,21 +93,13 @@ class ApiPaymentController
         $details = $storage->createModel();
         ArrayObject::ensureArrayObject($details)->replace($rawDetails);
 
-        $sensitiveKeys = new GetSensitiveKeysRequest;
-        $this->registry->getPayment($name)->execute($sensitiveKeys);
-
-        $sensitiveValues = array();
-        foreach ($sensitiveKeys->getKeys() as $sensitiveKey) {
-            if (isset($details[$sensitiveKey])) {
-                $sensitiveValues[$sensitiveKey] = $details[$sensitiveKey];
-                $details[$sensitiveKey] = new SensitiveValue($details[$sensitiveKey]);
-            }
-        }
+        $protectDetails = new ProtectedDetailsRequest($details);
+        $this->registry->getPayment($name)->execute($protectDetails);
 
         $storage->updateModel($details);
 
         $purchaseParameters = array_filter(array(
-            'sensitive' => base64_encode(json_encode($sensitiveValues))
+            'sensitive' => $protectDetails->getSensitiveDetailsAsString()
         ));
         $captureToken = $this->tokenFactory->createToken($name, $details, 'purchase', $purchaseParameters);
         $captureToken->setAfterUrl($afterUrl);
