@@ -12,7 +12,7 @@ use Payum\Paypal\ExpressCheckout\Nvp\PaymentFactory;
 use Payum\OmnipayBridge\PaymentFactory as OmnipayPaymentFactory;
 use Payum\Server\Action\GetSensitiveValuesAction;
 use Payum\Server\Action\OmnipayStripeCaptureAction;
-use Payum\Server\Action\OmnipayStripeSensitiveKeysAction;
+use Payum\Server\Action\Stripe\ProtectDetailsAction as StripeProtectedDetailsAction;
 use Payum\Server\Action\PaypalExpressCheckoutCaptureAction;
 use Payum\Server\Action\VoidGetSensitiveKeysAction;
 use Silex\Application;
@@ -87,7 +87,7 @@ class ServiceProvider implements ServiceProviderInterface
             $payments['paypal']->addAction(new VoidGetSensitiveKeysAction, true);
 
             $payments['stripe']->addAction(new OmnipayStripeCaptureAction, true);
-            $payments['stripe']->addAction(new OmnipayStripeSensitiveKeysAction, true);
+            $payments['stripe']->addAction(new StripeProtectedDetailsAction, true);
             $payments['stripe']->addAction(new GetSensitiveValuesAction($app['request']), true);
 
             return new SimpleRegistry($payments, $storages, null, null);

@@ -1,19 +1,22 @@
 <?php
-namespace Payum\Server\Action;
+namespace Payum\Server\Action\Stripe;
 
 use Payum\Core\Action\PaymentAwareAction;
 use Payum\Core\Bridge\Spl\ArrayObject;
 use Payum\Server\Request\GetSensitiveKeysRequest;
 use Payum\Server\Request\PrepareCaptureRequest;
+use Payum\Server\Request\ProtectedDetailsRequest;
 
-class OmnipayStripeSensitiveKeysAction extends PaymentAwareAction
+class ProtectDetailsAction extends PaymentAwareAction
 {
     /**
      * {@inheritDoc}
      */
     public function execute($request)
     {
-        $request->setKeys(array('card'));
+        /** @var ProtectedDetailsRequest$request */
+
+        $request->protect('card');
     }
 
     /**
@@ -21,6 +24,6 @@ class OmnipayStripeSensitiveKeysAction extends PaymentAwareAction
      */
     public function supports($request)
     {
-        return $request instanceof GetSensitiveKeysRequest;
+        return $request instanceof ProtectedDetailsRequest;
     }
 }
