@@ -1,4 +1,4 @@
-# Payum Server
+# Payum Server.
 
 The idea of the service is to **get rid** of routine work. Whenever a developer has a task to integrate a payment they have to do same things:
 
@@ -11,7 +11,7 @@ The idea of the service is to **get rid** of routine work. Whenever a developer 
 * Security issues.
 * Status calculation.
 
-The service would allow to solve most of the mentioned tasks. Now you can install your own server or play with [online](server.payum.forma-dev.com) one
+The service would allow to solve most of the mentioned tasks. Now you can install your own server or play with [online](http://server.payum.forma-dev.com) one
 
 ## Installation
 
@@ -115,3 +115,5 @@ $ curl -X GET http://dev.payum-server.com/api/payment/WOFJgK-VrsxXsZu8sMHP0NsSri
 ```
 
 Enjoy!
+
+Code MIT licensed and could be found on Github: https://github.com/Payum/PayumServer

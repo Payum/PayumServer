@@ -6,6 +6,8 @@ require_once __DIR__.'/../vendor/autoload.php';
 use Buzz\Client\Curl;
 use Omnipay\Common\GatewayFactory;
 use Payum\Core\Bridge\Spl\ArrayObject;
+use Payum\Core\Bridge\Symfony\Security\HttpRequestVerifier;
+use Payum\Core\Bridge\Symfony\Security\TokenFactory;
 use Payum\Core\Registry\RegistryInterface;
 use Payum\Core\Request\BinaryMaskStatusRequest;
 use Payum\Core\Request\RedirectUrlInteractiveRequest;
@@ -23,12 +25,12 @@ use Payum\Server\Action\OmnipayStripeSensitiveKeysAction;
 use Payum\Server\Action\PaypalExpressCheckoutCaptureAction;
 use Payum\Server\Action\VoidGetSensitiveKeysAction;
 use Payum\Server\Request\GetSensitiveKeysRequest;
-use Payum\Server\Security\HttpRequestVerifier;
-use Payum\Server\Security\TokenFactory;
 use Payum\OmnipayBridge\PaymentFactory as OmnipayPaymentFactory;
 use Silex\Application;
 use Silex\Provider\UrlGeneratorServiceProvider;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Yaml\Yaml;
 
 $app = new Application;
@@ -102,7 +104,7 @@ $app['payum'] = $app->share(function($app) {
 });
 
 $app->get('/', function () {
-    return nl2br(file_get_contents(__DIR__.'/../README.md'));
+    return MarkdownExtended(file_get_contents(__DIR__.'/../README.md'));
 });
 
 $app->get('/purchase/{payum_token}', function (Application $app, Request $request) {
@@ -169,7 +171,9 @@ $app->post('/api/payment', function (Application $app, Request $request) {
     $purchaseParameters = array_filter(array(
         'sensitive' => base64_encode(json_encode($sensitiveValues))
     ));
-    $captureToken = $tokenFactory->createToken($name, $details, 'purchase', $purchaseParameters, $afterUrl);
+    $captureToken = $tokenFactory->createToken($name, $details, 'purchase', $purchaseParameters);
+    $captureToken->setAfterUrl($afterUrl);
+    $app['payum.security.token_storage']->updateModel($captureToken);
 
     $getToken = $tokenFactory->createToken($name, $details, 'payment_get');
 
@@ -186,7 +190,11 @@ $app->post('/api/payment', function (Application $app, Request $request) {
     $meta['links']['purchase'] = $captureToken->getTargetUrl();
     $details['meta'] = $meta;
 
-    return json_encode(iterator_to_array($details), JSON_PRETTY_PRINT);
+    $response = new JsonResponse(iterator_to_array($details));
+    $response->headers->set('Cache-Control', 'no-store, no-cache, max-age=0, post-check=0, pre-check=0');
+    $response->headers->set('Pragma', 'no-cache');
+
+    return $response;
 })->bind('payment_create');
 
 $app->get('/api/payment/{payum_token}', function (Application $app, Request $request) {
@@ -207,7 +215,7 @@ $app->get('/api/payment/{payum_token}', function (Application $app, Request $req
     $storage = $payum->getStorageForClass($app['payum.model.payment_details_class'], $token->getPaymentName());
     $storage->updateModel($details);
 
-    return json_encode(iterator_to_array($details), JSON_PRETTY_PRINT);
+    return new JsonResponse(iterator_to_array($details));
 })->bind('payment_get');
 
 $app->run();

@@ -21,8 +21,31 @@
     "require": {
         "silex/silex": "~1.2",
         "symfony/yaml": "~2",
-        "payum/payum": "0.8.*"
+        "payum/payum": "0.8.*@dev",
+        "dflydev/markdown": "dev-master",
+        "egil/php-markdown-extra-extended": "1.0"
     },
+    "repositories": [
+        {
+            "type":"git",
+            "url":"https://github.com/dflydev/dflydev-markdown"
+        },
+        {
+            "type":"package",
+            "package":{
+                "name":"egil/php-markdown-extra-extended",
+                "version":"1.0",
+                "source":{
+                    "type":"git",
+                    "url":"https://github.com/egil/php-markdown-extra-extended",
+                    "reference":"master"
+                },
+                "autoload":{
+                    "files":["markdown.php", "markdown_extended.php"]
+                }
+            }
+        }
+    ],
     "config": {
         "bin-dir": "bin"
     },

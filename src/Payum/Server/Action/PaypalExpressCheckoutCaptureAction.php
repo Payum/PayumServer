@@ -14,8 +14,6 @@ class PaypalExpressCheckoutCaptureAction extends PaymentAwareAction
     public function execute($request)
     {
         $model = ArrayObject::ensureArrayObject($request->getModel());
-        $model['RETURNURL'] = $request->getToken()->getTargetUrl();
-        $model['CANCELURL'] = $request->getToken()->getTargetUrl();
 
         $coreRequest = new CoreSecuredCaptureRequest($request->getToken());
         $coreRequest->setModel($model);
