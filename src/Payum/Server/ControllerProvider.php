@@ -21,7 +21,6 @@ class ControllerProvider implements ServiceProviderInterface
         $app['controller.api_payment'] = $app->share(function() use ($app) {
             return new ApiPaymentController(
                 $app['payum.security.token_factory'],
-                $app['payum.security.token_storage'],
                 $app['payum.security.http_request_verifier'],
                 $app['payum'],
                 $app['payum.model.payment_details_class']

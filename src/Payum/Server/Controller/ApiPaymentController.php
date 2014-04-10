@@ -6,8 +6,6 @@ use Payum\Core\Registry\RegistryInterface;
 use Payum\Core\Request\BinaryMaskStatusRequest;
 use Payum\Core\Security\GenericTokenFactoryInterface;
 use Payum\Core\Security\HttpRequestVerifierInterface;
-use Payum\Core\Security\SensitiveValue;
-use Payum\Core\Storage\StorageInterface;
 use Payum\Server\Request\ProtectedDetailsRequest;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -19,11 +17,6 @@ class ApiPaymentController
      * @var GenericTokenFactoryInterface
      */
     protected $tokenFactory;
-
-    /**
-     * @var StorageInterface
-     */
-    protected $tokenStorage;
 
     /**
      * @var HttpRequestVerifierInterface
@@ -42,20 +35,17 @@ class ApiPaymentController
 
     /**
      * @param GenericTokenFactoryInterface $tokenFactory
-     * @param StorageInterface $tokenStorage
      * @param HttpRequestVerifierInterface $httpRequestVerifier
      * @param RegistryInterface $registry
      * @param string $paymentClass
      */
     public function __construct(
         GenericTokenFactoryInterface $tokenFactory,
-        StorageInterface $tokenStorage,
         HttpRequestVerifierInterface $httpRequestVerifier,
         RegistryInterface $registry,
         $paymentClass
     ) {
         $this->tokenFactory = $tokenFactory;
-        $this->tokenStorage = $tokenStorage;
         $this->registry = $registry;
         $this->paymentClass = $paymentClass;
         $this->httpRequestVerifier = $httpRequestVerifier;
@@ -98,12 +88,15 @@ class ApiPaymentController
 
         $storage->updateModel($details);
 
-        $purchaseParameters = array_filter(array(
-            'sensitive' => $protectDetails->getSensitiveDetailsAsString()
-        ));
-        $captureToken = $this->tokenFactory->createToken($name, $details, 'purchase', $purchaseParameters);
-        $captureToken->setAfterUrl($afterUrl);
-        $this->tokenStorage->updateModel($captureToken);
+        $captureToken = $this->tokenFactory->createToken(
+            $name,
+            $details,
+            'purchase',
+            array_filter(array(
+                'sensitive' => $protectDetails->getSensitiveDetailsAsString()
+            )),
+            $afterUrl
+        );
 
         $getToken = $this->tokenFactory->createToken($name, $details, 'payment_get');
 
