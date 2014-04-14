@@ -22,6 +22,7 @@ class ProtectedDetailsRequest
     public function __construct($details)
     {
         $this->details = $details;
+        $this->sensitiveDetails = array();
     }
 
     /**
