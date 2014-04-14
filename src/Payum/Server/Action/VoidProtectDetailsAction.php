@@ -2,11 +2,9 @@
 namespace Payum\Server\Action;
 
 use Payum\Core\Action\PaymentAwareAction;
-use Payum\Core\Bridge\Spl\ArrayObject;
-use Payum\Server\Request\GetSensitiveKeysRequest;
-use Payum\Server\Request\PrepareCaptureRequest;
+use Payum\Server\Request\ProtectedDetailsRequest;
 
-class VoidGetSensitiveKeysAction extends PaymentAwareAction
+class VoidProtectDetailsAction extends PaymentAwareAction
 {
     /**
      * {@inheritDoc}
@@ -21,6 +19,6 @@ class VoidGetSensitiveKeysAction extends PaymentAwareAction
      */
     public function supports($request)
     {
-        return $request instanceof GetSensitiveKeysRequest;
+        return $request instanceof ProtectedDetailsRequest;
     }
 }

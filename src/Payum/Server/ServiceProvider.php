@@ -14,7 +14,7 @@ use Payum\Server\Action\GetSensitiveValuesAction;
 use Payum\Server\Action\OmnipayStripeCaptureAction;
 use Payum\Server\Action\Stripe\ProtectDetailsAction as StripeProtectedDetailsAction;
 use Payum\Server\Action\PaypalExpressCheckoutCaptureAction;
-use Payum\Server\Action\VoidGetSensitiveKeysAction;
+use Payum\Server\Action\VoidProtectDetailsAction;
 use Silex\Application;
 use Silex\ServiceProviderInterface;
 use Symfony\Component\Yaml\Yaml;
@@ -84,7 +84,7 @@ class ServiceProvider implements ServiceProviderInterface
             );
 
             $payments['paypal']->addAction(new PaypalExpressCheckoutCaptureAction, true);
-            $payments['paypal']->addAction(new VoidGetSensitiveKeysAction, true);
+            $payments['paypal']->addAction(new VoidProtectDetailsAction, true);
 
             $payments['stripe']->addAction(new OmnipayStripeCaptureAction, true);
             $payments['stripe']->addAction(new StripeProtectedDetailsAction, true);
