@@ -116,4 +116,16 @@ $ curl -X GET http://dev.payum-server.com/api/payment/WOFJgK-VrsxXsZu8sMHP0NsSri
 
 Enjoy!
 
-Code MIT licensed.
+## Errors\Exceptions tracking
+
+The server comes with built in support of [sentry](https://getsentry.com/welcome/) service. You just need to set a `SENTRY_DSN` environment:
+
+```bash
+$ SENTRY_DSN=aDsn php -S 127.0.0.1:8000 web/index.php
+```
+
+In Case you use apache add this `SetEnv SENTRY_DSN aDsn` to your vhost.
+
+## License
+
+Code MIT [licensed](LICENSE.md).

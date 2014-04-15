@@ -7,6 +7,12 @@ use Silex\Application;
 use Silex\Provider\ServiceControllerServiceProvider;
 use Silex\Provider\UrlGeneratorServiceProvider;
 
+$client = new Raven_Client;
+$errorHandler = new Raven_ErrorHandler($client);
+$errorHandler->registerExceptionHandler();
+$errorHandler->registerErrorHandler();
+$errorHandler->registerShutdownFunction();
+
 $app = new Application;
 $app['app.root_dir'] = realpath(__DIR__.'/../');
 

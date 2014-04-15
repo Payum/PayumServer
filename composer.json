@@ -22,6 +22,7 @@
         "silex/silex": "~1.2",
         "symfony/yaml": "~2",
         "payum/payum": "0.8.*@dev",
+        "raven/raven": "~0.8.0",
         "dflydev/markdown": "dev-master",
         "egil/php-markdown-extra-extended": "1.0"
     },
