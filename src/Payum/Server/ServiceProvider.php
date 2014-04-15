@@ -11,9 +11,9 @@ use Payum\Paypal\ExpressCheckout\Nvp\Api;
 use Payum\Paypal\ExpressCheckout\Nvp\PaymentFactory;
 use Payum\OmnipayBridge\PaymentFactory as OmnipayPaymentFactory;
 use Payum\Server\Action\GetSensitiveValuesAction;
-use Payum\Server\Action\OmnipayStripeCaptureAction;
+use Payum\Server\Action\Stripe\OmnipayStripeCaptureAction;
 use Payum\Server\Action\Stripe\ProtectDetailsAction as StripeProtectedDetailsAction;
-use Payum\Server\Action\PaypalExpressCheckoutCaptureAction;
+use Payum\Server\Action\Paypal\PaypalExpressCheckoutCaptureAction;
 use Payum\Server\Action\VoidProtectDetailsAction;
 use Silex\Application;
 use Silex\ServiceProviderInterface;
@@ -83,7 +83,7 @@ class ServiceProvider implements ServiceProviderInterface
                 'stripe' => OmnipayPaymentFactory::create($stripeGateway)
             );
 
-            $payments['paypal']->addAction(new PaypalExpressCheckoutCaptureAction, true);
+            $payments['paypal']->addAction(new PaypalExpressCheckoutCaptureAction($app), true);
             $payments['paypal']->addAction(new VoidProtectDetailsAction, true);
 
             $payments['stripe']->addAction(new OmnipayStripeCaptureAction, true);

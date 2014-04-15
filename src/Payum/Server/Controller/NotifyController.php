@@ -2,19 +2,13 @@
 namespace Payum\Server\Controller;
 
 use Payum\Core\Registry\RegistryInterface;
-use Payum\Core\Security\GenericTokenFactoryInterface;
+use Payum\Core\Request\SecuredNotifyRequest;
 use Payum\Core\Security\HttpRequestVerifierInterface;
-use Payum\Server\Request\SecuredCaptureRequest;
-use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 
-class PurchaseController
+class NotifyController
 {
-    /**
-     * @var GenericTokenFactoryInterface
-     */
-    protected $tokenFactory;
-
     /**
      * @var RegistryInterface
      */
@@ -26,16 +20,13 @@ class PurchaseController
     protected $httpRequestVerifier;
 
     /**
-     * @param GenericTokenFactoryInterface $tokenFactory
      * @param HttpRequestVerifierInterface $httpRequestVerifier
      * @param RegistryInterface $registry
      */
     public function __construct(
-        GenericTokenFactoryInterface $tokenFactory,
         HttpRequestVerifierInterface $httpRequestVerifier,
         RegistryInterface $registry
     ) {
-        $this->tokenFactory = $tokenFactory;
         $this->registry = $registry;
         $this->httpRequestVerifier = $httpRequestVerifier;
     }
@@ -43,17 +34,19 @@ class PurchaseController
     /**
      * @param Request $request
      *
-     * @return RedirectResponse
+     * @return Response
      */
     public function doAction(Request $request)
     {
         $token = $this->httpRequestVerifier->verify($request);
 
         $payment = $this->registry->getPayment($token->getPaymentName());
-        $payment->execute(new SecuredCaptureRequest($token));
 
-        $this->httpRequestVerifier->invalidate($token);
+        $payment->execute(new SecuredNotifyRequest(
+            array_replace($request->query->all(), $request->request->all()),
+            $token
+        ));
 
-        return new RedirectResponse($token->getAfterUrl());
+        return new Response('', 204);
     }
 }
