@@ -10,6 +10,7 @@ The idea of the service is to **get rid** of routine work. Whenever a developer 
 * Secured data handling.
 * Security issues.
 * Status calculation.
+* Errors\Exception tracking.
 
 The service would allow to solve most of the mentioned tasks. Now you can install your [own server](https://github.com/Payum/PayumServer) or play with it [online](http://server.payum.forma-dev.com) one.
 
