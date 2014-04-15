@@ -1,5 +1,5 @@
 <?php
-namespace Payum\Server\Action;
+namespace Payum\Server\Action\Stripe;
 
 use Payum\Core\Action\PaymentAwareAction;
 use Payum\Core\Bridge\Spl\ArrayObject;
