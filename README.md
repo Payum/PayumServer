@@ -119,31 +119,31 @@ _**Note**: Do not store purchase url. Use it immediately._
 
 * Use get url to get payment\order details and its status.
 
-```bash
-$ curl -X GET http://dev.payum-server.com/api/payment/WOFJgK-VrsxXsZu8sMHP0NsSridaWz-aiLO99XJxVlk
+    ```bash
+    $ curl -X GET http://dev.payum-server.com/api/payment/WOFJgK-VrsxXsZu8sMHP0NsSridaWz-aiLO99XJxVlk
 
-{
-    "PAYMENTREQUEST_0_CURRENCYCODE": "USD",
-    "PAYMENTREQUEST_0_AMT": 10,
-    "meta": {
-        "name": "paypal",
-        "purchase_after_url": "http:\/\/google.com",
-        "links": {
-            "purchase": null,
-            "get": "http:\/\/dev.payum-server.com\/api\/payment\/WOFJgK-VrsxXsZu8sMHP0NsSridaWz-aiLO99XJxVlk"
-        },
-        "status": 2
+    {
+        "PAYMENTREQUEST_0_CURRENCYCODE": "USD",
+        "PAYMENTREQUEST_0_AMT": 10,
+        "meta": {
+            "name": "paypal",
+            "purchase_after_url": "http:\/\/google.com",
+            "links": {
+                "purchase": null,
+                "get": "http:\/\/dev.payum-server.com\/api\/payment\/WOFJgK-VrsxXsZu8sMHP0NsSridaWz-aiLO99XJxVlk"
+            },
+            "status": 2
+        }
     }
-}
-```
+    ```
 
 * Exceptions tracking
 
-The server comes with built in support of [sentry](https://getsentry.com/welcome/) service. You just need to set a `SENTRY_DSN` environment (In Case you use apache add this `SetEnv SENTRY_DSN aDsn` to your vhost.):
+    The server comes with built in support of [sentry](https://getsentry.com/welcome/) service. You just need to set a `SENTRY_DSN` environment (In Case you use apache add this `SetEnv SENTRY_DSN aDsn` to your vhost.):
 
-```bash
-$ SENTRY_DSN=aDsn php -S 127.0.0.1:8000 web/index.php
-```
+    ```bash
+    $ SENTRY_DSN=aDsn php -S 127.0.0.1:8000 web/index.php
+    ```
 
 * Redirect user to a purchase url to proceed with a payment.
 
