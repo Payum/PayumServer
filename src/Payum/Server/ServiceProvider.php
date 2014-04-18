@@ -5,15 +5,18 @@ use Buzz\Client\Curl;
 use Omnipay\Common\GatewayFactory;
 use Payum\Core\Bridge\Symfony\Security\HttpRequestVerifier;
 use Payum\Core\Bridge\Symfony\Security\TokenFactory;
+use Payum\Core\PaymentInterface;
 use Payum\Core\Registry\SimpleRegistry;
 use Payum\Core\Storage\FilesystemStorage;
 use Payum\Paypal\ExpressCheckout\Nvp\Api;
 use Payum\Paypal\ExpressCheckout\Nvp\PaymentFactory;
 use Payum\OmnipayBridge\PaymentFactory as OmnipayPaymentFactory;
 use Payum\Server\Action\GetSensitiveValuesAction;
+use Payum\Server\Action\OrderStatusAction;
+use Payum\Server\Action\Paypal\OrderCaptureAction;
 use Payum\Server\Action\Stripe\OmnipayStripeCaptureAction;
 use Payum\Server\Action\Stripe\ProtectDetailsAction as StripeProtectedDetailsAction;
-use Payum\Server\Action\Paypal\PaypalExpressCheckoutCaptureAction;
+use Payum\Server\Action\Paypal\DetailsCaptureAction;
 use Payum\Server\Action\VoidProtectDetailsAction;
 use Silex\Application;
 use Silex\ServiceProviderInterface;
@@ -30,6 +33,7 @@ class ServiceProvider implements ServiceProviderInterface
         $app['payum.config'] = Yaml::parse(file_get_contents($app['app.root_dir'].'/payum.yml'));
         $app['payum.storage_dir'] = $app['app.root_dir'].'/storage';
         $app['payum.model.payment_details_class'] = 'Payum\Server\Model\PaymentDetails';
+        $app['payum.model.order_class'] = 'Payum\Server\Model\Order';
         $app['payum.model.security_token_class'] = 'Payum\Server\Model\SecurityToken';
 
         $app['payum.security.token_storage'] = $app->share(function($app) {
@@ -58,6 +62,7 @@ class ServiceProvider implements ServiceProviderInterface
             $config = $app['payum.config'];
 
             $detailsClass = $app['payum.model.payment_details_class'];
+            $orderClass = $app['payum.model.order_class'];
 
             $stripeGateway = GatewayFactory::create('Stripe');
             $stripeGateway->setApiKey($config['stripe']['secret_key']);
@@ -65,14 +70,16 @@ class ServiceProvider implements ServiceProviderInterface
 
             $storages = array(
                 'paypal' => array(
-                    $detailsClass => new FilesystemStorage($app['payum.storage_dir'], $detailsClass, 'id')
+                    $detailsClass => new FilesystemStorage($app['payum.storage_dir'], $detailsClass, 'id'),
+                    $orderClass => new FilesystemStorage($app['payum.storage_dir'], $orderClass, 'id')
                 ),
                 'stripe' => array(
-                    $detailsClass => new FilesystemStorage($app['payum.storage_dir'], $detailsClass, 'id')
+                    $detailsClass => new FilesystemStorage($app['payum.storage_dir'], $detailsClass, 'id'),
+                    $orderClass => new FilesystemStorage($app['payum.storage_dir'], $orderClass, 'id')
                 )
             );
 
-
+            /** @var PaymentInterface[] $payments */
             $payments = array(
                 'paypal' => PaymentFactory::create(new Api(new Curl, array(
                     'username' => $config['paypal']['username'],
@@ -83,12 +90,15 @@ class ServiceProvider implements ServiceProviderInterface
                 'stripe' => OmnipayPaymentFactory::create($stripeGateway)
             );
 
-            $payments['paypal']->addAction(new PaypalExpressCheckoutCaptureAction($app), true);
+            $payments['paypal']->addAction(new DetailsCaptureAction($app), true);
             $payments['paypal']->addAction(new VoidProtectDetailsAction, true);
+            $payments['paypal']->addAction(new OrderStatusAction, true);
+            $payments['paypal']->addAction(new OrderCaptureAction($storages['paypal'][$detailsClass]), true);
 
             $payments['stripe']->addAction(new OmnipayStripeCaptureAction, true);
             $payments['stripe']->addAction(new StripeProtectedDetailsAction, true);
             $payments['stripe']->addAction(new GetSensitiveValuesAction($app['request']), true);
+            $payments['stripe']->addAction(new OrderStatusAction, true);
 
             return new SimpleRegistry($payments, $storages, null, null);
         });

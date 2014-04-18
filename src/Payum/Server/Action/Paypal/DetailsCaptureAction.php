@@ -7,7 +7,7 @@ use Payum\Server\Request\SecuredCaptureRequest;
 use Payum\Core\Request\SecuredCaptureRequest as CoreSecuredCaptureRequest;
 use Silex\Application;
 
-class PaypalExpressCheckoutCaptureAction extends PaymentAwareAction
+class DetailsCaptureAction extends PaymentAwareAction
 {
     /**
      * @var Application
