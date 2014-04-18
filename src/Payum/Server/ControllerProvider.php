@@ -5,6 +5,7 @@ use Payum\Core\Bridge\Symfony\Request\ResponseInteractiveRequest;
 use Payum\Core\Exception\LogicException;
 use Payum\Core\Request\InteractiveRequestInterface;
 use Payum\Core\Request\RedirectUrlInteractiveRequest;
+use Payum\Server\Controller\ApiOrderController;
 use Payum\Server\Controller\ApiPaymentController;
 use Payum\Server\Controller\IndexController;
 use Payum\Server\Controller\NotifyController;
@@ -33,6 +34,15 @@ class ControllerProvider implements ServiceProviderInterface
             );
         });
 
+        $app['controller.api_order'] = $app->share(function() use ($app) {
+            return new ApiOrderController(
+                $app['payum.security.token_factory'],
+                $app['payum.security.http_request_verifier'],
+                $app['payum'],
+                $app['payum.model.order_class']
+            );
+        });
+
         $app['controller.purchase'] = $app->share(function() use ($app) {
             return new PurchaseController(
                 $app['payum.security.token_factory'],
@@ -53,6 +63,8 @@ class ControllerProvider implements ServiceProviderInterface
         $app->get('/notify/{payum_token}', 'controller.notify:doAction')->bind('notify');
         $app->post('/api/payment', 'controller.api_payment:createAction')->bind('payment_create');
         $app->get('/api/payment/{payum_token}', 'controller.api_payment:getAction')->bind('payment_get');
+        $app->post('/api/order', 'controller.api_order:createAction')->bind('order_create');
+        $app->get('/api/order/{payum_token}', 'controller.api_order:getAction')->bind('order_get');
 
         $app->error(function (\Exception $e, $code) {
             if (false == $e instanceof InteractiveRequestInterface) {

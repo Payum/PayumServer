@@ -39,7 +39,31 @@ _**Note**: Never use built in web server on production. Set apache or nginx serv
 
 ## Use
 
-First create a paypal payment:
+There are two APIs available. First called `Order`.
+It is unified API and the format supported by all payments.
+While purchasing the server may ask for additional info, like credit card.
+
+```bash
+$ curl \
+  -X POST \
+  -H "Content-Type: application/json" \
+  http://server.payum.forma-dev.com/api/payment \
+  -d  '{ "currency": "USD", "amount": 10, "meta": { "name": "paypal", "purchase_after_url": "http://google.com" } }';
+
+{
+    "amount": 10,
+    "currency": "USD",
+    "details": null,
+    "meta": {
+        "links": {
+            "get": "http://dev.payum-server.com/api/order/_sgU9tUmXVuBzjb3VcREss79pmlsLBp_W549XQKeM_c",
+            "purchase": "http://dev.payum-server.com/purchase/sXzD1EtZKT-8sLmcPULgUOTroszWPqVg5QiFwP7uPfA"
+        }
+    }
+}
+```
+
+The other API is called `Payment`. This API has payment specific format. Here's an example for Paypal and Stripe:
 
 ```bash
 $ curl \
@@ -64,8 +88,6 @@ $ curl \
 ```
 
 _**Note**: Do not store purchase url. Use it immediately._
-
-or a stripe one:
 
 ```bash
 $ curl \
@@ -93,39 +115,37 @@ $ curl \
 
 _**Note**: Do not store purchase url. Use it immediately._
 
-Redirect user to purchase. After users will be redirected back to purchase_after_url.
+## Tips
 
-## Get details and status
+* Use get url to get payment\order details and its status.
 
-```bash
-$ curl -X GET http://dev.payum-server.com/api/payment/WOFJgK-VrsxXsZu8sMHP0NsSridaWz-aiLO99XJxVlk
+    ```bash
+    $ curl -X GET http://dev.payum-server.com/api/payment/WOFJgK-VrsxXsZu8sMHP0NsSridaWz-aiLO99XJxVlk
 
-{
-    "PAYMENTREQUEST_0_CURRENCYCODE": "USD",
-    "PAYMENTREQUEST_0_AMT": 10,
-    "meta": {
-        "name": "paypal",
-        "purchase_after_url": "http:\/\/google.com",
-        "links": {
-            "purchase": null,
-            "get": "http:\/\/dev.payum-server.com\/api\/payment\/WOFJgK-VrsxXsZu8sMHP0NsSridaWz-aiLO99XJxVlk"
-        },
-        "status": 2
+    {
+        "PAYMENTREQUEST_0_CURRENCYCODE": "USD",
+        "PAYMENTREQUEST_0_AMT": 10,
+        "meta": {
+            "name": "paypal",
+            "purchase_after_url": "http:\/\/google.com",
+            "links": {
+                "purchase": null,
+                "get": "http:\/\/dev.payum-server.com\/api\/payment\/WOFJgK-VrsxXsZu8sMHP0NsSridaWz-aiLO99XJxVlk"
+            },
+            "status": 2
+        }
     }
-}
-```
+    ```
 
-Enjoy!
+* Exceptions tracking
 
-## Errors\Exceptions tracking
+    The server comes with built in support of [sentry](https://getsentry.com/welcome/) service. You just need to set a `SENTRY_DSN` environment (In Case you use apache add this `SetEnv SENTRY_DSN aDsn` to your vhost.):
 
-The server comes with built in support of [sentry](https://getsentry.com/welcome/) service. You just need to set a `SENTRY_DSN` environment:
+    ```bash
+    $ SENTRY_DSN=aDsn php -S 127.0.0.1:8000 web/index.php
+    ```
 
-```bash
-$ SENTRY_DSN=aDsn php -S 127.0.0.1:8000 web/index.php
-```
-
-In Case you use apache add this `SetEnv SENTRY_DSN aDsn` to your vhost.
+* Redirect user to a purchase url to proceed with a payment.
 
 ## License
 

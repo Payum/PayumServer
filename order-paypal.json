@@ -1,0 +1,8 @@
+{
+    "amount": 10,
+    "currency": "USD",
+    "meta": {
+        "name": "paypal",
+        "purchase_after_url": "http:\/\/google.com"
+    }
+}
