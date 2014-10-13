@@ -1,8 +1,8 @@
 <?php
 namespace Payum\Server;
 
-use Buzz\Client\Curl;
-use Omnipay\Common\GatewayFactory;
+use Omnipay\Omnipay;
+use Payum\Core\Bridge\Symfony\ReplyToSymfonyResponseConverter;
 use Payum\Core\Bridge\Symfony\Security\HttpRequestVerifier;
 use Payum\Core\Bridge\Symfony\Security\TokenFactory;
 use Payum\Core\PaymentInterface;
@@ -11,13 +11,6 @@ use Payum\Core\Storage\FilesystemStorage;
 use Payum\Paypal\ExpressCheckout\Nvp\Api;
 use Payum\Paypal\ExpressCheckout\Nvp\PaymentFactory;
 use Payum\OmnipayBridge\PaymentFactory as OmnipayPaymentFactory;
-use Payum\Server\Action\GetSensitiveValuesAction;
-use Payum\Server\Action\OrderStatusAction;
-use Payum\Server\Action\Paypal\OrderCaptureAction;
-use Payum\Server\Action\Stripe\OmnipayStripeCaptureAction;
-use Payum\Server\Action\Stripe\ProtectDetailsAction as StripeProtectedDetailsAction;
-use Payum\Server\Action\Paypal\DetailsCaptureAction;
-use Payum\Server\Action\VoidProtectDetailsAction;
 use Silex\Application;
 use Silex\ServiceProviderInterface;
 use Symfony\Component\Yaml\Yaml;
@@ -30,7 +23,11 @@ class ServiceProvider implements ServiceProviderInterface
     public function register(Application $app)
     {
         $app['debug'] = true;
-        $app['payum.config'] = Yaml::parse(file_get_contents($app['app.root_dir'].'/payum.yml'));
+        $app['payum.config_file'] = $app['app.root_dir'].'/payum.yml';
+        $app['payum.config'] = file_exists($app['payum.config_file']) ?
+            Yaml::parse(file_get_contents($app['payum.config_file'])) :
+            array('payments' => array())
+        ;
         $app['payum.storage_dir'] = $app['app.root_dir'].'/storage';
         $app['payum.model.payment_details_class'] = 'Payum\Server\Model\PaymentDetails';
         $app['payum.model.order_class'] = 'Payum\Server\Model\Order';
@@ -44,6 +41,10 @@ class ServiceProvider implements ServiceProviderInterface
             );
         });
 
+        $app['payum.reply_to_symfony_response_converter'] = $app->share(function($app) {
+            return new ReplyToSymfonyResponseConverter();
+        });
+
         $app['payum.security.http_request_verifier'] = $app->share(function($app) {
             return new HttpRequestVerifier($app['payum.security.token_storage']);
         });
@@ -53,52 +54,31 @@ class ServiceProvider implements ServiceProviderInterface
                 $app['url_generator'],
                 $app['payum.security.token_storage'],
                 $app['payum'],
-                'purchase',
-                'notify'
+                'capture',
+                'notify',
+                'authorize'
             );
         });
 
         $app['payum'] = $app->share(function($app) {
             $config = $app['payum.config'];
 
-            $detailsClass = $app['payum.model.payment_details_class'];
             $orderClass = $app['payum.model.order_class'];
 
-            $stripeGateway = GatewayFactory::create('Stripe');
-            $stripeGateway->setApiKey($config['stripe']['secret_key']);
-            $stripeGateway->setTestMode($config['stripe']['sandbox']);
-
             $storages = array(
-                'paypal' => array(
-                    $detailsClass => new FilesystemStorage($app['payum.storage_dir'], $detailsClass, 'id'),
-                    $orderClass => new FilesystemStorage($app['payum.storage_dir'], $orderClass, 'id')
-                ),
-                'stripe' => array(
-                    $detailsClass => new FilesystemStorage($app['payum.storage_dir'], $detailsClass, 'id'),
-                    $orderClass => new FilesystemStorage($app['payum.storage_dir'], $orderClass, 'id')
-                )
+                $orderClass => new FilesystemStorage($app['payum.storage_dir'], $orderClass, 'number')
             );
 
             /** @var PaymentInterface[] $payments */
-            $payments = array(
-                'paypal' => PaymentFactory::create(new Api(new Curl, array(
-                    'username' => $config['paypal']['username'],
-                    'password' => $config['paypal']['password'],
-                    'signature' => $config['paypal']['signature'],
-                    'sandbox' => $config['paypal']['sandbox']
-                ))),
-                'stripe' => OmnipayPaymentFactory::create($stripeGateway)
-            );
+            $payments = array();
+            foreach ($config['payments'] as $name => $paymentConfig) {
+                if (false == isset($paymentConfig['paypal'])) {
+                    continue;
+                }
 
-            $payments['paypal']->addAction(new DetailsCaptureAction($app), true);
-            $payments['paypal']->addAction(new VoidProtectDetailsAction, true);
-            $payments['paypal']->addAction(new OrderStatusAction, true);
-            $payments['paypal']->addAction(new OrderCaptureAction($storages['paypal'][$detailsClass]), true);
-
-            $payments['stripe']->addAction(new OmnipayStripeCaptureAction, true);
-            $payments['stripe']->addAction(new StripeProtectedDetailsAction, true);
-            $payments['stripe']->addAction(new GetSensitiveValuesAction($app['request']), true);
-            $payments['stripe']->addAction(new OrderStatusAction, true);
+                /** @var PaymentInterface[] $payments */
+                $payments[$name] = PaymentFactory::create(new Api($paymentConfig['paypal']));
+            }
 
             return new SimpleRegistry($payments, $storages, null, null);
         });

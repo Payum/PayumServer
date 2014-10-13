@@ -3,11 +3,10 @@ namespace Payum\Server\Controller;
 
 use Payum\Core\Bridge\Spl\ArrayObject;
 use Payum\Core\Registry\RegistryInterface;
-use Payum\Core\Request\BinaryMaskStatusRequest;
+use Payum\Core\Request\GetHumanStatus;
 use Payum\Core\Security\GenericTokenFactoryInterface;
 use Payum\Core\Security\HttpRequestVerifierInterface;
 use Payum\Server\Model\Order;
-use Payum\Server\Request\ProtectedDetailsRequest;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
@@ -65,46 +64,34 @@ class ApiOrderController
             throw new BadRequestHttpException('The request content type is invalid.');
         }
 
-        $rawDetails = json_decode($request->getContent(), true);
-        if (null ===  $rawDetails) {
+        $rawOrder = json_decode($request->getContent(), true);
+        if (null ===  $rawOrder) {
             throw new BadRequestHttpException('The request content is not valid json.');
         }
-        if (empty($rawDetails['meta']['name'])) {
-            throw new BadRequestHttpException('The payment name must be set to meta.name.');
-        }
-        $name = $rawDetails['meta']['name'];
+        $rawOrder = ArrayObject::ensureArrayObject($rawOrder);
 
-        if (empty($rawDetails['meta']['purchase_after_url'])) {
-            throw new BadRequestHttpException('The purchase after url has to be set to  meta.purchase_after_url.');
-        }
-        $afterUrl = $rawDetails['meta']['purchase_after_url'];
+        $storage = $this->registry->getStorage('Payum\Server\Model\Order');
 
-        $storage = $this->registry->getStorageForClass($this->orderClass, $name);
+        $afterUrl = $rawOrder['afterUrl'] ?: $request->getSchemeAndHttpHost();
 
         /** @var Order $order */
         $order = $storage->createModel();
-        $order->setAmount($rawDetails['amount']);
-        $order->setCurrency($rawDetails['currency']);
+        $order->setPaymentName($rawOrder['paymentName']);
+        $order->setNumber(date('Ymd-'.mt_rand(10000, 99999)));
+        $order->setTotalAmount($rawOrder['totalAmount']);
+        $order->setCurrencyCode($rawOrder['currencyCode']);
+        $order->setClientEmail($rawOrder['clientEmail']);
+        $order->setClientId($rawOrder['clientId']);
+        $order->setDetails(is_array($rawOrder['details']) ? $rawOrder['details'] : array());
+
+        $order->addToken('get', $this->tokenFactory->createToken($order->getPaymentName(), $order, 'order_get'));
+        $order->addToken('authorize', $this->tokenFactory->createAuthorizeToken($order->getPaymentName(), $order, $afterUrl));
+        $order->addToken('capture', $this->tokenFactory->createCaptureToken($order->getPaymentName(), $order, $afterUrl));
+        $order->addToken('notify', $this->tokenFactory->createNotifyToken($order->getPaymentName(), $order));
 
         $storage->updateModel($order);
 
-        $captureToken = $this->tokenFactory->createCaptureToken($name, $order, $afterUrl);
-        $getToken = $this->tokenFactory->createToken($name, $order, 'order_get');
-
-        $meta = array();
-        $meta['links'] = array(
-            'purchase' => null,
-            'get' => $getToken->getTargetUrl(),
-        );
-        $order->setMeta($meta);
-
-        $storage->updateModel($order);
-
-        $meta = $order->getMeta();
-        $meta['links']['purchase'] = $captureToken->getTargetUrl();
-        $order->setMeta($meta);
-
-        $response = new JsonResponse(iterator_to_array($order));
+        $response = new JsonResponse($this->buildJsonOrder($order));
         $response->headers->set('Cache-Control', 'no-store, no-cache, max-age=0, post-check=0, pre-check=0');
         $response->headers->set('Pragma', 'no-cache');
 
@@ -120,18 +107,37 @@ class ApiOrderController
     {
         $token = $this->httpRequestVerifier->verify($request);
 
-        $status = new BinaryMaskStatusRequest($token);
-        $this->registry->getPayment($token->getPaymentName())->execute($status);
+        $storage = $this->registry->getStorage('Payum\Server\Model\Order');
 
         /** @var Order $order */
-        $order = $status->getModel();
-        $meta = $order->getMeta();
-        $meta['status'] = $status->getStatus();
-        $order->setMeta($meta);
+        $order = $storage->findModelByIdentificator($token->getDetails());
 
-        $storage = $this->registry->getStorageForClass($this->orderClass, $token->getPaymentName());
+        $payment = $this->registry->getPayment($order->getPaymentName());
+
+        $payment->execute($status = new GetHumanStatus($order));
+
+        $order->setPaymentStatus($status->getValue());
         $storage->updateModel($order);
 
-        return new JsonResponse(iterator_to_array($order));
+        return new JsonResponse($this->buildJsonOrder($order));
+    }
+
+    public function buildJsonOrder(Order $order)
+    {
+        return array(
+            'order' => array(
+                'paymentName' => $order->getPaymentName(),
+                'paymentStatus' => $order->getPaymentStatus(),
+                'number' => $order->getNumber(),
+                'totalAmount' => $order->getTotalAmount(),
+                'currencyCode' => $order->getCurrencyCode(),
+                'clientEmail' => $order->getClientEmail(),
+                'clientId' => $order->getClientId(),
+                'details' => $order->getDetails(),
+            ),
+
+            '_tokens' => $order->getTokens(),
+            '_links' => $order->getLinks(),
+        );
     }
 }

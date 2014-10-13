@@ -1,118 +1,102 @@
 <?php
 namespace Payum\Server\Model;
 
-use Payum\Core\Model\DetailsAggregateInterface;
-use Payum\Core\Model\DetailsAwareInterface;
+use Payum\Core\Model\Order as BaseOrder;
+use Payum\Core\Request\GetHumanStatus;
+use Payum\Core\Security\TokenInterface;
 
-class Order implements DetailsAggregateInterface, DetailsAwareInterface, \IteratorAggregate
+class Order extends BaseOrder
 {
     /**
      * @var string
      */
-    protected $id;
+    protected $paymentName;
 
     /**
      * @var string
      */
-    protected $amount;
+    protected $paymentStatus;
 
     /**
      * @var string
      */
-    protected $currency;
+    protected $afterUrl;
 
     /**
-     * @var array
+     * @var string[]
      */
-    protected $meta;
+    protected $links;
 
     /**
-     * @var PaymentDetails
+     * @var string[]
      */
-    protected $details;
+    protected $tokens;
 
-    /**
-     * @return mixed
-     */
-    public function getId()
+    public function __construct()
     {
-        return $this->id;
-    }
+        parent::__construct();
 
-    /**
-     * @return mixed
-     */
-    public function getAmount()
-    {
-        return $this->amount;
-    }
+        $this->links = array();
+        $this->tokens = array();
 
-    /**
-     * @param mixed $amount
-     */
-    public function setAmount($amount)
-    {
-        $this->amount = $amount;
+        $this->paymentStatus = GetHumanStatus::STATUS_NEW;
     }
 
     /**
      * @return string
      */
-    public function getCurrency()
+    public function getPaymentName()
     {
-        return $this->currency;
+        return $this->paymentName;
     }
 
     /**
-     * @param string $currency
+     * @param string $paymentName
      */
-    public function setCurrency($currency)
+    public function setPaymentName($paymentName)
     {
-        $this->currency = $currency;
+        $this->paymentName = $paymentName;
     }
 
     /**
-     * @return array
+     * @return string
      */
-    public function getDetails()
+    public function getPaymentStatus()
     {
-        return $this->details;
+        return $this->paymentStatus;
     }
 
     /**
-     * @param array $details
+     * @param string $paymentStatus
      */
-    public function setDetails($details)
+    public function setPaymentStatus($paymentStatus)
     {
-        $this->details = $details;
+        $this->paymentStatus = $paymentStatus;
     }
 
     /**
-     * @return array
+     * @return \string[]
      */
-    public function getMeta()
+    public function getLinks()
     {
-        return $this->meta;
+        return $this->links;
     }
 
     /**
-     * @param array $meta
+     * @return \string[]
      */
-    public function setMeta($meta)
+    public function getTokens()
     {
-        $this->meta = $meta;
+        return $this->tokens;
     }
 
     /**
-     * {@inheritDoc}
+     * @param string $name
+     * @param TokenInterface $token
      */
-    public function getIterator()
+    public function addToken($name, TokenInterface $token)
     {
-        return new \ArrayIterator(array(
-            'amount' => $this->amount,
-            'currency' => $this->currency,
-            'meta' => $this->meta,
-            'details' => $this->details ? iterator_to_array($this->details) : null
-        ));
+        $this->tokens[$name] = $token->getHash();
+        $this->links[$name] = $token->getTargetUrl();
     }
 }
