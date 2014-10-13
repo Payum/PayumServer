@@ -37,7 +37,7 @@ $ curl -X GET -H "Content-Type: application/json" http://192.168.80.80:8000/api/
 First of all you have to create an order on the server. After, you have to redirect a payer to capture url:
 
 ```bash
-$ curl -X POST -H "Content-Type: application/json" http://192.168.80.80:8000/api/order -d  '{"paymentName": "paypal", "totalAmount": 123, "currenctCode": "USD"}' | python -m json.tool 
+$ curl -X POST -H "Content-Type: application/json" http://192.168.80.80:8000/api/order -d  '{"paymentName": "germany_paypal", "totalAmount": 123, "currenctCode": "USD"}' | python -m json.tool 
     % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
                                    Dload  Upload   Total   Spent    Left  Speed
   100   857    0   789  100    68  10587    912 --:--:-- --:--:-- --:--:-- 10662
