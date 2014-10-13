@@ -1,6 +1,6 @@
 # Payum Server.
 
-Look ma! How it is easy to setup the payment server.
+Look ma! How it is easy to setup the payment server. Setup the server and it will take care of your payments. Easy to setup and tweak.
 
 ## Installation
 
@@ -79,6 +79,7 @@ $ curl -X POST -H "Content-Type: application/json" http://192.168.80.80:8000/api
     ```bash
     $ SENTRY_DSN=aDsn php -S 127.0.0.1:8000 web/index.php
     ```
+* Try it [online](http://server.payum.forma-dev.com/)
 
 ## License
 
