@@ -3,6 +3,7 @@ namespace Payum\Server\Model;
 
 use Payum\Core\Model\Order as BaseOrder;
 use Payum\Core\Request\GetHumanStatus;
+use Payum\Core\Security\TokenInterface;
 
 class Order extends BaseOrder
 {
@@ -21,9 +22,22 @@ class Order extends BaseOrder
      */
     protected $afterUrl;
 
+    /**
+     * @var string[]
+     */
+    protected $links;
+
+    /**
+     * @var string[]
+     */
+    protected $tokens;
+
     public function __construct()
     {
         parent::__construct();
+
+        $this->links = array();
+        $this->tokens = array();
 
         $this->paymentStatus = GetHumanStatus::STATUS_NEW;
     }
@@ -61,18 +75,28 @@ class Order extends BaseOrder
     }
 
     /**
-     * @return string
+     * @return \string[]
      */
-    public function getAfterUrl()
+    public function getLinks()
     {
-        return $this->afterUrl;
+        return $this->links;
     }
 
     /**
-     * @param string $afterUrl
+     * @return \string[]
      */
-    public function setAfterUrl($afterUrl)
+    public function getTokens()
     {
-        $this->afterUrl = $afterUrl;
+        return $this->tokens;
+    }
+
+    /**
+     * @param string $name
+     * @param TokenInterface $token
+     */
+    public function addToken($name, TokenInterface $token)
+    {
+        $this->tokens[$name] = $token->getHash();
+        $this->links[$name] = $token->getTargetUrl();
     }
 }

@@ -23,7 +23,11 @@ class ServiceProvider implements ServiceProviderInterface
     public function register(Application $app)
     {
         $app['debug'] = true;
-        $app['payum.config'] = Yaml::parse(file_get_contents($app['app.root_dir'].'/payum.yml'));
+        $app['payum.config_file'] = $app['app.root_dir'].'/payum.yml';
+        $app['payum.config'] = file_exists($app['payum.config_file']) ?
+            Yaml::parse(file_get_contents($app['payum.config_file'])) :
+            array('payments' => array())
+        ;
         $app['payum.storage_dir'] = $app['app.root_dir'].'/storage';
         $app['payum.model.payment_details_class'] = 'Payum\Server\Model\PaymentDetails';
         $app['payum.model.order_class'] = 'Payum\Server\Model\Order';
@@ -61,27 +65,20 @@ class ServiceProvider implements ServiceProviderInterface
 
             $orderClass = $app['payum.model.order_class'];
 
-//            $gatewayFactory = Omnipay::getFactory();
-//            $gatewayFactory->find();
-//
-//            $stripeGateway = $gatewayFactory->create('Stripe');
-//            $stripeGateway->setApiKey($config['stripe']['secret_key']);
-//            $stripeGateway->setTestMode($config['stripe']['sandbox']);
-//
             $storages = array(
-                $orderClass => new FilesystemStorage($app['payum.storage_dir'], $orderClass, 'id')
+                $orderClass => new FilesystemStorage($app['payum.storage_dir'], $orderClass, 'number')
             );
 
             /** @var PaymentInterface[] $payments */
-            $payments = array(
-                'paypal' => PaymentFactory::create(new Api(array(
-                    'username' => $config['paypal']['username'],
-                    'password' => $config['paypal']['password'],
-                    'signature' => $config['paypal']['signature'],
-                    'sandbox' => $config['paypal']['sandbox']
-                ))),
-//                'stripe' => OmnipayPaymentFactory::create($stripeGateway)
-            );
+            $payments = array();
+            foreach ($config['payments'] as $name => $paymentConfig) {
+                if (false == isset($paymentConfig['paypal'])) {
+                    continue;
+                }
+
+                /** @var PaymentInterface[] $payments */
+                $payments[$name] = PaymentFactory::create(new Api($paymentConfig['paypal']));
+            }
 
             return new SimpleRegistry($payments, $storages, null, null);
         });

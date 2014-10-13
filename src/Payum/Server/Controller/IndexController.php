@@ -18,6 +18,10 @@ class IndexController
 
     public function indexAction()
     {
-        return MarkdownExtended(file_get_contents($this->rootDir.'/README.md'));
+        return
+            "<html><body style='max-width: 800px'>".
+                MarkdownExtended(file_get_contents($this->rootDir.'/README.md')).
+            "</body></html>"
+        ;
     }
 } 
