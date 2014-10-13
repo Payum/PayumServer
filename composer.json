@@ -21,9 +21,9 @@
     "require": {
         "silex/silex": "~1.2",
         "symfony/yaml": "~2",
-        "payum/payum": "0.8.*@dev",
-        "raven/raven": "~0.8.0",
-        "dflydev/markdown": "dev-master",
+        "payum/payum": "0.12.*@dev",
+        "raven/raven": "~0.10.0",
+        "michelf/php-markdown": "~1.4",
         "egil/php-markdown-extra-extended": "1.0"
     },
     "repositories": [
@@ -55,7 +55,7 @@
     },
     "extra": {
         "branch-alias": {
-            "dev-master": "0.8-dev"
+            "dev-master": "0.12-dev"
         }
     }
 }
