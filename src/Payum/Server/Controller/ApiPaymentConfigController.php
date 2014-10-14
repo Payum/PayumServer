@@ -2,6 +2,7 @@
 namespace Payum\Server\Controller;
 
 use Payum\Core\Bridge\Spl\ArrayObject;
+use Payum\Core\Security\Util\Mask;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -69,6 +70,19 @@ class ApiPaymentConfigController
      */
     public function getAction()
     {
-        return new JsonResponse(array($this->currentConfig));
+        $payments = array();
+        foreach ($this->currentConfig['payments'] as $name => $config) {
+            $options = array();
+            foreach ($config['options'] as $optionName => $optionValue) {
+                $options[$optionName] = Mask::mask($optionValue, '*');
+            }
+
+            $payments[$name] = array(
+                'factory' => $config['factory'],
+                'options' => $options,
+            );
+        }
+
+        return new JsonResponse(array('payments' => $payments));
     }
 }
