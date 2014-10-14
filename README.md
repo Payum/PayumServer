@@ -21,23 +21,17 @@ _**Note**: Never use built in web server on production. Set apache or nginx serv
 ## Configure
 
 ```bash
-$ curl -X POST -H "Content-Type: application/json" http://192.168.80.80:8000/api/config -d  '{"paymentName": "germany_paypal", "paymentFactory": "paypal", "username": "EDIT IT", "password": "EDIT IT", "signature": "EDIT IT", "sandbox": true}'
+$ curl -X POST -H "Content-Type: application/json" http://192.168.80.80:8000/api/payments/configs -d  '{"name": "barpaypal", "factory": "paypal", "options": {"username": "foo", "password": "bar", "signature": "baz", "sandbox": true}}'
 ```
 
 _**Note**: You must provide correct Paypal credentials._
 
-The payment will be stored to `payum.yml` file in server root directory. You can later edit this file from console. Also you can get the list of payments
-
-```bash
-$ curl -X GET -H "Content-Type: application/json" http://192.168.80.80:8000/api/config'
-```
-
-## Purchase
+## Create Order
  
 First of all you have to create an order on the server. After, you have to redirect a payer to capture url:
 
 ```bash
-$ curl -X POST -H "Content-Type: application/json" http://192.168.80.80:8000/api/order -d  '{"paymentName": "germany_paypal", "totalAmount": 123, "currenctCode": "USD"}' | python -m json.tool 
+$ curl -X POST -H "Content-Type: application/json" http://192.168.80.80:8000/api/orders -d  '{"paymentName": "barpaypal", "totalAmount": 123, "currenctCode": "USD"}' | python -m json.tool 
     % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
                                    Dload  Upload   Total   Spent    Left  Speed
   100   857    0   789  100    68  10587    912 --:--:-- --:--:-- --:--:-- 10662
@@ -45,7 +39,7 @@ $ curl -X POST -H "Content-Type: application/json" http://192.168.80.80:8000/api
       "_links": {
           "authorize": "http://192.168.80.80:8000/authorize/urd3IGRnMsIiNNMiwqdKzOQFIAbIa-uR3XNAQ2573QA",
           "capture": "http://192.168.80.80:8000/capture/gT5OofuBMQp_D4lxfSuM4ZNx9yjgYdXoK96yiTsKHOI",
-          "get": "http://192.168.80.80:8000/api/order/FiZzVbBu5ob2l2x4bvMCKezFU6QyuZRZ7WHlo6PzRU4",
+          "get": "http://192.168.80.80:8000/api/orders/FiZzVbBu5ob2l2x4bvMCKezFU6QyuZRZ7WHlo6PzRU4",
           "notify": "http://192.168.80.80:8000/notify/VTc1D9U3Ab2AKBUp-kh9ycLf-Bbt608bxHyihYLuJGY"
       },
       "_tokens": {
@@ -68,9 +62,29 @@ $ curl -X POST -H "Content-Type: application/json" http://192.168.80.80:8000/api
 
 ```
 
+## Purchase
+
+Redirect user to capture url you get with order response, It should be something like this:
+
+```
+http://192.168.80.80:8000/capture/gT5OofuBMQp_D4lxfSuM4ZNx9yjgYdXoK96yiTsKHOI
+```
+
 ## Tips
 
-* Use urls provided with order to capture it (redirect user), get order details and so on.
+* Find out which payment you can use:
+
+    ```bash
+    $ curl -X GET -H "Content-Type: application/json" http://192.168.80.80:8000/api/payments/configs'
+    ```
+    
+* Find out which payments you can configure:
+
+    ```bash
+    $ curl -X GET -H "Content-Type: application/json" http://192.168.80.80:8000/api/payments/factories'
+    ```
+
+* Try it [online](http://server.payum.forma-dev.com/)
 
 * Exceptions tracking
 
@@ -79,7 +93,6 @@ $ curl -X POST -H "Content-Type: application/json" http://192.168.80.80:8000/api
     ```bash
     $ SENTRY_DSN=aDsn php -S 127.0.0.1:8000 web/index.php
     ```
-* Try it [online](http://server.payum.forma-dev.com/)
 
 ## License
 

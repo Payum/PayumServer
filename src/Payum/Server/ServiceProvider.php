@@ -72,12 +72,12 @@ class ServiceProvider implements ServiceProviderInterface
             /** @var PaymentInterface[] $payments */
             $payments = array();
             foreach ($config['payments'] as $name => $paymentConfig) {
-                if (false == isset($paymentConfig['paypal'])) {
+                if ('paypa' != isset($paymentConfig['factory'])) {
                     continue;
                 }
 
                 /** @var PaymentInterface[] $payments */
-                $payments[$name] = PaymentFactory::create(new Api($paymentConfig['paypal']));
+                $payments[$name] = PaymentFactory::create(new Api($paymentConfig['options']));
             }
 
             return new SimpleRegistry($payments, $storages, null, null);

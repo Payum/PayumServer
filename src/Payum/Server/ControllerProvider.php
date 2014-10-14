@@ -3,8 +3,9 @@ namespace Payum\Server;
 
 use Payum\Core\Bridge\Symfony\ReplyToSymfonyResponseConverter;
 use Payum\Core\Reply\ReplyInterface;
-use Payum\Server\Controller\ApiConfigController;
+use Payum\Server\Controller\ApiPaymentConfigController;
 use Payum\Server\Controller\ApiOrderController;
+use Payum\Server\Controller\ApiPaymentFactoryController;
 use Payum\Server\Controller\IndexController;
 use Payum\Server\Controller\PayumController;
 use Silex\Application;
@@ -30,8 +31,12 @@ class ControllerProvider implements ServiceProviderInterface
             );
         });
 
-        $app['controller.api_config'] = $app->share(function() use ($app) {
-            return new ApiConfigController($app['payum.config'], $app['payum.config_file']);
+        $app['controller.api_payment_config'] = $app->share(function() use ($app) {
+            return new ApiPaymentConfigController($app['payum.config'], $app['payum.config_file']);
+        });
+
+        $app['controller.api_payment_factory'] = $app->share(function() use ($app) {
+            return new ApiPaymentFactoryController;
         });
 
         $app['controller.payum'] = $app->share(function() use ($app) {
@@ -46,10 +51,11 @@ class ControllerProvider implements ServiceProviderInterface
         $app->get('/capture/{payum_token}', 'controller.payum:captureAction')->bind('capture');
         $app->get('/authorize/{payum_token}', 'controller.payum:authorizeAction')->bind('authorize');
         $app->get('/notify/{payum_token}', 'controller.payum:notifyAction')->bind('notify');
-        $app->get('/api/order/{payum_token}', 'controller.api_order:getAction')->bind('order_get');
-        $app->post('/api/order', 'controller.api_order:createAction')->bind('order_create');
-        $app->get('/api/config', 'controller.api_config:getAction')->bind('config_get');
-        $app->post('/api/config', 'controller.api_config:createAction')->bind('config_create');
+        $app->get('/api/orders/{payum_token}', 'controller.api_order:getAction')->bind('order_get');
+        $app->post('/api/orders', 'controller.api_order:createAction')->bind('order_create');
+        $app->get('/api/payments/configs', 'controller.api_payment_config:getAction')->bind('payment_config_get');
+        $app->post('/api/payments/configs', 'controller.api_payment_config:createAction')->bind('payment_config_create');
+        $app->get('/api/payments/factories', 'controller.api_payment_factory:getAction')->bind('payment_factory_get');
 
 
         $app->error(function (\Exception $e, $code) use ($app) {

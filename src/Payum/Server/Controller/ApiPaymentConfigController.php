@@ -8,7 +8,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\Yaml\Yaml;
 
-class ApiConfigController
+class ApiPaymentConfigController
 {
     /**
      * @var array
@@ -48,19 +48,18 @@ class ApiConfigController
         }
         $rawConfig = ArrayObject::ensureArrayObject($rawConfig);
 
-        if (false == $paymentName = $rawConfig['paymentName']) {
-            throw new BadRequestHttpException('The paymentName is required.');
+        if (false == $name = $rawConfig['name']) {
+            throw new BadRequestHttpException('The name is required.');
         }
-        unset($rawConfig['paymentName']);
 
-        if (false == $paymentFactory = $rawConfig['paymentFactory']) {
-            throw new BadRequestHttpException('The paymentFactory is required.');
+        if (false == $factory = $rawConfig['factory']) {
+            throw new BadRequestHttpException('The factory is required.');
         }
-        unset($rawConfig['paymentFactory']);
 
-        $this->currentConfig['payments'][$paymentName][$paymentFactory] = (array) $rawConfig;
+        $this->currentConfig['payments'][$name]['factory'] = $factory;
+        $this->currentConfig['payments'][$name]['options'] = $rawConfig['options'] ?: array();;
 
-        file_put_contents($this->configFile, Yaml::dump($this->currentConfig));
+        file_put_contents($this->configFile, Yaml::dump($this->currentConfig, 5));
 
         return new Response('', 204);
     }
@@ -70,8 +69,6 @@ class ApiConfigController
      */
     public function getAction()
     {
-        return new JsonResponse(array(
-            'payments' => array_keys($this->currentConfig['payments']),
-        ));
+        return new JsonResponse(array($this->currentConfig));
     }
 }
