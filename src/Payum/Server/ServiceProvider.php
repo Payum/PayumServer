@@ -72,7 +72,7 @@ class ServiceProvider implements ServiceProviderInterface
             /** @var PaymentInterface[] $payments */
             $payments = array();
             foreach ($config['payments'] as $name => $paymentConfig) {
-                if ('paypa' != isset($paymentConfig['factory'])) {
+                if ('paypal' != isset($paymentConfig['factory'])) {
                     continue;
                 }
 
