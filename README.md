@@ -21,7 +21,7 @@ _**Note**: Never use built in web server on production. Set apache or nginx serv
 ## Configure
 
 ```bash
-$ curl -X POST -H "Content-Type: application/json" http://192.168.80.80:8000/api/payments/configs -d  '{"name": "barpaypal", "factory": "paypal", "options": {"username": "foo", "password": "bar", "signature": "baz", "sandbox": true}}'
+$ curl -i -X POST -H "Content-Type: application/json" http://192.168.80.80:8000/api/payments/configs -d  '{"name": "barpaypal", "factory": "paypal", "options": {"username": "foo", "password": "bar", "signature": "baz", "sandbox": true}}'
 ```
 
 _**Note**: You must provide correct Paypal credentials._
@@ -31,10 +31,11 @@ _**Note**: You must provide correct Paypal credentials._
 First of all you have to create an order on the server. After, you have to redirect a payer to capture url:
 
 ```bash
-$ curl -X POST -H "Content-Type: application/json" http://192.168.80.80:8000/api/orders -d  '{"paymentName": "barpaypal", "totalAmount": 123, "currenctCode": "USD"}' | python -m json.tool 
-    % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
-                                   Dload  Upload   Total   Spent    Left  Speed
-  100   857    0   789  100    68  10587    912 --:--:-- --:--:-- --:--:-- 10662
+$ curl -i -X POST -H "Content-Type: application/json" http://192.168.80.80:8000/api/orders -d  '{"paymentName": "barpaypal", "totalAmount": 123, "currenctCode": "USD"}'
+```
+
+As a response you have to get:
+```json
   {
       "_links": {
           "authorize": "http://192.168.80.80:8000/authorize/urd3IGRnMsIiNNMiwqdKzOQFIAbIa-uR3XNAQ2573QA",
@@ -59,7 +60,6 @@ $ curl -X POST -H "Content-Type: application/json" http://192.168.80.80:8000/api
           "totalAmount": 123
       }
   }
-
 ```
 
 ## Purchase
