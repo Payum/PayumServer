@@ -1,1 +1,1 @@
-{"name": "barpaypal", "factory": "paypal_express_checkout", "options": {"username": "foo", "password": "bar", "signature": "baz", "sandbox": true}}
+{"name": "paypal", "factory": "paypal_express_checkout", "options": {"username": "foo", "password": "bar", "signature": "baz", "sandbox": true}}

@@ -35,13 +35,17 @@ class ControllerProvider implements ServiceProviderInterface
             return new ApiPaymentConfigController(
                 $app['form.factory'],
                 $app['url_generator'],
+                $app['payum.payment_factories'],
                 $app['payum.config'],
                 $app['payum.config_file']
             );
         });
 
         $app['controller.api_payment_factory'] = $app->share(function() use ($app) {
-            return new ApiPaymentFactoryController($app['form.factory']);
+            return new ApiPaymentFactoryController(
+                $app['form.factory'],
+                $app['payum.payment_factories']
+            );
         });
 
         $app['controller.payum'] = $app->share(function() use ($app) {

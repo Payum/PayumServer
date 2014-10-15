@@ -9,6 +9,7 @@ use Payum\Core\Security\HttpRequestVerifierInterface;
 use Payum\Server\Model\Order;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
 class ApiOrderController
@@ -84,18 +85,24 @@ class ApiOrderController
         $order->setClientId($rawOrder['clientId']);
         $order->setDetails(is_array($rawOrder['details']) ? $rawOrder['details'] : array());
 
-        $order->addToken('get', $this->tokenFactory->createToken($order->getPaymentName(), $order, 'order_get'));
+        $getToken = $this->tokenFactory->createToken($order->getPaymentName(), $order, 'order_get');
+
+        $order->addToken('get', $getToken);
         $order->addToken('authorize', $this->tokenFactory->createAuthorizeToken($order->getPaymentName(), $order, $afterUrl));
         $order->addToken('capture', $this->tokenFactory->createCaptureToken($order->getPaymentName(), $order, $afterUrl));
         $order->addToken('notify', $this->tokenFactory->createNotifyToken($order->getPaymentName(), $order));
 
         $storage->updateModel($order);
 
-        $response = new JsonResponse($this->buildJsonOrder($order));
-        $response->headers->set('Cache-Control', 'no-store, no-cache, max-age=0, post-check=0, pre-check=0');
-        $response->headers->set('Pragma', 'no-cache');
+        return new Response('', 204, array(
+            'Location' => $getToken->getTargetUrl()
+        ));
 
-        return $response;
+//        $response = new JsonResponse($this->buildJsonOrder($order));
+//        $response->headers->set('Cache-Control', 'no-store, no-cache, max-age=0, post-check=0, pre-check=0');
+//        $response->headers->set('Pragma', 'no-cache');
+//
+//        return $response;
     }
 
     /**
