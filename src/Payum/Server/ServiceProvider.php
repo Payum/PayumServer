@@ -1,7 +1,6 @@
 <?php
 namespace Payum\Server;
 
-use Omnipay\Omnipay;
 use Payum\Core\Bridge\Symfony\ReplyToSymfonyResponseConverter;
 use Payum\Core\Bridge\Symfony\Security\HttpRequestVerifier;
 use Payum\Core\Bridge\Symfony\Security\TokenFactory;
@@ -10,7 +9,7 @@ use Payum\Core\Registry\SimpleRegistry;
 use Payum\Core\Storage\FilesystemStorage;
 use Payum\Paypal\ExpressCheckout\Nvp\Api;
 use Payum\Paypal\ExpressCheckout\Nvp\PaymentFactory;
-use Payum\OmnipayBridge\PaymentFactory as OmnipayPaymentFactory;
+use Payum\Server\Factory\Payment\PaypalExpressCheckoutFactory;
 use Silex\Application;
 use Silex\ServiceProviderInterface;
 use Symfony\Component\Yaml\Yaml;
@@ -60,6 +59,12 @@ class ServiceProvider implements ServiceProviderInterface
             );
         });
 
+        $app['payum.payment_factories'] = $app->share(function ($app) {
+            return array(
+                new PaypalExpressCheckoutFactory,
+            );
+        });
+
         $app['payum'] = $app->share(function($app) {
             $config = $app['payum.config'];
 
@@ -69,15 +74,16 @@ class ServiceProvider implements ServiceProviderInterface
                 $orderClass => new FilesystemStorage($app['payum.storage_dir'], $orderClass, 'number')
             );
 
+            $paypalExpressCheckoutFactory = new PaypalExpressCheckoutFactory;
+
             /** @var PaymentInterface[] $payments */
             $payments = array();
             foreach ($config['payments'] as $name => $paymentConfig) {
-                if ('paypal' != isset($paymentConfig['factory'])) {
+                if ($paypalExpressCheckoutFactory->getName() != isset($paymentConfig['factory'])) {
                     continue;
                 }
 
-                /** @var PaymentInterface[] $payments */
-                $payments[$name] = PaymentFactory::create(new Api($paymentConfig['options']));
+                $payments[$name] = $paypalExpressCheckoutFactory->createPayment($paymentConfig['options']);
             }
 
             return new SimpleRegistry($payments, $storages, null, null);

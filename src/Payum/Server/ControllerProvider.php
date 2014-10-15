@@ -32,11 +32,16 @@ class ControllerProvider implements ServiceProviderInterface
         });
 
         $app['controller.api_payment_config'] = $app->share(function() use ($app) {
-            return new ApiPaymentConfigController($app['payum.config'], $app['payum.config_file']);
+            return new ApiPaymentConfigController(
+                $app['form.factory'],
+                $app['url_generator'],
+                $app['payum.config'],
+                $app['payum.config_file']
+            );
         });
 
         $app['controller.api_payment_factory'] = $app->share(function() use ($app) {
-            return new ApiPaymentFactoryController;
+            return new ApiPaymentFactoryController($app['form.factory']);
         });
 
         $app['controller.payum'] = $app->share(function() use ($app) {
@@ -53,9 +58,10 @@ class ControllerProvider implements ServiceProviderInterface
         $app->get('/notify/{payum_token}', 'controller.payum:notifyAction')->bind('notify');
         $app->get('/api/orders/{payum_token}', 'controller.api_order:getAction')->bind('order_get');
         $app->post('/api/orders', 'controller.api_order:createAction')->bind('order_create');
-        $app->get('/api/payments/configs', 'controller.api_payment_config:getAction')->bind('payment_config_get');
+        $app->get('/api/payments/configs', 'controller.api_payment_config:getAllAction')->bind('payment_config_get_all');
+        $app->get('/api/payments/configs/{name}', 'controller.api_payment_config:getAction')->bind('payment_config_get');
         $app->post('/api/payments/configs', 'controller.api_payment_config:createAction')->bind('payment_config_create');
-        $app->get('/api/payments/factories', 'controller.api_payment_factory:getAction')->bind('payment_factory_get');
+        $app->get('/api/payments/factories', 'controller.api_payment_factory:getAllAction')->bind('payment_factory_get_all');
 
 
         $app->error(function (\Exception $e, $code) use ($app) {

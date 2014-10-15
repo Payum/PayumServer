@@ -1,27 +1,50 @@
 <?php
 namespace Payum\Server\Factory\Payment;
 
-class PaypalExpressCheckoutFactory
+use Payum\Paypal\ExpressCheckout\Nvp\Api;
+use Payum\Paypal\ExpressCheckout\Nvp\PaymentFactory;
+use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Validator\Constraints\NotBlank;
+
+class PaypalExpressCheckoutFactory implements FactoryInterface
 {
-    public function getOptions()
+    /**
+     * {@inheritDoc}
+     */
+    public function configureOptionsFormBuilder(FormBuilderInterface $builder)
     {
-        return array(
-            'username' => '',
-            'password' => '',
-            'signature' => '',
-            'sandbox' => true,
-        );
+        $builder
+            ->add('username', 'text', array(
+                'required' => true,
+                'constraints' => array(new NotBlank),
+            ))
+            ->add('password', 'text', array(
+                'required' => true,
+                'constraints' => array(new NotBlank),
+            ))
+            ->add('signature', 'text', array(
+                'required' => true,
+                'constraints' => array(new NotBlank),
+            ))
+            ->add('sandbox', 'checkbox', array(
+                'required' => false,
+                'data' => true,
+                'empty_data' => true,
+            ))
+        ;
     }
 
-    public function getRequiredOptions()
+    /**
+     * {@inheritDoc}
+     */
+    public function createPayment(array $options)
     {
-        return array(
-            'username',
-            'password',
-            'signature',
-        );
+        return PaymentFactory::create(new Api($options));
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public function getName()
     {
         return 'paypal_express_checkout';
