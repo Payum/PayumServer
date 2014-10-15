@@ -1,6 +1,7 @@
 <?php
 namespace Payum\Server\Controller;
 
+use Payum\Server\Factory\Payment\FactoryInterface;
 use Payum\Server\Factory\Payment\PaypalExpressCheckoutFactory;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -13,11 +14,18 @@ class ApiPaymentFactoryController
     private $formFactory;
 
     /**
-     * @param FormFactoryInterface $formFactory
+     * @var array|FactoryInterface[]
      */
-    public function __construct(FormFactoryInterface $formFactory)
+    private $factories;
+
+    /**
+     * @param FormFactoryInterface $formFactory
+     * @param FactoryInterface[] $factories
+     */
+    public function __construct(FormFactoryInterface $formFactory, array $factories)
     {
         $this->formFactory = $formFactory;
+        $this->factories = $factories;
     }
 
     /**
@@ -25,12 +33,22 @@ class ApiPaymentFactoryController
      */
     public function getAllAction()
     {
+        $normalizedFactories = array();
+
+        foreach ($this->factories as $name => $factory) {
+            $normalizedFactories[$name] = $this->normalizeFactory($factory);
+        }
+
+        return new JsonResponse(array('factories' => $normalizedFactories));
+    }
+
+    protected function normalizeFactory(FactoryInterface $factory)
+    {
         $builder = $this->formFactory->createBuilder('form', null, array(
             'csrf_protection' => false,
         ));
 
-        $paypalPaymentFactory = new PaypalExpressCheckoutFactory();
-        $paypalPaymentFactory->configureOptionsFormBuilder($builder);
+        $factory->configureOptionsFormBuilder($builder);
 
         $formView = $builder->getForm()->createView();
 
@@ -51,8 +69,9 @@ class ApiPaymentFactoryController
             }
         }
 
-        return new JsonResponse(array('factories' => array(
-            $paypalPaymentFactory->getName() => $options
-        )));
+        return array(
+            'name' => $factory->getName(),
+            'options' => $options
+        );
     }
 }

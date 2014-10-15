@@ -3,14 +3,18 @@ namespace Payum\Server\Controller;
 
 use Payum\Core\Bridge\Spl\ArrayObject;
 use Payum\Core\Security\Util\Mask;
+use Payum\Server\Factory\Payment\FactoryInterface;
 use Payum\Server\Factory\Payment\PaypalExpressCheckoutFactory;
+use Symfony\Component\Form\FormError;
 use Symfony\Component\Form\FormFactoryInterface;
+use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Symfony\Component\Validator\Constraints\Choice;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Yaml\Yaml;
 
@@ -20,15 +24,22 @@ class ApiPaymentConfigController
      * @var FormFactoryInterface
      */
     private $formFactory;
+
     /**
      * @var UrlGeneratorInterface
      */
     private $urlGenerator;
 
     /**
+     * @var FactoryInterface[]
+     */
+    private $factories;
+
+    /**
      * @var array
      */
     private $currentConfig;
+
     /**
      * @var string
      */
@@ -37,15 +48,22 @@ class ApiPaymentConfigController
     /**
      * @param FormFactoryInterface $formFactory
      * @param UrlGeneratorInterface $urlGenerator
+     * @param FactoryInterface[] $factories
      * @param array $currentConfig
      * @param string $configFile
      */
-    public function __construct(FormFactoryInterface $formFactory, UrlGeneratorInterface $urlGenerator, $currentConfig, $configFile)
-    {
+    public function __construct(
+        FormFactoryInterface $formFactory,
+        UrlGeneratorInterface $urlGenerator,
+        $factories,
+        $currentConfig,
+        $configFile
+    ) {
         $this->formFactory = $formFactory;
         $this->urlGenerator = $urlGenerator;
         $this->currentConfig = $currentConfig;
         $this->configFile = $configFile;
+        $this->factories = $factories;
     }
 
     public function createAction(Request $request)
@@ -62,15 +80,33 @@ class ApiPaymentConfigController
 
         $builder = $this->formFactory->createNamedBuilder('', 'form', null, array(
             'csrf_protection' => false,
+            'allow_extra_fields' => true,
         ));
 
         $builder
             ->add('name', 'text', array('constraints' => array(new NotBlank)))
-            ->add('factory', 'text', array('constraints' => array(new NotBlank)))
+            ->add('factory', 'text', array(
+                'constraints' => array(
+                    new NotBlank,
+                    new Choice(array('choices' => array_keys($this->factories)))
+                )
+            ))
+        ;
+
+        $form = $builder->getForm();
+        $form->submit((array) $rawConfig);
+
+        if (!$form->isValid()) {
+            return $this->normalizeInvalidForm($form);
+        }
+
+        $config = $form->getData();
+
+        $builder
             ->add('options', 'form')
         ;
 
-        $factory = new PaypalExpressCheckoutFactory;
+        $factory = $this->factories[$config['factory']];
         $factory->configureOptionsFormBuilder($builder->get('options'));
 
         $form = $builder->getForm();
@@ -90,9 +126,7 @@ class ApiPaymentConfigController
             ));
         }
 
-        return new JsonResponse(array(
-            'errors' => $form->getErrorsAsString(),
-        ));
+        return $this->normalizeInvalidForm($form);
     }
 
     public function getAllAction()
@@ -126,5 +160,12 @@ class ApiPaymentConfigController
             'factory' => $config['factory'],
             'options' => $options,
         );
+    }
+
+    protected function normalizeInvalidForm(FormInterface $form)
+    {
+        return new JsonResponse(array(
+            'errors' => $form->getErrorsAsString(),
+        ));
     }
 }
