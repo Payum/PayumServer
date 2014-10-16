@@ -7,8 +7,6 @@ use Payum\Core\Bridge\Symfony\Security\TokenFactory;
 use Payum\Core\PaymentInterface;
 use Payum\Core\Registry\SimpleRegistry;
 use Payum\Core\Storage\FilesystemStorage;
-use Payum\Paypal\ExpressCheckout\Nvp\Api;
-use Payum\Paypal\ExpressCheckout\Nvp\PaymentFactory;
 use Payum\Server\Factory\Payment\FactoryInterface;
 use Payum\Server\Factory\Payment\PaypalExpressCheckoutFactory;
 use Payum\Server\Factory\Payment\StripeCheckoutFactory;
@@ -24,7 +22,7 @@ class ServiceProvider implements ServiceProviderInterface
      */
     public function register(Application $app)
     {
-        $app['debug'] = true;
+        $app['debug'] = (boolean) getenv('PAYUM_SERVER_DEBUG');
         $app['payum.config_file'] = $app['app.root_dir'].'/payum.yml';
         $app['payum.config'] = file_exists($app['payum.config_file']) ?
             Yaml::parse(file_get_contents($app['payum.config_file'])) :

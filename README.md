@@ -21,7 +21,7 @@ _**Note**: Never use built in web server on production. Set apache or nginx serv
 ## Configure
 
 ```bash
-$ curl -i -X POST -H "Content-Type: application/json" http://192.168.80.80:8000/api/payments/configs -d  '{"name": "barpaypal", "factory": "paypal", "options": {"username": "foo", "password": "bar", "signature": "baz", "sandbox": true}}'
+$ curl -i -X POST -H "Content-Type: application/json" http://server.payum.forma-dev.com/api/payments/configs -d  '{"name": "barpaypal", "factory": "paypal", "options": {"username": "foo", "password": "bar", "signature": "baz", "sandbox": true}}'
 ```
 
 _**Note**: You must provide correct Paypal credentials._
@@ -31,17 +31,17 @@ _**Note**: You must provide correct Paypal credentials._
 First of all you have to create an order on the server. After, you have to redirect a payer to capture url:
 
 ```bash
-$ curl -i -X POST -H "Content-Type: application/json" http://192.168.80.80:8000/api/orders -d  '{"paymentName": "barpaypal", "totalAmount": 123, "currenctCode": "USD"}'
+$ curl -i -X POST -H "Content-Type: application/json" http://server.payum.forma-dev.com/api/orders -d  '{"paymentName": "barpaypal", "totalAmount": 123, "currenctCode": "USD"}'
 ```
 
 As a response you have to get:
 ```json
   {
       "_links": {
-          "authorize": "http://192.168.80.80:8000/authorize/urd3IGRnMsIiNNMiwqdKzOQFIAbIa-uR3XNAQ2573QA",
-          "capture": "http://192.168.80.80:8000/capture/gT5OofuBMQp_D4lxfSuM4ZNx9yjgYdXoK96yiTsKHOI",
-          "get": "http://192.168.80.80:8000/api/orders/FiZzVbBu5ob2l2x4bvMCKezFU6QyuZRZ7WHlo6PzRU4",
-          "notify": "http://192.168.80.80:8000/notify/VTc1D9U3Ab2AKBUp-kh9ycLf-Bbt608bxHyihYLuJGY"
+          "authorize": "http://server.payum.forma-dev.com/authorize/urd3IGRnMsIiNNMiwqdKzOQFIAbIa-uR3XNAQ2573QA",
+          "capture": "http://server.payum.forma-dev.com/capture/gT5OofuBMQp_D4lxfSuM4ZNx9yjgYdXoK96yiTsKHOI",
+          "get": "http://server.payum.forma-dev.com/api/orders/FiZzVbBu5ob2l2x4bvMCKezFU6QyuZRZ7WHlo6PzRU4",
+          "notify": "http://server.payum.forma-dev.com/notify/VTc1D9U3Ab2AKBUp-kh9ycLf-Bbt608bxHyihYLuJGY"
       },
       "_tokens": {
           "authorize": "urd3IGRnMsIiNNMiwqdKzOQFIAbIa-uR3XNAQ2573QA",
@@ -67,7 +67,7 @@ As a response you have to get:
 Redirect user to capture url you get with order response, It should be something like this:
 
 ```
-http://192.168.80.80:8000/capture/gT5OofuBMQp_D4lxfSuM4ZNx9yjgYdXoK96yiTsKHOI
+http://server.payum.forma-dev.com/capture/gT5OofuBMQp_D4lxfSuM4ZNx9yjgYdXoK96yiTsKHOI
 ```
 
 ## Tips
@@ -75,16 +75,22 @@ http://192.168.80.80:8000/capture/gT5OofuBMQp_D4lxfSuM4ZNx9yjgYdXoK96yiTsKHOI
 * Find out which payment you can use:
 
     ```bash
-    $ curl -X GET -H "Content-Type: application/json" http://192.168.80.80:8000/api/payments/configs'
+    $ curl -X GET -H "Content-Type: application/json" http://server.payum.forma-dev.com/api/payments/configs'
     ```
     
 * Find out which payments you can configure:
 
     ```bash
-    $ curl -X GET -H "Content-Type: application/json" http://192.168.80.80:8000/api/payments/factories'
+    $ curl -X GET -H "Content-Type: application/json" http://server.payum.forma-dev.com/api/payments/factories'
     ```
 
 * Try it [online](http://server.payum.forma-dev.com/)
+
+* Enabled debug mode to get pretty printed json:
+
+    ```bash
+    $ PAYUM_SERVER_DEBUG=1 php -S 127.0.0.1:8000 web/index.php
+    ```
 
 * Exceptions tracking
 
