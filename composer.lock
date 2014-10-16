@@ -617,12 +617,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/Payum/Payum.git",
-                "reference": "f7a791d02f22aefb07565d8cbede863300b86e9d"
+                "reference": "b64aa2fc2ab8ff5ff8c18149bac4da54c7620899"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Payum/Payum/zipball/f7a791d02f22aefb07565d8cbede863300b86e9d",
-                "reference": "f7a791d02f22aefb07565d8cbede863300b86e9d",
+                "url": "https://api.github.com/repos/Payum/Payum/zipball/b64aa2fc2ab8ff5ff8c18149bac4da54c7620899",
+                "reference": "b64aa2fc2ab8ff5ff8c18149bac4da54c7620899",
                 "shasum": ""
             },
             "require": {
@@ -727,7 +727,7 @@
                 "stripe checkout",
                 "stripe.js"
             ],
-            "time": "2014-10-13 07:12:17"
+            "time": "2014-10-16 09:40:13"
         },
         {
             "name": "phpxmlrpc/phpxmlrpc",
