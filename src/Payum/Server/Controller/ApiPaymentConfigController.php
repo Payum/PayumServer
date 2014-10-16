@@ -66,17 +66,9 @@ class ApiPaymentConfigController
         $this->factories = $factories;
     }
 
-    public function createAction(Request $request)
+    public function createAction($content)
     {
-        if ('json' !== $request->getContentType()) {
-            throw new BadRequestHttpException('The request content type is invalid.');
-        }
-
-        $rawConfig = json_decode($request->getContent(), true);
-        if (null ===  $rawConfig) {
-            throw new BadRequestHttpException('The request content is not valid json.');
-        }
-        $rawConfig = ArrayObject::ensureArrayObject($rawConfig);
+        $rawConfig = ArrayObject::ensureArrayObject($content);
 
         $builder = $this->formFactory->createNamedBuilder('', 'form', null, array(
             'csrf_protection' => false,

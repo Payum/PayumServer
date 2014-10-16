@@ -10,6 +10,10 @@ use Payum\Server\Controller\IndexController;
 use Payum\Server\Controller\PayumController;
 use Silex\Application;
 use Silex\ServiceProviderInterface;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
 class ControllerProvider implements ServiceProviderInterface
 {
@@ -67,6 +71,31 @@ class ControllerProvider implements ServiceProviderInterface
         $app->post('/api/payments/configs', 'controller.api_payment_config:createAction')->bind('payment_config_create');
         $app->get('/api/payments/factories', 'controller.api_payment_factory:getAllAction')->bind('payment_factory_get_all');
 
+        $app->before(function (Request $request, Application $app) {
+            if (0 !== strpos($request->getPathInfo(), '/api')) {
+                return;
+            }
+            if ($request->getMethod() == 'GET') {
+                return;
+            }
+
+            if ('json' !== $request->getContentType()) {
+                throw new BadRequestHttpException('The request content type is invalid. It must be application/json');
+            }
+
+            $decodedContent = json_decode($request->getContent(), true);
+            if (null ===  $decodedContent) {
+                throw new BadRequestHttpException('The request content is not valid json.');
+            }
+
+            $request->attributes->set('content', $decodedContent);
+        });
+
+        $app->after(function (Request $request, Response $response) use ($app) {
+            if($response instanceof JsonResponse && $app['debug']) {
+                $response->setEncodingOptions($response->getEncodingOptions() | JSON_PRETTY_PRINT);
+            }
+        });
 
         $app->error(function (\Exception $e, $code) use ($app) {
             if (false == $e instanceof ReplyInterface) {
@@ -77,7 +106,21 @@ class ControllerProvider implements ServiceProviderInterface
             $converter = $app['payum.reply_to_symfony_response_converter'];
 
             return $converter->convert($e);
-        });
+        }, $priority = 100);
+
+        $app->error(function (\Exception $e, $code) use ($app) {
+            if ('json' !== $app['request']->getContentType()) {
+                return;
+            }
+
+            return new JsonResponse(array(
+                'exception' => get_class($e),
+                'message' => $e->getMessage(),
+                'code' => $e->getCode(),
+                'file' => $e->getFile(),
+                'line' => $e->getLine(),
+            ));
+        }, $priority = -100);
     }
 
     /**

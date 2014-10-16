@@ -59,17 +59,9 @@ class ApiOrderController
      *
      * @return JsonResponse
      */
-    public function createAction(Request $request)
+    public function createAction($content, Request $request)
     {
-        if ('json' !== $request->getContentType()) {
-            throw new BadRequestHttpException('The request content type is invalid.');
-        }
-
-        $rawOrder = json_decode($request->getContent(), true);
-        if (null ===  $rawOrder) {
-            throw new BadRequestHttpException('The request content is not valid json.');
-        }
-        $rawOrder = ArrayObject::ensureArrayObject($rawOrder);
+        $rawOrder = ArrayObject::ensureArrayObject($content);
 
         $storage = $this->registry->getStorage('Payum\Server\Model\Order');
 
@@ -97,12 +89,6 @@ class ApiOrderController
         return new Response('', 204, array(
             'Location' => $getToken->getTargetUrl()
         ));
-
-//        $response = new JsonResponse($this->buildJsonOrder($order));
-//        $response->headers->set('Cache-Control', 'no-store, no-cache, max-age=0, post-check=0, pre-check=0');
-//        $response->headers->set('Pragma', 'no-cache');
-//
-//        return $response;
     }
 
     /**
