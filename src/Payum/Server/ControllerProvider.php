@@ -83,18 +83,20 @@ class ControllerProvider implements ServiceProviderInterface
         $app->get('/capture/{payum_token}', 'controller.payum:captureAction')->bind('capture');
         $app->get('/authorize/{payum_token}', 'controller.payum:authorizeAction')->bind('authorize');
         $app->get('/notify/{payum_token}', 'controller.payum:notifyAction')->bind('notify');
+
         $app->get('/api/orders/{payum_token}', 'controller.api_order:getAction')->bind('order_get');
         $app->post('/api/orders', 'controller.api_order:createAction')->bind('order_create');
+
+        $app->get('/api/configs/payments/metas', 'controller.api_payment_factory:getAllAction')->bind('payment_factory_get_all');
         $app->get('/api/configs/payments', 'controller.api_payment_config:getAllAction')->bind('payment_config_get_all');
         $app->get('/api/configs/payments/{name}', 'controller.api_payment_config:getAction')->bind('payment_config_get');
         $app->post('/api/configs/payments', 'controller.api_payment_config:createAction')->bind('payment_config_create');
-        $app->get('/api/configs/payments/meta', 'controller.api_payment_factory:getAllAction')->bind('payment_factory_get_all');
 
+        $app->get('/api/configs/storages/metas', 'controller.api_storage_factory:getAllAction')->bind('storage_factory_get_all');
         $app->get('/api/configs/storages', 'controller.api_storage_config:getAllAction')->bind('storage_config_get_all');
         $app->put('/api/configs/storages/order', 'controller.api_storage_config:updateOrderAction')->bind('storage_order_config_update');
         $app->put('/api/configs/storages/security_token', 'controller.api_storage_config:updateTokenAction')->bind('storage_token_config_update');
         $app->get('/api/configs/storages/{name}', 'controller.api_storage_config:getAction')->bind('storage_config_get');
-        $app->get('/api/configs/storages/meta', 'controller.api_storage_factory:getAllAction')->bind('storage_factory_get_all');
 
         $app->before(function (Request $request, Application $app) {
             if (0 !== strpos($request->getPathInfo(), '/api')) {
