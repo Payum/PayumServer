@@ -1,11 +1,11 @@
 <?php
 namespace Payum\Server\Controller;
 
-use Payum\Server\Factory\Payment\FactoryInterface;
+use Payum\Server\Factory\Storage\FactoryInterface;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
-class ApiPaymentFactoryController
+class ApiStorageFactoryController
 {
     /**
      * @var FormFactoryInterface
@@ -63,6 +63,9 @@ class ApiPaymentFactoryController
                 $options[$name]['type'] = 'text';
             } elseif (in_array('checkbox', $child->vars['block_prefixes'])) {
                 $options[$name]['type'] = 'checkbox';
+            } elseif (in_array('choice', $child->vars['block_prefixes'])) {
+                $options[$name]['type'] = 'choice';
+                $options[$name]['choices'] = $child->vars['choices'];
             } else {
                 $options[$name]['type'] = 'text';
             }

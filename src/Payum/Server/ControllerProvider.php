@@ -6,6 +6,8 @@ use Payum\Core\Reply\ReplyInterface;
 use Payum\Server\Controller\ApiPaymentConfigController;
 use Payum\Server\Controller\ApiOrderController;
 use Payum\Server\Controller\ApiPaymentFactoryController;
+use Payum\Server\Controller\ApiStorageConfigController;
+use Payum\Server\Controller\ApiStorageFactoryController;
 use Payum\Server\Controller\IndexController;
 use Payum\Server\Controller\PayumController;
 use Silex\Application;
@@ -52,6 +54,23 @@ class ControllerProvider implements ServiceProviderInterface
             );
         });
 
+        $app['controller.api_storage_factory'] = $app->share(function() use ($app) {
+            return new ApiStorageFactoryController(
+                $app['form.factory'],
+                $app['payum.storage_factories']
+            );
+        });
+
+        $app['controller.api_storage_config'] = $app->share(function() use ($app) {
+            return new ApiStorageConfigController(
+                $app['form.factory'],
+                $app['url_generator'],
+                $app['payum.storage_factories'],
+                $app['payum.config'],
+                $app['payum.config_file']
+            );
+        });
+
         $app['controller.payum'] = $app->share(function() use ($app) {
             return new PayumController(
                 $app['payum.security.token_factory'],
@@ -70,6 +89,12 @@ class ControllerProvider implements ServiceProviderInterface
         $app->get('/api/payments/configs/{name}', 'controller.api_payment_config:getAction')->bind('payment_config_get');
         $app->post('/api/payments/configs', 'controller.api_payment_config:createAction')->bind('payment_config_create');
         $app->get('/api/payments/factories', 'controller.api_payment_factory:getAllAction')->bind('payment_factory_get_all');
+
+        $app->get('/api/storages/configs', 'controller.api_storage_config:getAllAction')->bind('storage_config_get_all');
+        $app->put('/api/storages/configs/order', 'controller.api_storage_config:updateOrderAction')->bind('storage_order_config_update');
+        $app->put('/api/storages/configs/security_token', 'controller.api_storage_config:updateTokenAction')->bind('storage_token_config_update');
+        $app->get('/api/storages/configs/{name}', 'controller.api_storage_config:getAction')->bind('storage_config_get');
+        $app->get('/api/storages/factories', 'controller.api_storage_factory:getAllAction')->bind('storage_factory_get_all');
 
         $app->before(function (Request $request, Application $app) {
             if (0 !== strpos($request->getPathInfo(), '/api')) {

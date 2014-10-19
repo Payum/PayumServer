@@ -11,6 +11,7 @@ use Payum\Server\Factory\Payment\FactoryInterface;
 use Payum\Server\Factory\Payment\PaypalExpressCheckoutFactory;
 use Payum\Server\Factory\Payment\StripeCheckoutFactory;
 use Payum\Server\Factory\Payment\StripeJsFactory;
+use Payum\Server\Factory\Storage\FilesystemFactory;
 use Silex\Application;
 use Silex\ServiceProviderInterface;
 use Symfony\Component\Yaml\Yaml;
@@ -26,19 +27,16 @@ class ServiceProvider implements ServiceProviderInterface
         $app['payum.config_file'] = $app['app.root_dir'].'/payum.yml';
         $app['payum.config'] = file_exists($app['payum.config_file']) ?
             Yaml::parse(file_get_contents($app['payum.config_file'])) :
-            array('payments' => array())
+            array('payments' => array(), 'storages' => array())
         ;
         $app['payum.storage_dir'] = $app['app.root_dir'].'/storage';
-        $app['payum.model.payment_details_class'] = 'Payum\Server\Model\PaymentDetails';
         $app['payum.model.order_class'] = 'Payum\Server\Model\Order';
+        $app['payum.model.order_id_property'] = 'number';
         $app['payum.model.security_token_class'] = 'Payum\Server\Model\SecurityToken';
+        $app['payum.model.security_token_id_property'] = 'hash';
 
         $app['payum.security.token_storage'] = $app->share(function($app) {
-            return new FilesystemStorage(
-                $app['payum.storage_dir'],
-                $app['payum.model.security_token_class'],
-                'hash'
-            );
+            return $app['payum.storages']['Payum\Server\Model\SecurityToken'];
         });
 
         $app['payum.reply_to_symfony_response_converter'] = $app->share(function($app) {
@@ -75,17 +73,11 @@ class ServiceProvider implements ServiceProviderInterface
             return $factories;
         });
 
-        $app['payum'] = $app->share(function($app) {
+        $app['payum.payments'] = $app->share(function ($app) {
             $config = $app['payum.config'];
-
-            $orderClass = $app['payum.model.order_class'];
 
             /** @var FactoryInterface[] $factories */
             $factories = $app['payum.payment_factories'];
-
-            $storages = array(
-                $orderClass => new FilesystemStorage($app['payum.storage_dir'], $orderClass, 'number')
-            );
 
             /** @var PaymentInterface[] $payments */
             $payments = array();
@@ -100,7 +92,42 @@ class ServiceProvider implements ServiceProviderInterface
                 $payments[$name] = $factories[$paymentConfig['factory']]->createPayment($paymentConfig['options']);
             }
 
-            return new SimpleRegistry($payments, $storages, null, null);
+            return $payments;
+        });
+
+        $app['payum.storage_factories'] = $app->share(function ($app) {
+            $factories = array();
+
+            $factory = new FilesystemFactory();
+            $factories[$factory->getName()] = $factory;
+
+            return $factories;
+        });
+
+        $app['payum.storages'] = $app->share(function ($app) {
+            $config = $app['payum.config']['storages'];
+
+            /** @var \Payum\Server\Factory\Storage\FactoryInterface[] $factories */
+            $factories = $app['payum.storage_factories'];
+
+            $storages = array(
+                $config['order']['modelClass'] => $factories[$config['order']['factory']]->createStorage(
+                    $config['order']['modelClass'],
+                    $config['order']['idProperty'],
+                    $config['order']['options']
+                ),
+                $config['security_token']['modelClass'] => $factories[$config['security_token']['factory']]->createStorage(
+                    $config['security_token']['modelClass'],
+                    $config['security_token']['idProperty'],
+                    $config['security_token']['options']
+                ),
+            );
+
+            return $storages;
+        });
+
+        $app['payum'] = $app->share(function($app) {
+            return new SimpleRegistry($app['payum.payments'], $app['payum.storages'], null, null);
         });
     }
 
@@ -109,5 +136,34 @@ class ServiceProvider implements ServiceProviderInterface
      */
     public function boot(Application $app)
     {
+        $config = $app['payum.config'];
+
+        if (false == isset($config['storages']['order'])) {
+            $config['storages']['order'] = array(
+                'modelClass' => 'Payum\Server\Model\Order',
+                'idProperty' => 'number',
+                'factory' => 'filesystem',
+                'options' => array(
+                    'storageDir' => $app['app.root_dir'].'/storage',
+                ),
+            );
+
+            file_put_contents($app['payum.config_file'], Yaml::dump($config, 5));
+        }
+
+        if (false == isset($config['storages']['security_token'])) {
+            $config['storages']['security_token'] = array(
+                'modelClass' => 'Payum\Server\Model\SecurityToken',
+                'idProperty' => 'hash',
+                'factory' => 'filesystem',
+                'options' => array(
+                    'storageDir' => $app['app.root_dir'].'/storage',
+                ),
+            );
+
+            file_put_contents($app['payum.config_file'], Yaml::dump($config, 5));
+        }
+
+        $app['payum.config'] = $config;
     }
 }
