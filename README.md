@@ -75,13 +75,25 @@ http://server.payum.forma-dev.com/capture/gT5OofuBMQp_D4lxfSuM4ZNx9yjgYdXoK96yiT
 * Find out which payment you can use:
 
     ```bash
-    $ curl -X GET -H "Content-Type: application/json" http://server.payum.forma-dev.com/api/payments/configs'
+    $ curl -i -X GET -H "Content-Type: application/json" http://server.payum.forma-dev.com/api/payments/configs'
     ```
     
 * Find out which payments you can configure:
 
     ```bash
-    $ curl -X GET -H "Content-Type: application/json" http://server.payum.forma-dev.com/api/payments/factories'
+    $ curl -i -X GET -H "Content-Type: application/json" http://server.payum.forma-dev.com/api/payments/factories'
+    ```
+
+* Find out which storage you can use:
+
+    ```bash
+    $ curl -i -X GET -H "Content-Type: application/json" http://server.payum.forma-dev.com/api/storages/configs'
+    ```
+    
+* Find out which storages you can configure:
+
+    ```bash
+    $ curl -i -X GET -H "Content-Type: application/json" http://server.payum.forma-dev.com/api/storages/factories'
     ```
 
 * Try it [online](http://server.payum.forma-dev.com/)
