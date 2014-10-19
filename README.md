@@ -21,7 +21,7 @@ _**Note**: Never use built in web server on production. Set apache or nginx serv
 ## Configure
 
 ```bash
-$ curl -i -X POST -H "Content-Type: application/json" http://server.payum.forma-dev.com/api/payments/configs -d  '{"name": "barpaypal", "factory": "paypal", "options": {"username": "foo", "password": "bar", "signature": "baz", "sandbox": true}}'
+$ curl -i -X POST -H "Content-Type: application/json" http://server.payum.forma-dev.com/api/configs/payments -d  '{"name": "barpaypal", "factory": "paypal", "options": {"username": "foo", "password": "bar", "signature": "baz", "sandbox": true}}'
 ```
 
 _**Note**: You must provide correct Paypal credentials._
@@ -75,25 +75,25 @@ http://server.payum.forma-dev.com/capture/gT5OofuBMQp_D4lxfSuM4ZNx9yjgYdXoK96yiT
 * Find out which payment you can use:
 
     ```bash
-    $ curl -i -X GET -H "Content-Type: application/json" http://server.payum.forma-dev.com/api/payments/configs'
+    $ curl -i -X GET -H "Content-Type: application/json" http://server.payum.forma-dev.com/api/configs/payments'
     ```
     
 * Find out which payments you can configure:
 
     ```bash
-    $ curl -i -X GET -H "Content-Type: application/json" http://server.payum.forma-dev.com/api/payments/factories'
+    $ curl -i -X GET -H "Content-Type: application/json" http://server.payum.forma-dev.com/api/configs/payments/meta'
     ```
 
 * Find out which storage you can use:
 
     ```bash
-    $ curl -i -X GET -H "Content-Type: application/json" http://server.payum.forma-dev.com/api/storages/configs'
+    $ curl -i -X GET -H "Content-Type: application/json" http://server.payum.forma-dev.com/api/configs/storages'
     ```
     
 * Find out which storages you can configure:
 
     ```bash
-    $ curl -i -X GET -H "Content-Type: application/json" http://server.payum.forma-dev.com/api/storages/factories'
+    $ curl -i -X GET -H "Content-Type: application/json" http://server.payum.forma-dev.com/api/configs/storages/meta'
     ```
 
 * Try it [online](http://server.payum.forma-dev.com/)

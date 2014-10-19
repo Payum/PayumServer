@@ -5,9 +5,9 @@ use Payum\Core\Bridge\Symfony\ReplyToSymfonyResponseConverter;
 use Payum\Core\Reply\ReplyInterface;
 use Payum\Server\Controller\ApiPaymentConfigController;
 use Payum\Server\Controller\ApiOrderController;
-use Payum\Server\Controller\ApiPaymentFactoryController;
+use Payum\Server\Controller\ApiPaymentMetaController;
 use Payum\Server\Controller\ApiStorageConfigController;
-use Payum\Server\Controller\ApiStorageFactoryController;
+use Payum\Server\Controller\ApiStorageMetaController;
 use Payum\Server\Controller\IndexController;
 use Payum\Server\Controller\PayumController;
 use Silex\Application;
@@ -48,14 +48,14 @@ class ControllerProvider implements ServiceProviderInterface
         });
 
         $app['controller.api_payment_factory'] = $app->share(function() use ($app) {
-            return new ApiPaymentFactoryController(
+            return new ApiPaymentMetaController(
                 $app['form.factory'],
                 $app['payum.payment_factories']
             );
         });
 
         $app['controller.api_storage_factory'] = $app->share(function() use ($app) {
-            return new ApiStorageFactoryController(
+            return new ApiStorageMetaController(
                 $app['form.factory'],
                 $app['payum.storage_factories']
             );
@@ -85,16 +85,16 @@ class ControllerProvider implements ServiceProviderInterface
         $app->get('/notify/{payum_token}', 'controller.payum:notifyAction')->bind('notify');
         $app->get('/api/orders/{payum_token}', 'controller.api_order:getAction')->bind('order_get');
         $app->post('/api/orders', 'controller.api_order:createAction')->bind('order_create');
-        $app->get('/api/payments/configs', 'controller.api_payment_config:getAllAction')->bind('payment_config_get_all');
-        $app->get('/api/payments/configs/{name}', 'controller.api_payment_config:getAction')->bind('payment_config_get');
-        $app->post('/api/payments/configs', 'controller.api_payment_config:createAction')->bind('payment_config_create');
-        $app->get('/api/payments/factories', 'controller.api_payment_factory:getAllAction')->bind('payment_factory_get_all');
+        $app->get('/api/configs/payments', 'controller.api_payment_config:getAllAction')->bind('payment_config_get_all');
+        $app->get('/api/configs/payments/{name}', 'controller.api_payment_config:getAction')->bind('payment_config_get');
+        $app->post('/api/configs/payments', 'controller.api_payment_config:createAction')->bind('payment_config_create');
+        $app->get('/api/configs/payments/meta', 'controller.api_payment_factory:getAllAction')->bind('payment_factory_get_all');
 
-        $app->get('/api/storages/configs', 'controller.api_storage_config:getAllAction')->bind('storage_config_get_all');
-        $app->put('/api/storages/configs/order', 'controller.api_storage_config:updateOrderAction')->bind('storage_order_config_update');
-        $app->put('/api/storages/configs/security_token', 'controller.api_storage_config:updateTokenAction')->bind('storage_token_config_update');
-        $app->get('/api/storages/configs/{name}', 'controller.api_storage_config:getAction')->bind('storage_config_get');
-        $app->get('/api/storages/factories', 'controller.api_storage_factory:getAllAction')->bind('storage_factory_get_all');
+        $app->get('/api/configs/storages', 'controller.api_storage_config:getAllAction')->bind('storage_config_get_all');
+        $app->put('/api/configs/storages/order', 'controller.api_storage_config:updateOrderAction')->bind('storage_order_config_update');
+        $app->put('/api/configs/storages/security_token', 'controller.api_storage_config:updateTokenAction')->bind('storage_token_config_update');
+        $app->get('/api/configs/storages/{name}', 'controller.api_storage_config:getAction')->bind('storage_config_get');
+        $app->get('/api/configs/storages/meta', 'controller.api_storage_factory:getAllAction')->bind('storage_factory_get_all');
 
         $app->before(function (Request $request, Application $app) {
             if (0 !== strpos($request->getPathInfo(), '/api')) {

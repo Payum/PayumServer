@@ -5,7 +5,7 @@ use Payum\Server\Factory\Payment\FactoryInterface;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
-class ApiPaymentFactoryController
+class ApiPaymentMetaController
 {
     /**
      * @var FormFactoryInterface
@@ -38,7 +38,7 @@ class ApiPaymentFactoryController
             $normalizedFactories[$name] = $this->normalizeFactory($factory);
         }
 
-        return new JsonResponse(array('factories' => $normalizedFactories));
+        return new JsonResponse(array('metas' => $normalizedFactories));
     }
 
     protected function normalizeFactory(FactoryInterface $factory)
