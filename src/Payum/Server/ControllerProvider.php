@@ -126,7 +126,7 @@ class ControllerProvider implements ServiceProviderInterface
 
         $app->after(function (Request $request, Response $response) use ($app) {
             if (0 === strpos($request->getPathInfo(), '/api')) {
-                $response->headers->set(' Access-Control-Allow-Origin', '*');
+                $response->headers->set('Access-Control-Allow-Origin', '*');
             }
         });
 
