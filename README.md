@@ -36,30 +36,65 @@ $ curl -i -X POST -H "Content-Type: application/json" http://server.payum.forma-
 
 As a response you have to get:
 ```json
-  {
-      "_links": {
-          "authorize": "http://server.payum.forma-dev.com/authorize/urd3IGRnMsIiNNMiwqdKzOQFIAbIa-uR3XNAQ2573QA",
-          "capture": "http://server.payum.forma-dev.com/capture/gT5OofuBMQp_D4lxfSuM4ZNx9yjgYdXoK96yiTsKHOI",
-          "get": "http://server.payum.forma-dev.com/api/orders/FiZzVbBu5ob2l2x4bvMCKezFU6QyuZRZ7WHlo6PzRU4",
-          "notify": "http://server.payum.forma-dev.com/notify/VTc1D9U3Ab2AKBUp-kh9ycLf-Bbt608bxHyihYLuJGY"
-      },
-      "_tokens": {
-          "authorize": "urd3IGRnMsIiNNMiwqdKzOQFIAbIa-uR3XNAQ2573QA",
-          "capture": "gT5OofuBMQp_D4lxfSuM4ZNx9yjgYdXoK96yiTsKHOI",
-          "get": "FiZzVbBu5ob2l2x4bvMCKezFU6QyuZRZ7WHlo6PzRU4",
-          "notify": "VTc1D9U3Ab2AKBUp-kh9ycLf-Bbt608bxHyihYLuJGY"
-      },
-      "order": {
-          "clientEmail": null,
-          "clientId": null,
-          "currencyCode": null,
-          "details": [],
-          "number": "20141013-81843",
-          "paymentName": "paypal",
-          "paymentStatus": "new",
-          "totalAmount": 123
-      }
-  }
+{
+    "order": {
+        "clientEmail": null,
+        "clientId": null,
+        "currencyCode": null,
+        "totalAmount": 123
+        "details": [],
+        "number": "20141013-81843",
+        "payments": [
+            {
+                "status": "new",
+                "date": "2014-10-21T21:58:54+0200",
+                "name": "barpaypal",
+                "details": []
+            },
+            {
+                "status": "new",
+                "date": "2014-10-21T21:59:06+0200",
+                "name": "barpaypal",
+                "details": {
+                    "INVNUM": "20141021-36803",
+                    "PAYMENTREQUEST_0_CURRENCYCODE": "USD",
+                    "PAYMENTREQUEST_0_AMT": 1.23
+                }
+            },
+            {
+                "status": "new",
+                "date": "2014-10-21T21:59:08+0200",
+                "name": "barpaypal",
+                "details": {
+                    "INVNUM": "20141021-36803",
+                    "PAYMENTREQUEST_0_CURRENCYCODE": "USD",
+                    "PAYMENTREQUEST_0_AMT": 1.23,
+                    "PAYMENTREQUEST_0_PAYMENTACTION": "Sale",
+                    "RETURNURL": "http:\/\/192.168.80.80:8000\/capture\/1JlWkpdA0s4nCHqSAE3tHrHtlx94LiCuj5G27qcYhQU",
+                    "CANCELURL": "http:\/\/192.168.80.80:8000\/capture\/1JlWkpdA0s4nCHqSAE3tHrHtlx94LiCuj5G27qcYhQU",
+                    "TOKEN": "EC-4BH34851L07194223",
+                    "TIMESTAMP": "2014-10-21T19:59:08Z",
+                    "CORRELATIONID": "aaee2dd617056",
+                    "ACK": "Success",
+                    "VERSION": "65.1",
+                    "BUILD": "13443904"
+                }
+            }
+        ]
+    },
+    "_links": {
+        "authorize": "http://server.payum.forma-dev.com/authorize/urd3IGRnMsIiNNMiwqdKzOQFIAbIa-uR3XNAQ2573QA",
+        "capture": "http://server.payum.forma-dev.com/capture/gT5OofuBMQp_D4lxfSuM4ZNx9yjgYdXoK96yiTsKHOI",
+        "get": "http://server.payum.forma-dev.com/api/orders/FiZzVbBu5ob2l2x4bvMCKezFU6QyuZRZ7WHlo6PzRU4",
+        "notify": "http://server.payum.forma-dev.com/notify/VTc1D9U3Ab2AKBUp-kh9ycLf-Bbt608bxHyihYLuJGY"
+    },
+    "_tokens": {
+        "authorize": "urd3IGRnMsIiNNMiwqdKzOQFIAbIa-uR3XNAQ2573QA",
+        "capture": "gT5OofuBMQp_D4lxfSuM4ZNx9yjgYdXoK96yiTsKHOI",
+        "get": "FiZzVbBu5ob2l2x4bvMCKezFU6QyuZRZ7WHlo6PzRU4",
+        "notify": "VTc1D9U3Ab2AKBUp-kh9ycLf-Bbt608bxHyihYLuJGY"
+    }
+}
 ```
 
 ## Purchase
