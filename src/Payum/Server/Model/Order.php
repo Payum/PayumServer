@@ -4,6 +4,7 @@ namespace Payum\Server\Model;
 use Payum\Core\Model\Order as BaseOrder;
 use Payum\Core\Request\GetHumanStatus;
 use Payum\Core\Security\TokenInterface;
+use Symfony\Component\Validator\Constraints\DateTime;
 
 class Order extends BaseOrder
 {
@@ -15,12 +16,12 @@ class Order extends BaseOrder
     /**
      * @var string
      */
-    protected $paymentStatus;
+    protected $afterUrl;
 
     /**
-     * @var string
+     * @var array
      */
-    protected $afterUrl;
+    protected $payments;
 
     /**
      * @var string[]
@@ -38,8 +39,7 @@ class Order extends BaseOrder
 
         $this->links = array();
         $this->tokens = array();
-
-        $this->paymentStatus = GetHumanStatus::STATUS_NEW;
+        $this->payments = array();
     }
 
     /**
@@ -58,20 +58,29 @@ class Order extends BaseOrder
         $this->paymentName = $paymentName;
     }
 
-    /**
-     * @return string
-     */
-    public function getPaymentStatus()
+    public function getPayments()
     {
-        return $this->paymentStatus;
+        return $this->payments;
     }
 
     /**
-     * @param string $paymentStatus
+     * @param array $payments
      */
-    public function setPaymentStatus($paymentStatus)
+    public function setPayments(array $payments)
     {
-        $this->paymentStatus = $paymentStatus;
+        $this->payments = $payments;
+    }
+
+    public function setDetails($details)
+    {
+        parent::setDetails($details);
+
+        $this->payments[] = array(
+            'status' => GetHumanStatus::STATUS_UNKNOWN,
+            'date' => date(\DateTime::ISO8601),
+            'name' => $this->paymentName,
+            'details' => $this->details
+        );
     }
 
     /**

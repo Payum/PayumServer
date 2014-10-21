@@ -107,10 +107,20 @@ class ApiOrderController
 
         $payment = $this->registry->getPayment($order->getPaymentName());
 
-        $payment->execute($status = new GetHumanStatus($order));
+        $orderPayments = array();
+        foreach ($order->getPayments() as $orderPayment) {
+            if (false == isset($orderPayment['status']) || GetHumanStatus::STATUS_UNKNOWN == $orderPayment['status']) {
+                $payment->execute($status = new GetHumanStatus($orderPayment['details']));
+                $orderPayment['status'] = $status->getValue();
 
-        $order->setPaymentStatus($status->getValue());
-        $storage->updateModel($order);
+            }
+
+            $orderPayments[] = $orderPayment;
+        }
+
+        $order->setPayments($orderPayments);
+
+        $payment->execute($status = new GetHumanStatus($order));
 
         return new JsonResponse($this->buildJsonOrder($order));
     }
@@ -119,14 +129,12 @@ class ApiOrderController
     {
         return array(
             'order' => array(
-                'paymentName' => $order->getPaymentName(),
-                'paymentStatus' => $order->getPaymentStatus(),
                 'number' => $order->getNumber(),
                 'totalAmount' => $order->getTotalAmount(),
                 'currencyCode' => $order->getCurrencyCode(),
                 'clientEmail' => $order->getClientEmail(),
                 'clientId' => $order->getClientId(),
-                'details' => $order->getDetails(),
+                'payments' => $order->getPayments(),
             ),
 
             '_tokens' => $order->getTokens(),
