@@ -3,15 +3,13 @@ namespace Payum\Server\Controller;
 
 use Payum\Core\Bridge\Spl\ArrayObject;
 use Payum\Core\Security\Util\Mask;
-use Payum\Server\Factory\Payment\FactoryInterface;
+use Payum\Server\Api\View\FormToJsonConverter;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
-use Symfony\Component\Validator\Constraints\Choice;
-use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Yaml\Yaml;
 
 class ApiPaymentConfigController
@@ -27,15 +25,14 @@ class ApiPaymentConfigController
     private $urlGenerator;
 
     /**
-     * @var FactoryInterface[]
+     * @var FormToJsonConverter
      */
-    private $factories;
+    private $formToJsonConverter;
 
     /**
      * @var array
      */
     private $currentConfig;
-
     /**
      * @var string
      */
@@ -44,14 +41,14 @@ class ApiPaymentConfigController
     /**
      * @param FormFactoryInterface $formFactory
      * @param UrlGeneratorInterface $urlGenerator
-     * @param FactoryInterface[] $factories
+     * @param FormToJsonConverter $formToJsonConverter
      * @param array $currentConfig
      * @param string $configFile
      */
     public function __construct(
         FormFactoryInterface $formFactory,
         UrlGeneratorInterface $urlGenerator,
-        $factories,
+        FormToJsonConverter $formToJsonConverter,
         $currentConfig,
         $configFile
     ) {
@@ -59,55 +56,33 @@ class ApiPaymentConfigController
         $this->urlGenerator = $urlGenerator;
         $this->currentConfig = $currentConfig;
         $this->configFile = $configFile;
-        $this->factories = $factories;
+        $this->formToJsonConverter = $formToJsonConverter;
     }
 
     public function createAction($content)
     {
         $rawConfig = ArrayObject::ensureArrayObject($content);
 
-        $builder = $this->formFactory->createNamedBuilder('', 'form', null, array(
-            'csrf_protection' => false,
-            'allow_extra_fields' => true,
-        ));
-
-        $builder
-            ->add('name', 'text', array('constraints' => array(new NotBlank)))
-            ->add('factory', 'text', array(
-                'constraints' => array(
-                    new NotBlank,
-                    new Choice(array('choices' => array_keys($this->factories)))
-                )
-            ))
-        ;
-
-        $form = $builder->getForm();
+        $form = $this->formFactory->create('create_payment_config');
         $form->submit((array) $rawConfig);
 
-        if (!$form->isValid()) {
-            return $this->normalizeInvalidForm($form);
+        if (false == $form->isValid()) {
+            return new JsonResponse($this->formToJsonConverter->convertInvalid($form), 400);
         }
-
         $config = $form->getData();
-
-        $builder
-            ->add('options', 'form')
-        ;
-
-        $factory = $this->factories[$config['factory']];
-        $factory->configureOptionsFormBuilder($builder->get('options'));
-
-        $form = $builder->getForm();
+        $form = $this->formFactory->create('create_payment_config', null, array(
+            'factory' => $config['factory'],
+        ));
         $form->submit((array) $rawConfig);
         if ($form->isValid()) {
             $config = $form->getData();
 
-            $this->currentConfig['payments'][$config['name']]['factory'] = $factory->getName();
+            $this->currentConfig['payments'][$config['name']]['factory'] = $config['factory'];
             $this->currentConfig['payments'][$config['name']]['options'] = $config['options'];
 
             file_put_contents($this->configFile, Yaml::dump($this->currentConfig, 5));
 
-            return new Response('', 204, array(
+            return new Response('', 201, array(
                 'Location' => $this->urlGenerator->generate('payment_config_get', array(
                     'name' => $config['name'],
                 ), $absolute = true)

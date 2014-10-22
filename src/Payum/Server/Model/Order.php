@@ -58,6 +58,23 @@ class Order extends BaseOrder
         $this->paymentName = $paymentName;
     }
 
+    /**
+     * @return string
+     */
+    public function getAfterUrl()
+    {
+        return $this->afterUrl;
+    }
+
+    /**
+     * @param string $afterUrl
+     */
+    public function setAfterUrl($afterUrl)
+    {
+        $this->afterUrl = $afterUrl;
+        $this->links['after'] = $afterUrl;
+    }
+
     public function getPayments()
     {
         return $this->payments;

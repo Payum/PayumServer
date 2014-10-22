@@ -37,4 +37,12 @@ class FilesystemFactory implements FactoryInterface
     {
         return 'filesystem';
     }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getTitle()
+    {
+        return 'Filesystem (For devs only)';
+    }
 }

@@ -40,4 +40,12 @@ class StripeJsFactory implements FactoryInterface
     {
         return 'stripe_js';
     }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getTitle()
+    {
+        return 'Stripe.Js';
+    }
 }

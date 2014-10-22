@@ -1,6 +1,7 @@
 <?php
 namespace Payum\Server\Controller;
 
+use Payum\Server\Api\View\FormToJsonConverter;
 use Payum\Server\Factory\Payment\FactoryInterface;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -13,17 +14,27 @@ class ApiPaymentMetaController
     private $formFactory;
 
     /**
+     * @var FormToJsonConverter
+     */
+    private $formToJsonConverter;
+
+    /**
      * @var array|FactoryInterface[]
      */
     private $factories;
 
     /**
      * @param FormFactoryInterface $formFactory
+     * @param FormToJsonConverter $formToJsonConverter
      * @param FactoryInterface[] $factories
      */
-    public function __construct(FormFactoryInterface $formFactory, array $factories)
-    {
+    public function __construct(
+        FormFactoryInterface $formFactory,
+        FormToJsonConverter $formToJsonConverter,
+        array $factories
+    ) {
         $this->formFactory = $formFactory;
+        $this->formToJsonConverter = $formToJsonConverter;
         $this->factories = $factories;
     }
 
@@ -35,42 +46,22 @@ class ApiPaymentMetaController
         $normalizedFactories = array();
 
         foreach ($this->factories as $name => $factory) {
-            $normalizedFactories[$name] = $this->normalizeFactory($factory);
-        }
+            $builder = $this->formFactory->createBuilder('form', null, array(
+                'csrf_protection' => false,
+            ));
 
-        return new JsonResponse(array('metas' => $normalizedFactories));
-    }
+            $factory->configureOptionsFormBuilder($builder);
 
-    protected function normalizeFactory(FactoryInterface $factory)
-    {
-        $builder = $this->formFactory->createBuilder('form', null, array(
-            'csrf_protection' => false,
-        ));
-
-        $factory->configureOptionsFormBuilder($builder);
-
-        $formView = $builder->getForm()->createView();
-
-        $options = array();
-        foreach ($formView->children as $name => $child) {
-            $options[$name] = array(
-                'default' => $child->vars['data'],
-                'label' => $child->vars['label'],
-                'required' => $child->vars['required'],
+            $normalizedFactories[$name] = array(
+                'options' => $this->formToJsonConverter->convertMeta($builder->getForm()),
             );
-
-            if (in_array('text', $child->vars['block_prefixes'])) {
-                $options[$name]['type'] = 'text';
-            } elseif (in_array('checkbox', $child->vars['block_prefixes'])) {
-                $options[$name]['type'] = 'checkbox';
-            } else {
-                $options[$name]['type'] = 'text';
-            }
         }
 
-        return array(
-            'name' => $factory->getName(),
-            'options' => $options
-        );
+        $builder = $this->formFactory->createBuilder('create_payment_config');
+
+        return new JsonResponse(array(
+            'metas' => $normalizedFactories,
+            'generic' => $this->formToJsonConverter->convertMeta($builder->getForm()),
+        ));
     }
 }

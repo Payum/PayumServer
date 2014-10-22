@@ -49,4 +49,12 @@ class PaypalExpressCheckoutFactory implements FactoryInterface
     {
         return 'paypal_express_checkout';
     }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getTitle()
+    {
+        return 'Paypal ExpressCheckout';
+    }
 }

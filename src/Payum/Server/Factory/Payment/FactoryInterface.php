@@ -22,4 +22,9 @@ interface FactoryInterface
      * @return string
      */
     function getName();
+
+    /**
+     * @return string
+     */
+    function getTitle();
 }
