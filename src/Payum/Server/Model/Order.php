@@ -72,6 +72,7 @@ class Order extends BaseOrder
     public function setAfterUrl($afterUrl)
     {
         $this->afterUrl = $afterUrl;
+        $this->links['after'] = $afterUrl;
     }
 
     public function getPayments()
