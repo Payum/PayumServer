@@ -102,7 +102,7 @@ class ControllerProvider implements ServiceProviderInterface
             if (0 !== strpos($request->getPathInfo(), '/api')) {
                 return;
             }
-            if ($request->getMethod() == 'GET') {
+            if (in_array($request->getMethod(), array('GET', 'OPTIONS'))) {
                 return;
             }
 

@@ -20,9 +20,7 @@ $app = new Application;
 $app['app.root_dir'] = realpath(__DIR__.'/../');
 
 $app->register(new UrlGeneratorServiceProvider);
-$app->register(new CorsServiceProvider(), array(
-  "cors.allowOrigin" => "*",
-));
+$app->register(new CorsServiceProvider());
 $app->register(new ValidatorServiceProvider());
 $app->register(new FormServiceProvider);
 $app->register(new ServiceControllerServiceProvider);
