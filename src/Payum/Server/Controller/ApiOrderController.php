@@ -114,31 +114,50 @@ class ApiOrderController
      *
      * @return JsonResponse
      */
-    public function getAction(Request $request)
+    public function updateAction($content, Request $request)
     {
-        $token = $this->httpRequestVerifier->verify($request);
+        $order = $this->findRequestedOrder($request);
 
-        $storage = $this->registry->getStorage('Payum\Server\Model\Order');
+        $rawOrder = ArrayObject::ensureArrayObject($content);
 
-        /** @var Order $order */
-        $order = $storage->findModelByIdentificator($token->getDetails());
+        $form = $this->formFactory->create('update_order', $order);
+        $form->submit((array) $rawOrder);
 
-        $payment = $this->registry->getPayment($order->getPaymentName());
-
-        $orderPayments = array();
-        foreach ($order->getPayments() as $orderPayment) {
-            if (false == isset($orderPayment['status']) || GetHumanStatus::STATUS_UNKNOWN == $orderPayment['status']) {
-                $payment->execute($status = new GetHumanStatus($orderPayment['details']));
-                $orderPayment['status'] = $status->getValue();
-
-            }
-
-            $orderPayments[] = $orderPayment;
+        if (false == $form->isValid()) {
+            return new JsonResponse($this->formToJsonConverter->convertInvalid($form), 400);
         }
 
-        $order->setPayments($orderPayments);
+        /** @var Order $order */
+        $order = $form->getData();
+        $order->setAfterUrl($order->getAfterUrl() ?: $request->getSchemeAndHttpHost());
+        $order->setDetails([]);
 
-        $payment->execute($status = new GetHumanStatus($order));
+        $storage = $this->registry->getStorage($order);
+        $storage->updateModel($order);
+
+        $getToken = $this->tokenFactory->createToken($order->getPaymentName(), $order, 'order_get');
+
+        $order->addToken('get', $getToken);
+        $order->addToken('authorize', $this->tokenFactory->createAuthorizeToken($order->getPaymentName(), $order, $order->getAfterUrl()));
+        $order->addToken('capture', $this->tokenFactory->createCaptureToken($order->getPaymentName(), $order, $order->getAfterUrl()));
+        $order->addToken('notify', $this->tokenFactory->createNotifyToken($order->getPaymentName(), $order));
+
+        $storage->updateModel($order);
+
+        return new JsonResponse(array(
+            'order' => $this->orderToJsonConverter->convert($order),
+            '_links' => $order->getLinks(),
+        ));
+    }
+
+    /**
+     * @param Request $request
+     *
+     * @return JsonResponse
+     */
+    public function getAction(Request $request)
+    {
+        $order = $this->findRequestedOrder($request);
 
         return new JsonResponse(array(
             'order' => $this->orderToJsonConverter->convert($order),
@@ -156,5 +175,19 @@ class ApiOrderController
         return new JsonResponse(array(
             'meta' => $this->formToJsonConverter->convertMeta($form),
         ));
+    }
+
+    /**
+     * @param Request $request
+     *
+     * @return Order
+     */
+    protected function findRequestedOrder(Request $request)
+    {
+        $token = $this->httpRequestVerifier->verify($request);
+
+        $storage = $this->registry->getStorage('Payum\Server\Model\Order');
+
+        return $storage->findModelByIdentificator($token->getDetails());
     }
 }

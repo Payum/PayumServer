@@ -13,8 +13,8 @@ class ApiProvider implements ServiceProviderInterface
      */
     public function register(Application $app)
     {
-        $app['api.view.order_to_json_converter'] = function() {
-            return new OrderToJsonConverter();
+        $app['api.view.order_to_json_converter'] = function() use ($app) {
+            return new OrderToJsonConverter($app['payum']);
         };
 
         $app['api.view.form_to_json_converter'] = function() {
