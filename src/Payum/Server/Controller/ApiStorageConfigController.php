@@ -2,6 +2,7 @@
 namespace Payum\Server\Controller;
 
 use Payum\Core\Bridge\Spl\ArrayObject;
+use Payum\Server\Api\View\FormToJsonConverter;
 use Payum\Server\Factory\Storage\FactoryInterface;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\Form\FormInterface;
@@ -26,9 +27,9 @@ class ApiStorageConfigController
     private $urlGenerator;
 
     /**
-     * @var FactoryInterface[]
+     * @var FormToJsonConverter
      */
-    private $factories;
+    private $formToJsonConverter;
 
     /**
      * @var array
@@ -43,14 +44,14 @@ class ApiStorageConfigController
     /**
      * @param FormFactoryInterface $formFactory
      * @param UrlGeneratorInterface $urlGenerator
-     * @param FactoryInterface[] $factories
+     * @param FormToJsonConverter $formToJsonConverter
      * @param array $currentConfig
      * @param string $configFile
      */
     public function __construct(
         FormFactoryInterface $formFactory,
         UrlGeneratorInterface $urlGenerator,
-        $factories,
+        FormToJsonConverter $formToJsonConverter,
         $currentConfig,
         $configFile
     ) {
@@ -58,7 +59,7 @@ class ApiStorageConfigController
         $this->urlGenerator = $urlGenerator;
         $this->currentConfig = $currentConfig;
         $this->configFile = $configFile;
-        $this->factories = $factories;
+        $this->formToJsonConverter = $formToJsonConverter;
     }
 
     public function updateOrderAction($content)
@@ -94,38 +95,16 @@ class ApiStorageConfigController
     {
         $rawConfig = ArrayObject::ensureArrayObject($content);
 
-        $builder = $this->formFactory->createNamedBuilder('', 'form', null, array(
-            'csrf_protection' => false,
-            'allow_extra_fields' => true,
-        ));
-
-        $builder
-            ->add('factory', 'text', array(
-                'constraints' => array(
-                    new NotBlank,
-                    new Choice(array('choices' => array_keys($this->factories)))
-                )
-            ))
-        ;
-
-        $form = $builder->getForm();
+        $form = $this->formFactory->create('create_storage_config');
         $form->submit((array) $rawConfig);
-
-        if (!$form->isValid()) {
-            return $this->normalizeInvalidForm($form);
+        if (false == $form->isValid()) {
+            return new JsonResponse($this->formToJsonConverter->convertInvalid($form), 400);
         }
-
         $config = $form->getData();
 
-        $builder
-            ->add('options', 'form')
-        ;
-
-        $factory = $this->factories[$config['factory']];
-        $factory->configureOptionsFormBuilder($builder->get('options'));
-
-
-        $form = $builder->getForm();
+        $form = $this->formFactory->create('create_storage_config', null, array(
+            'factory' => $config['factory'],
+        ));
         $form->submit((array) $rawConfig);
         if ($form->isValid()) {
             $config = $form->getData();
@@ -134,12 +113,12 @@ class ApiStorageConfigController
                 'order' => array(
                     'modelClass' => 'Payum\Server\Model\Order',
                     'idProperty' => 'number',
-                    'factory' => $factory->getName(),
+                    'factory' => $config['factory'],
                 ),
                 'security_token' => array(
                     'modelClass' => 'Payum\Server\Model\SecurityToken',
                     'idProperty' => 'hash',
-                    'factory' => $factory->getName(),
+                    'factory' => $config['factory'],
                 ),
             );
 
@@ -148,14 +127,10 @@ class ApiStorageConfigController
 
             file_put_contents($this->configFile, Yaml::dump($this->currentConfig, 5));
 
-            return new Response('', 204, array(
-                'Location' => $this->urlGenerator->generate('storage_config_get', array(
-                    'name' => $name,
-                ), $absolute = true)
-            ));
+            return new JsonResponse(array('config' => $this->normalizeConfig($name, $this->currentConfig['storages'][$name])));
         }
 
-        return $this->normalizeInvalidForm($form);
+        return new JsonResponse($this->formToJsonConverter->convertInvalid($form), 400);
     }
 
     /**
@@ -169,12 +144,5 @@ class ApiStorageConfigController
         $config['name'] = $name;
 
         return $config;
-    }
-
-    protected function normalizeInvalidForm(FormInterface $form)
-    {
-        return new JsonResponse(array(
-            'errors' => $form->getErrorsAsString(),
-        ));
     }
 }

@@ -6,12 +6,13 @@ use Payum\Core\Bridge\Symfony\Security\HttpRequestVerifier;
 use Payum\Core\Bridge\Symfony\Security\TokenFactory;
 use Payum\Core\PaymentInterface;
 use Payum\Core\Registry\SimpleRegistry;
-use Payum\Core\Storage\FilesystemStorage;
 use Payum\Server\Factory\Payment\FactoryInterface;
 use Payum\Server\Factory\Payment\PaypalExpressCheckoutFactory;
 use Payum\Server\Factory\Payment\StripeCheckoutFactory;
 use Payum\Server\Factory\Payment\StripeJsFactory;
 use Payum\Server\Factory\Storage\FilesystemFactory;
+use Payum\Server\Form\Type\CreatePaymentConfigType;
+use Payum\Server\Form\Type\CreateStorageConfigType;
 use Silex\Application;
 use Silex\ServiceProviderInterface;
 use Symfony\Component\Yaml\Yaml;
@@ -34,6 +35,13 @@ class ServiceProvider implements ServiceProviderInterface
         $app['payum.model.order_id_property'] = 'number';
         $app['payum.model.security_token_class'] = 'Payum\Server\Model\SecurityToken';
         $app['payum.model.security_token_id_property'] = 'hash';
+
+        $app['form.types'] = $app->share($app->extend('form.types', function ($types) use ($app) {
+            $types[] = new CreatePaymentConfigType($app['payum.payment_factories']);
+            $types[] = new CreateStorageConfigType($app['payum.storage_factories']);
+
+            return $types;
+        }));
 
         $app['payum.security.token_storage'] = $app->share(function($app) {
             return $app['payum.storages']['Payum\Server\Model\SecurityToken'];

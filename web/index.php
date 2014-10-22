@@ -4,6 +4,7 @@ require_once __DIR__.'/../vendor/autoload.php';
 use JDesrosiers\Silex\Provider\CorsServiceProvider;
 use Payum\Server\ControllerProvider as PayumControllerProvider;
 use Payum\Server\ServiceProvider as PayumServiceProvider;
+use Payum\Server\ApiProvider as PayumApiProvider;
 use Silex\Application;
 use Silex\Provider\FormServiceProvider;
 use Silex\Provider\ServiceControllerServiceProvider;
@@ -26,5 +27,6 @@ $app->register(new FormServiceProvider);
 $app->register(new ServiceControllerServiceProvider);
 $app->register(new PayumServiceProvider);
 $app->register(new PayumControllerProvider);
+$app->register(new PayumApiProvider());
 
 $app->run();

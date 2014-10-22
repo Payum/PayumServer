@@ -40,4 +40,12 @@ class StripeCheckoutFactory implements FactoryInterface
     {
         return 'stripe_checkout';
     }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getTitle()
+    {
+        return 'Stripe Checkout';
+    }
 }

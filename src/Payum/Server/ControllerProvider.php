@@ -3,6 +3,7 @@ namespace Payum\Server;
 
 use Payum\Core\Bridge\Symfony\ReplyToSymfonyResponseConverter;
 use Payum\Core\Reply\ReplyInterface;
+use Payum\Server\Controller\ApiHealthController;
 use Payum\Server\Controller\ApiPaymentConfigController;
 use Payum\Server\Controller\ApiOrderController;
 use Payum\Server\Controller\ApiPaymentMetaController;
@@ -28,6 +29,10 @@ class ControllerProvider implements ServiceProviderInterface
             return new IndexController($app['app.root_dir']);
         });
 
+        $app['controller.api_health'] = $app->share(function() {
+            return new ApiHealthController();
+        });
+
         $app['controller.api_order'] = $app->share(function() use ($app) {
             return new ApiOrderController(
                 $app['payum.security.token_factory'],
@@ -41,7 +46,7 @@ class ControllerProvider implements ServiceProviderInterface
             return new ApiPaymentConfigController(
                 $app['form.factory'],
                 $app['url_generator'],
-                $app['payum.payment_factories'],
+                $app['api.view.form_to_json_converter'],
                 $app['payum.config'],
                 $app['payum.config_file']
             );
@@ -50,6 +55,7 @@ class ControllerProvider implements ServiceProviderInterface
         $app['controller.api_payment_factory'] = $app->share(function() use ($app) {
             return new ApiPaymentMetaController(
                 $app['form.factory'],
+                $app['api.view.form_to_json_converter'],
                 $app['payum.payment_factories']
             );
         });
@@ -57,6 +63,7 @@ class ControllerProvider implements ServiceProviderInterface
         $app['controller.api_storage_factory'] = $app->share(function() use ($app) {
             return new ApiStorageMetaController(
                 $app['form.factory'],
+                $app['api.view.form_to_json_converter'],
                 $app['payum.storage_factories']
             );
         });
@@ -84,6 +91,7 @@ class ControllerProvider implements ServiceProviderInterface
         $app->get('/authorize/{payum_token}', 'controller.payum:authorizeAction')->bind('authorize');
         $app->get('/notify/{payum_token}', 'controller.payum:notifyAction')->bind('notify');
 
+        $app->get('/api/health', 'controller.api_health:checksAction')->bind('api_health_checks');
         $app->get('/api/orders/{payum_token}', 'controller.api_order:getAction')->bind('order_get');
         $app->post('/api/orders', 'controller.api_order:createAction')->bind('order_create');
 

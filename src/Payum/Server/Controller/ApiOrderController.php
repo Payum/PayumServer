@@ -86,7 +86,7 @@ class ApiOrderController
 
         $storage->updateModel($order);
 
-        return new Response('', 204, array(
+        return new Response('', 201, array(
             'Location' => $getToken->getTargetUrl()
         ));
     }
