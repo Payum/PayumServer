@@ -1,7 +1,7 @@
 {
     "name": "payum/payum-server",
     "type": "project",
-    "description": "Payment as a service. Install and do payments just after",
+    "description": "PHP 5.3+ Payment micro service. Setup once and rule them all: Paypal, Stripe, Payex, Authorize.NET, Be2bill, Klarna, IPNs...",
     "homepage": "http://payum.forma-dev.com",
     "license": "MIT",
     "authors": [
