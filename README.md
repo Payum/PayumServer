@@ -1,6 +1,6 @@
 # Payum Server.
 
-Look ma! How it is easy to setup the payment server. Setup the server and it will take care of your payments. Easy to setup and tweak.
+PHP 5.3+ Payment micro service. Setup once and rule them all: Paypal, Stripe, Payex, Authorize.NET, Be2bill, Klarna, IPNs...
 
 ## Installation
 
