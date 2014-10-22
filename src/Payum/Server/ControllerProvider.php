@@ -38,7 +38,9 @@ class ControllerProvider implements ServiceProviderInterface
                 $app['payum.security.token_factory'],
                 $app['payum.security.http_request_verifier'],
                 $app['payum'],
-                $app['payum.model.order_class']
+                $app['api.view.order_to_json_converter'],
+                $app['form.factory'],
+                $app['api.view.form_to_json_converter']
             );
         });
 
@@ -92,6 +94,7 @@ class ControllerProvider implements ServiceProviderInterface
         $app->get('/notify/{payum_token}', 'controller.payum:notifyAction')->bind('notify');
 
         $app->get('/api/health', 'controller.api_health:checksAction')->bind('api_health_checks');
+        $app->get('/api/orders/meta', 'controller.api_order:metaAction')->bind('order_meta');
         $app->get('/api/orders/{payum_token}', 'controller.api_order:getAction')->bind('order_get');
         $app->post('/api/orders', 'controller.api_order:createAction')->bind('order_create');
 

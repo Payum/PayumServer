@@ -11,6 +11,7 @@ use Payum\Server\Factory\Payment\PaypalExpressCheckoutFactory;
 use Payum\Server\Factory\Payment\StripeCheckoutFactory;
 use Payum\Server\Factory\Payment\StripeJsFactory;
 use Payum\Server\Factory\Storage\FilesystemFactory;
+use Payum\Server\Form\Type\CreateOrderType;
 use Payum\Server\Form\Type\CreatePaymentConfigType;
 use Payum\Server\Form\Type\CreateStorageConfigType;
 use Silex\Application;
@@ -39,6 +40,7 @@ class ServiceProvider implements ServiceProviderInterface
         $app['form.types'] = $app->share($app->extend('form.types', function ($types) use ($app) {
             $types[] = new CreatePaymentConfigType($app['payum.payment_factories']);
             $types[] = new CreateStorageConfigType($app['payum.storage_factories']);
+            $types[] = new CreateOrderType($app['payum.config']);
 
             return $types;
         }));
