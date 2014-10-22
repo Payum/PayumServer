@@ -1,6 +1,7 @@
 <?php
 require_once __DIR__.'/../vendor/autoload.php';
 
+use JDesrosiers\Silex\Provider\CorsServiceProvider;
 use Payum\Server\ControllerProvider as PayumControllerProvider;
 use Payum\Server\ServiceProvider as PayumServiceProvider;
 use Silex\Application;
@@ -19,6 +20,7 @@ $app = new Application;
 $app['app.root_dir'] = realpath(__DIR__.'/../');
 
 $app->register(new UrlGeneratorServiceProvider);
+$app->register(new CorsServiceProvider());
 $app->register(new ValidatorServiceProvider());
 $app->register(new FormServiceProvider);
 $app->register(new ServiceControllerServiceProvider);

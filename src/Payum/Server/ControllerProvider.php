@@ -124,11 +124,7 @@ class ControllerProvider implements ServiceProviderInterface
             }
         });
 
-        $app->after(function (Request $request, Response $response) use ($app) {
-            if (0 === strpos($request->getPathInfo(), '/api')) {
-                $response->headers->set('Access-Control-Allow-Origin', '*');
-            }
-        });
+        $app->after($app["cors"]);
 
         $app->error(function (\Exception $e, $code) use ($app) {
             if (false == $e instanceof ReplyInterface) {
