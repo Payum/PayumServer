@@ -4,7 +4,7 @@
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "3a7319f7d0bddf33fbcd24ceadc006ab",
+    "hash": "585f98204b6cf839b992f9ce319038d3",
     "packages": [
         {
             "name": "ajbdev/authorizenet-php-api",
@@ -284,6 +284,56 @@
                 "stream"
             ],
             "time": "2014-05-01 21:36:02"
+        },
+        {
+            "name": "jdesrosiers/silex-cors-provider",
+            "version": "v0.1.3",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/jdesrosiers/silex-cors-provider.git",
+                "reference": "d157466a40bd615f8cbc7158e930118f7e69a772"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/jdesrosiers/silex-cors-provider/zipball/d157466a40bd615f8cbc7158e930118f7e69a772",
+                "reference": "d157466a40bd615f8cbc7158e930118f7e69a772",
+                "shasum": ""
+            },
+            "require": {
+                "silex/silex": "~1.0"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "3.7.*",
+                "symfony/browser-kit": "2.3.*"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-0": {
+                    "JDesrosiers": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Jason Desrosiers",
+                    "email": "jdesrosi@gmail.com"
+                }
+            ],
+            "description": "A silex service provider that adds CORS services to silex",
+            "keywords": [
+                "cors",
+                "cross",
+                "origin",
+                "provider",
+                "resource",
+                "service",
+                "sharing",
+                "silex"
+            ],
+            "time": "2014-08-08 03:28:29"
         },
         {
             "name": "klarna/checkout",
@@ -617,12 +667,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/Payum/Payum.git",
-                "reference": "b64aa2fc2ab8ff5ff8c18149bac4da54c7620899"
+                "reference": "513e7f92250d583f5b595f28778aa669128307ae"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Payum/Payum/zipball/b64aa2fc2ab8ff5ff8c18149bac4da54c7620899",
-                "reference": "b64aa2fc2ab8ff5ff8c18149bac4da54c7620899",
+                "url": "https://api.github.com/repos/Payum/Payum/zipball/513e7f92250d583f5b595f28778aa669128307ae",
+                "reference": "513e7f92250d583f5b595f28778aa669128307ae",
                 "shasum": ""
             },
             "require": {
@@ -727,7 +777,7 @@
                 "stripe checkout",
                 "stripe.js"
             ],
-            "time": "2014-10-16 09:40:13"
+            "time": "2014-10-19 14:31:59"
         },
         {
             "name": "phpxmlrpc/phpxmlrpc",
@@ -1610,12 +1660,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/OptionsResolver.git",
-                "reference": "4bf995dc9e8601562379251d5bc57b4426c06461"
+                "reference": "7b2242139b72b646d294a8ccca1d1f7abbfe08ad"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/OptionsResolver/zipball/4bf995dc9e8601562379251d5bc57b4426c06461",
-                "reference": "4bf995dc9e8601562379251d5bc57b4426c06461",
+                "url": "https://api.github.com/repos/symfony/OptionsResolver/zipball/7b2242139b72b646d294a8ccca1d1f7abbfe08ad",
+                "reference": "7b2242139b72b646d294a8ccca1d1f7abbfe08ad",
                 "shasum": ""
             },
             "require": {
@@ -1653,7 +1703,7 @@
                 "configuration",
                 "options"
             ],
-            "time": "2014-09-23 14:20:22"
+            "time": "2014-10-21 09:07:51"
         },
         {
             "name": "symfony/property-access",
@@ -2075,16 +2125,16 @@
         },
         {
             "name": "twig/twig",
-            "version": "v1.16.1",
+            "version": "v1.16.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/fabpot/Twig.git",
-                "reference": "7c4c01dcf578523cfcddf383641a4f12790270ec"
+                "reference": "42f758d9fe2146d1f0470604fc05ee43580873fc"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/fabpot/Twig/zipball/7c4c01dcf578523cfcddf383641a4f12790270ec",
-                "reference": "7c4c01dcf578523cfcddf383641a4f12790270ec",
+                "url": "https://api.github.com/repos/fabpot/Twig/zipball/42f758d9fe2146d1f0470604fc05ee43580873fc",
+                "reference": "42f758d9fe2146d1f0470604fc05ee43580873fc",
                 "shasum": ""
             },
             "require": {
@@ -2128,7 +2178,7 @@
             "keywords": [
                 "templating"
             ],
-            "time": "2014-10-10 14:09:53"
+            "time": "2014-10-17 12:53:44"
         }
     ],
     "packages-dev": [
