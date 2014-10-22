@@ -89,13 +89,18 @@ class ControllerProvider implements ServiceProviderInterface
         });
 
         $app->get('/', 'controller.index:indexAction');
+
         $app->get('/capture/{payum_token}', 'controller.payum:captureAction')->bind('capture');
+        $app->post('/capture/{payum_token}', 'controller.payum:captureAction')->bind('capture_post');
         $app->get('/authorize/{payum_token}', 'controller.payum:authorizeAction')->bind('authorize');
+        $app->post('/authorize/{payum_token}', 'controller.payum:authorizeAction')->bind('authorize_post');
         $app->get('/notify/{payum_token}', 'controller.payum:notifyAction')->bind('notify');
+        $app->post('/notify/{payum_token}', 'controller.payum:notifyAction')->bind('notify_post');
 
         $app->get('/api/health', 'controller.api_health:checksAction')->bind('api_health_checks');
         $app->get('/api/orders/meta', 'controller.api_order:metaAction')->bind('order_meta');
         $app->get('/api/orders/{payum_token}', 'controller.api_order:getAction')->bind('order_get');
+        $app->put('/api/orders/{payum_token}', 'controller.api_order:updateAction')->bind('order_update');
         $app->post('/api/orders', 'controller.api_order:createAction')->bind('order_create');
 
         $app->get('/api/configs/payments/metas', 'controller.api_payment_factory:getAllAction')->bind('payment_factory_get_all');

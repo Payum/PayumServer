@@ -14,6 +14,7 @@ use Payum\Server\Factory\Storage\FilesystemFactory;
 use Payum\Server\Form\Type\CreateOrderType;
 use Payum\Server\Form\Type\CreatePaymentConfigType;
 use Payum\Server\Form\Type\CreateStorageConfigType;
+use Payum\Server\Form\Type\UpdateOrderType;
 use Silex\Application;
 use Silex\ServiceProviderInterface;
 use Symfony\Component\Yaml\Yaml;
@@ -41,6 +42,7 @@ class ServiceProvider implements ServiceProviderInterface
             $types[] = new CreatePaymentConfigType($app['payum.payment_factories']);
             $types[] = new CreateStorageConfigType($app['payum.storage_factories']);
             $types[] = new CreateOrderType($app['payum.config']);
+            $types[] = new UpdateOrderType();
 
             return $types;
         }));
