@@ -76,13 +76,14 @@ class ApiPaymentConfigController
         $form->submit((array) $rawConfig);
         if ($form->isValid()) {
             $config = $form->getData();
+            $name = $config['name'];
 
-            $this->currentConfig['payments'][$config['name']]['factory'] = $config['factory'];
-            $this->currentConfig['payments'][$config['name']]['options'] = $config['options'];
+            $this->currentConfig['payments'][$name]['factory'] = $config['factory'];
+            $this->currentConfig['payments'][$name]['options'] = $config['options'];
 
             file_put_contents($this->configFile, Yaml::dump($this->currentConfig, 5));
 
-            return new Response('', 201, array(
+            return new Response(array('config' => $this->normalizeConfig($name, $this->currentConfig['payments'][$name])), 201, array(
                 'Location' => $this->urlGenerator->generate('payment_config_get', array(
                     'name' => $config['name'],
                 ), $absolute = true)

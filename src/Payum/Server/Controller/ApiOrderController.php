@@ -104,7 +104,7 @@ class ApiOrderController
 
         $storage->updateModel($order);
 
-        return new Response('', 201, array(
+        return new Response($this->orderToJsonConverter->convert($order), 201, array(
             'Location' => $getToken->getTargetUrl()
         ));
     }
