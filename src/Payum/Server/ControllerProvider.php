@@ -101,6 +101,7 @@ class ControllerProvider implements ServiceProviderInterface
         $app->get('/api/orders/meta', 'controller.api_order:metaAction')->bind('order_meta');
         $app->get('/api/orders/{payum_token}', 'controller.api_order:getAction')->bind('order_get');
         $app->put('/api/orders/{payum_token}', 'controller.api_order:updateAction')->bind('order_update');
+        $app->delete('/api/orders/{payum_token}', 'controller.api_order:deleteAction')->bind('order_delete');
         $app->post('/api/orders', 'controller.api_order:createAction')->bind('order_create');
 
         $app->get('/api/configs/payments/metas', 'controller.api_payment_factory:getAllAction')->bind('payment_factory_get_all');
@@ -118,7 +119,7 @@ class ControllerProvider implements ServiceProviderInterface
             if (0 !== strpos($request->getPathInfo(), '/api')) {
                 return;
             }
-            if (in_array($request->getMethod(), array('GET', 'OPTIONS'))) {
+            if (in_array($request->getMethod(), array('GET', 'OPTIONS', 'DELETE'))) {
                 return;
             }
 

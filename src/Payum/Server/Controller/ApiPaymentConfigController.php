@@ -83,7 +83,7 @@ class ApiPaymentConfigController
 
             file_put_contents($this->configFile, Yaml::dump($this->currentConfig, 5));
 
-            return new Response(array('config' => $this->normalizeConfig($name, $this->currentConfig['payments'][$name])), 201, array(
+            return new JsonResponse(array('config' => $this->normalizeConfig($name, $this->currentConfig['payments'][$name])), 201, array(
                 'Location' => $this->urlGenerator->generate('payment_config_get', array(
                     'name' => $config['name'],
                 ), $absolute = true)
