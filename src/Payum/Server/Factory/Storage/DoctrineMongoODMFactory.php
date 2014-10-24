@@ -41,7 +41,7 @@ class DoctrineMongoODMFactory implements FactoryInterface
                 'required' => true,
                 'constraints' => array(new NotBlank),
             ))
-            ->add('collection', 'text', array(
+            ->add('databaseName', 'text', array(
                 'data' => 'payum_server',
                 'required' => true,
                 'constraints' => array(new NotBlank),
@@ -60,7 +60,7 @@ class DoctrineMongoODMFactory implements FactoryInterface
 
         $driver = new MappingDriverChain;
 
-// payum's basic models
+        // payum's basic models
         $driver->addDriver(
             new XmlDriver(
                 new SymfonyFileLocator(array(
@@ -71,7 +71,7 @@ class DoctrineMongoODMFactory implements FactoryInterface
             'Payum\Core\Model'
         );
 
-// your models
+        // your models
         AnnotationDriver::registerAnnotationClasses();
         $driver->addDriver(
             new AnnotationDriver(new AnnotationReader(), array(

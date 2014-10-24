@@ -83,7 +83,7 @@ class ApiPaymentConfigController
 
             file_put_contents($this->configFile, Yaml::dump($this->currentConfig, 5));
 
-            return new JsonResponse(array('config' => $this->normalizeConfig($name, $this->currentConfig['payments'][$name])), 201, array(
+            return new JsonResponse(array('payment' => $this->normalizeConfig($name, $this->currentConfig['payments'][$name])), 201, array(
                 'Location' => $this->urlGenerator->generate('payment_config_get', array(
                     'name' => $config['name'],
                 ), $absolute = true)
@@ -100,7 +100,7 @@ class ApiPaymentConfigController
             $configs[$name] = $this->normalizeConfig($name, $config);
         }
 
-        return new JsonResponse(array('configs' => $configs));
+        return new JsonResponse(array('payments' => $configs));
     }
 
     public function getAction($name)
@@ -109,7 +109,7 @@ class ApiPaymentConfigController
             throw new NotFoundHttpException(sprintf('Config with name %s was not found.', $name));
         }
 
-        return new JsonResponse(array('config' => $this->normalizeConfig($name, $this->currentConfig['payments'][$name])));
+        return new JsonResponse(array('payment' => $this->normalizeConfig($name, $this->currentConfig['payments'][$name])));
     }
 
     protected function normalizeConfig($name, array $config)

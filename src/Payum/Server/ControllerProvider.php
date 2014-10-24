@@ -11,7 +11,7 @@ use Payum\Server\Controller\ApiStorageConfigController;
 use Payum\Server\Controller\ApiStorageMetaController;
 use Payum\Server\Controller\IndexController;
 use Payum\Server\Controller\PayumController;
-use Silex\Application;
+use Silex\Application as SilexApplication;
 use Silex\ServiceProviderInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -23,7 +23,7 @@ class ControllerProvider implements ServiceProviderInterface
     /**
      * {@inheritDoc}
      */
-    public function register(Application $app)
+    public function register(SilexApplication $app)
     {
         $app['controller.index'] = $app->share(function() use ($app) {
             return new IndexController($app['app.root_dir']);
@@ -74,7 +74,7 @@ class ControllerProvider implements ServiceProviderInterface
             return new ApiStorageConfigController(
                 $app['form.factory'],
                 $app['url_generator'],
-                $app['payum.storage_factories'],
+                $app['api.view.form_to_json_converter'],
                 $app['payum.config'],
                 $app['payum.config_file']
             );
@@ -172,7 +172,7 @@ class ControllerProvider implements ServiceProviderInterface
     /**
      * {@inheritDoc}
      */
-    public function boot(Application $app)
+    public function boot(SilexApplication $app)
     {
     }
 }

@@ -79,7 +79,7 @@ class ApiStorageConfigController
             $configs[$name] = $this->normalizeConfig($name, $config);
         }
 
-        return new JsonResponse(array('configs' => $configs));
+        return new JsonResponse(array('storages' => $configs));
     }
 
     public function getAction($name)
@@ -88,7 +88,7 @@ class ApiStorageConfigController
             throw new NotFoundHttpException(sprintf('Config with name %s was not found.', $name));
         }
 
-        return new JsonResponse(array('config' => $this->normalizeConfig($name, $this->currentConfig['storages'][$name])));
+        return new JsonResponse(array('storage' => $this->normalizeConfig($name, $this->currentConfig['storages'][$name])));
     }
 
     public function doUpdate($name, $content)
@@ -127,7 +127,7 @@ class ApiStorageConfigController
 
             file_put_contents($this->configFile, Yaml::dump($this->currentConfig, 5));
 
-            return new JsonResponse(array('config' => $this->normalizeConfig($name, $this->currentConfig['storages'][$name])));
+            return new JsonResponse(array('storage' => $this->normalizeConfig($name, $this->currentConfig['storages'][$name])));
         }
 
         return new JsonResponse($this->formToJsonConverter->convertInvalid($form), 400);

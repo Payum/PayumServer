@@ -10,6 +10,19 @@ use Symfony\Component\Validator\Constraints\NotBlank;
 class FilesystemFactory implements FactoryInterface
 {
     /**
+     * @var string
+     */
+    private $rootDir;
+
+    /**
+     * @param string $rootDir
+     */
+    public function __construct($rootDir)
+    {
+        $this->rootDir = $rootDir;
+    }
+
+    /**
      * {@inheritDoc}
      */
     public function configureOptionsFormBuilder(FormBuilderInterface $builder)
@@ -27,7 +40,11 @@ class FilesystemFactory implements FactoryInterface
      */
     public function createStorage($modelClass, $idProperty, array $options)
     {
-        return new FilesystemStorage($options['storageDir'], $modelClass, $idProperty);
+        return new FilesystemStorage(
+            str_replace('%app.root_dir%', $this->rootDir, $options['storageDir']),
+            $modelClass,
+            $idProperty
+        );
     }
 
     /**

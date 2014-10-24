@@ -16,7 +16,7 @@ use Payum\Server\Form\Type\CreateOrderType;
 use Payum\Server\Form\Type\CreatePaymentConfigType;
 use Payum\Server\Form\Type\CreateStorageConfigType;
 use Payum\Server\Form\Type\UpdateOrderType;
-use Silex\Application;
+use Silex\Application as SilexApplication;
 use Silex\ServiceProviderInterface;
 use Symfony\Component\Yaml\Yaml;
 
@@ -25,15 +25,21 @@ class ServiceProvider implements ServiceProviderInterface
     /**
      * {@inheritDoc}
      */
-    public function register(Application $app)
+    public function register(SilexApplication $app)
     {
         $app['debug'] = (boolean) getenv('PAYUM_SERVER_DEBUG');
-        $app['payum.config_file'] = $app['app.root_dir'].'/payum.yml';
-        $app['payum.config'] = file_exists($app['payum.config_file']) ?
-            Yaml::parse(file_get_contents($app['payum.config_file'])) :
-            array('payments' => array(), 'storages' => array())
-        ;
-        $app['payum.storage_dir'] = $app['app.root_dir'].'/storage';
+        $app['payum.config_file'] = $app->share(function($app) {
+            return $app['payum.root_dir'].'/payum.yml';
+        });
+        $app['payum.config'] = $app->share(function($app) {
+            return file_exists($app['payum.config_file']) ?
+                Yaml::parse(file_get_contents($app['payum.config_file'])) :
+                array('payments' => array(), 'storages' => array())
+            ;
+        });
+        $app['payum.storage_dir'] = $app->share(function($app) {
+            return $app['app.root_dir'].'/storage';
+        });
         $app['payum.model.order_class'] = 'Payum\Server\Model\Order';
         $app['payum.model.order_id_property'] = 'number';
         $app['payum.model.security_token_class'] = 'Payum\Server\Model\SecurityToken';
@@ -111,7 +117,7 @@ class ServiceProvider implements ServiceProviderInterface
         $app['payum.storage_factories'] = $app->share(function ($app) {
             $factories = array();
 
-            $factory = new FilesystemFactory();
+            $factory = new FilesystemFactory($app['app.root_dir']);
             $factories[$factory->getName()] = $factory;
 
             $factory = new DoctrineMongoODMFactory($app['app.root_dir']);
@@ -150,7 +156,7 @@ class ServiceProvider implements ServiceProviderInterface
     /**
      * {@inheritDoc}
      */
-    public function boot(Application $app)
+    public function boot(SilexApplication $app)
     {
         $config = $app['payum.config'];
 
@@ -160,7 +166,7 @@ class ServiceProvider implements ServiceProviderInterface
                 'idProperty' => 'number',
                 'factory' => 'filesystem',
                 'options' => array(
-                    'storageDir' => $app['app.root_dir'].'/storage',
+                    'storageDir' => '%app.root_dir%/storage',
                 ),
             );
 
@@ -173,7 +179,7 @@ class ServiceProvider implements ServiceProviderInterface
                 'idProperty' => 'hash',
                 'factory' => 'filesystem',
                 'options' => array(
-                    'storageDir' => $app['app.root_dir'].'/storage',
+                    'storageDir' => '%app.root_dir%/storage',
                 ),
             );
 

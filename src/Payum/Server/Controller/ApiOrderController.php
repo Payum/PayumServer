@@ -142,6 +142,7 @@ class ApiOrderController
         $storage = $this->registry->getStorage($order);
         $storage->updateModel($order);
 
+        $order->addToken('api', $this->tokenFactory->createToken($order->getPaymentName(), $order, 'order_get'));
         $order->addToken('authorize', $this->tokenFactory->createAuthorizeToken($order->getPaymentName(), $order, $order->getAfterUrl()));
         $order->addToken('capture', $this->tokenFactory->createCaptureToken($order->getPaymentName(), $order, $order->getAfterUrl()));
         $order->addToken('notify', $this->tokenFactory->createNotifyToken($order->getPaymentName(), $order));
