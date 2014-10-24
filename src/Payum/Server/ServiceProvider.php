@@ -10,6 +10,7 @@ use Payum\Server\Factory\Payment\FactoryInterface;
 use Payum\Server\Factory\Payment\PaypalExpressCheckoutFactory;
 use Payum\Server\Factory\Payment\StripeCheckoutFactory;
 use Payum\Server\Factory\Payment\StripeJsFactory;
+use Payum\Server\Factory\Storage\DoctrineMongoODMFactory;
 use Payum\Server\Factory\Storage\FilesystemFactory;
 use Payum\Server\Form\Type\CreateOrderType;
 use Payum\Server\Form\Type\CreatePaymentConfigType;
@@ -111,6 +112,9 @@ class ServiceProvider implements ServiceProviderInterface
             $factories = array();
 
             $factory = new FilesystemFactory();
+            $factories[$factory->getName()] = $factory;
+
+            $factory = new DoctrineMongoODMFactory($app['app.root_dir']);
             $factories[$factory->getName()] = $factory;
 
             return $factories;

@@ -32,7 +32,9 @@
         "payum/payum": "0.12.*@dev",
         "raven/raven": "~0.10.0",
         "michelf/php-markdown": "~1.4",
-        "egil/php-markdown-extra-extended": "1.0"
+        "egil/php-markdown-extra-extended": "1.0",
+        "doctrine/mongodb": "1.0.*@dev",
+        "doctrine/mongodb-odm": "1.0.*@dev"
     },
     "repositories": [
         {

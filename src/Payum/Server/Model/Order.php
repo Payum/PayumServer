@@ -1,13 +1,23 @@
 <?php
 namespace Payum\Server\Model;
 
+use Doctrine\ODM\MongoDB\Mapping\Annotations as Mongo;
 use Payum\Core\Model\Order as BaseOrder;
 use Payum\Core\Request\GetHumanStatus;
 use Payum\Core\Security\TokenInterface;
-use Symfony\Component\Validator\Constraints\DateTime;
 
+/**
+ * @Mongo\Document
+ */
 class Order extends BaseOrder
 {
+    /**
+     * @Mongo\Id
+     *
+     * @var integer $id
+     */
+    protected $id;
+
     /**
      * @var string
      */

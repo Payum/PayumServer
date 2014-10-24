@@ -1,4 +1,4 @@
 payum.yml
-storage
+/storage
 vendor
 app
