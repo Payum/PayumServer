@@ -1,7 +1,7 @@
 # PayumServer.
 [![Build Status](https://travis-ci.org/Payum/PayumServer.png?branch=master)](https://travis-ci.org/Payum/PayumServer)
-[![Total Downloads](https://poser.pugx.org/payum/PayumServer/d/total.png)](https://packagist.org/packages/payum/PayumServer)
-[![Latest Stable Version](https://poser.pugx.org/payum/PayumServer/version.png)](https://packagist.org/packages/payum/PayumServer)
+[![Total Downloads](https://poser.pugx.org/payum/payum-server/d/total.png)](https://packagist.org/packages/payum/payum-server)
+[![Latest Stable Version](https://poser.pugx.org/payum/payum-server/version.png)](https://packagist.org/packages/payum/payum-server)
 
 PHP 5.3+ Payment micro service. Setup once and rule them all: Paypal, Stripe, Payex, Authorize.NET, Be2bill, Klarna, IPNs...
 
