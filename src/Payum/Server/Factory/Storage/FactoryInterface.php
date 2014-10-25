@@ -2,6 +2,7 @@
 namespace Payum\Server\Factory\Storage;
 
 use Payum\Core\PaymentInterface;
+use Payum\Core\Storage\StorageInterface;
 use Symfony\Component\Form\FormBuilderInterface;
 
 interface FactoryInterface
@@ -16,7 +17,7 @@ interface FactoryInterface
      * @param string $idProperty
      * @param array $options
      *
-     * @return PaymentInterface
+     * @return StorageInterface
      */
     function createStorage($modelClass, $idProperty, array $options);
 

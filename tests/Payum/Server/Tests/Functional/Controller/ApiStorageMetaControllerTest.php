@@ -23,6 +23,6 @@ class ApiStorageMetaControllerTest extends ClientTestCase
         $this->assertObjectHasAttribute('metas', $content);
 
         $this->assertObjectHasAttribute('filesystem', $content->metas);
-        $this->assertObjectHasAttribute('doctrine_mongo_odm', $content->metas);
+        $this->assertObjectHasAttribute('doctrine_mongodb', $content->metas);
     }
 }

@@ -12,24 +12,13 @@ use Doctrine\ODM\MongoDB\DocumentManager;
 use Doctrine\ODM\MongoDB\Configuration;
 use Doctrine\MongoDB\Connection;
 use Payum\Core\Bridge\Doctrine\Storage\DoctrineStorage;
+use Payum\Core\PaymentInterface;
+use Payum\Server\Application;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Validator\Constraints\NotBlank;
 
-class DoctrineMongoODMFactory implements FactoryInterface
+class DoctrineMongoDbFactory implements FactoryInterface
 {
-    /**
-     * @var string
-     */
-    private $rootDir;
-
-    /**
-     * @param string $rootDir
-     */
-    public function __construct($rootDir)
-    {
-        $this->rootDir = $rootDir;
-    }
-
     /**
      * {@inheritDoc}
      */
@@ -61,10 +50,12 @@ class DoctrineMongoODMFactory implements FactoryInterface
         $driver = new MappingDriverChain;
 
         // payum's basic models
+        $coreRootDir = dirname((new \ReflectionClass(PaymentInterface::class))->getFileName());
+
         $driver->addDriver(
             new XmlDriver(
                 new SymfonyFileLocator(array(
-                    $this->rootDir.'/vendor/payum/payum/src/Payum/Core/Bridge/Doctrine/Resources/mapping' => 'Payum\Core\Model'
+                    $coreRootDir.'/Bridge/Doctrine/Resources/mapping' => 'Payum\Core\Model'
                 ), '.mongodb.xml'),
                 '.mongodb.xml'
             ),
@@ -72,11 +63,11 @@ class DoctrineMongoODMFactory implements FactoryInterface
         );
 
         // your models
+        $sererRootDir = dirname((new \ReflectionClass(Application::class))->getFileName());
+
         AnnotationDriver::registerAnnotationClasses();
         $driver->addDriver(
-            new AnnotationDriver(new AnnotationReader(), array(
-                $this->rootDir.'/src/Payum/Server/Model',
-            )),
+            new AnnotationDriver(new AnnotationReader(), array($sererRootDir.'/Model')),
             'Payum\Server\Model'
         );
 
@@ -87,9 +78,9 @@ class DoctrineMongoODMFactory implements FactoryInterface
         $config->setHydratorNamespace('Hydrators');
         $config->setMetadataDriverImpl($driver);
         $config->setMetadataCacheImpl(new ArrayCache());
-        $config->setDefaultDB($options['collection']);
+        $config->setDefaultDB($options['databaseName']);
 
-        $connection = new Connection($options['port'], array(), $config);
+        $connection = new Connection($options['host'], array(), $config);
 
         return new DoctrineStorage(DocumentManager::create($connection, $config), $modelClass);
     }
@@ -99,7 +90,7 @@ class DoctrineMongoODMFactory implements FactoryInterface
      */
     public function getName()
     {
-        return 'doctrine_mongo_odm';
+        return 'doctrine_mongodb';
     }
 
     /**
@@ -107,6 +98,6 @@ class DoctrineMongoODMFactory implements FactoryInterface
      */
     public function getTitle()
     {
-        return 'Doctrine MongoODM';
+        return 'Doctrine MongoDB';
     }
 }

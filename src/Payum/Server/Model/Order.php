@@ -14,31 +14,41 @@ class Order extends BaseOrder
     /**
      * @Mongo\Id
      *
-     * @var integer $id
+     * @var string $id
      */
     protected $id;
 
     /**
+     * @Mongo\String
+     *
      * @var string
      */
     protected $paymentName;
 
     /**
+     * @Mongo\String
+     *
      * @var string
      */
     protected $afterUrl;
 
     /**
+     * @Mongo\Hash
+     *
      * @var array
      */
     protected $payments;
 
     /**
+     * @Mongo\Hash
+     *
      * @var string[]
      */
     protected $links;
 
     /**
+     * @Mongo\Hash
+     *
      * @var string[]
      */
     protected $tokens;
@@ -50,6 +60,14 @@ class Order extends BaseOrder
         $this->links = array();
         $this->tokens = array();
         $this->payments = array();
+    }
+
+    /**
+     * @return string
+     */
+    public function getId()
+    {
+        return $this->id;
     }
 
     /**
