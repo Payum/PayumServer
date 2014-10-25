@@ -8,7 +8,7 @@ PHP 5.3+ Payment micro service. Setup once and rule them all: Paypal, Stripe, Pa
 ## Installation
 
 ```bash
-$ php composer.phar create-project payum/payum-server . --stability=dev
+$ php composer.phar create-project payum/payum-server --stability=dev
 ```
 
 ## Run
