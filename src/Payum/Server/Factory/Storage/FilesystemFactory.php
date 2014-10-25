@@ -41,7 +41,7 @@ class FilesystemFactory implements FactoryInterface
     public function createStorage($modelClass, $idProperty, array $options)
     {
         return new FilesystemStorage(
-            str_replace('%app.root_dir%', $this->rootDir, $options['storageDir']),
+            str_replace('%payum.root_dir%', $this->rootDir, $options['storageDir']),
             $modelClass,
             $idProperty
         );

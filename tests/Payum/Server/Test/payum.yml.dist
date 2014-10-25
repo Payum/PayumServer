@@ -22,10 +22,10 @@ storages:
         idProperty: number
         factory: filesystem
         options:
-            storageDir: '%app.root_dir%/storage'
+            storageDir: '%payum.root_dir%/storage'
     security_token:
         modelClass: Payum\Server\Model\SecurityToken
         idProperty: hash
         factory: filesystem
         options:
-            storageDir: '%app.root_dir%/storage'
+            storageDir: '%payum.root_dir%/storage'

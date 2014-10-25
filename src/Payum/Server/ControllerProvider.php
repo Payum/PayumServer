@@ -26,7 +26,7 @@ class ControllerProvider implements ServiceProviderInterface
     public function register(SilexApplication $app)
     {
         $app['controller.index'] = $app->share(function() use ($app) {
-            return new IndexController($app['app.root_dir']);
+            return new IndexController($app['payum.root_dir']);
         });
 
         $app['controller.api_health'] = $app->share(function() {

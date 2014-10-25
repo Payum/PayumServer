@@ -37,8 +37,9 @@ class ServiceProvider implements ServiceProviderInterface
                 array('payments' => array(), 'storages' => array())
             ;
         });
+
         $app['payum.storage_dir'] = $app->share(function($app) {
-            return $app['app.root_dir'].'/storage';
+            return $app['payum.root_dir'].'/storage';
         });
         $app['payum.model.order_class'] = 'Payum\Server\Model\Order';
         $app['payum.model.order_id_property'] = 'number';
@@ -117,10 +118,10 @@ class ServiceProvider implements ServiceProviderInterface
         $app['payum.storage_factories'] = $app->share(function ($app) {
             $factories = array();
 
-            $factory = new FilesystemFactory($app['app.root_dir']);
+            $factory = new FilesystemFactory($app['payum.root_dir']);
             $factories[$factory->getName()] = $factory;
 
-            $factory = new DoctrineMongoDbFactory($app['app.root_dir']);
+            $factory = new DoctrineMongoDbFactory($app['payum.root_dir']);
             $factories[$factory->getName()] = $factory;
 
             return $factories;
@@ -166,7 +167,7 @@ class ServiceProvider implements ServiceProviderInterface
                 'idProperty' => 'number',
                 'factory' => 'filesystem',
                 'options' => array(
-                    'storageDir' => '%app.root_dir%/storage',
+                    'storageDir' => '%payum.root_dir%/storage',
                 ),
             );
 
@@ -179,7 +180,7 @@ class ServiceProvider implements ServiceProviderInterface
                 'idProperty' => 'hash',
                 'factory' => 'filesystem',
                 'options' => array(
-                    'storageDir' => '%app.root_dir%/storage',
+                    'storageDir' => '%payum.root_dir%/storage',
                 ),
             );
 

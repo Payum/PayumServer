@@ -17,7 +17,7 @@ class Application extends SilexApplication
     {
         parent::__construct();
 
-        $this['app.root_dir'] = realpath(__DIR__.'/../../../');
+        $this['payum.root_dir'] = realpath(__DIR__.'/../../../');
 
         $this->register(new UrlGeneratorServiceProvider());
         $this->register(new CorsServiceProvider());
