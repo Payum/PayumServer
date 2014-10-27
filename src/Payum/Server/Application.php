@@ -2,14 +2,15 @@
 namespace Payum\Server;
 
 use JDesrosiers\Silex\Provider\CorsServiceProvider;
+use Payum\Server\Provider\PayumProvider;
 use Silex\Application as SilexApplication;
 use Silex\Provider\FormServiceProvider;
 use Silex\Provider\ServiceControllerServiceProvider;
 use Silex\Provider\UrlGeneratorServiceProvider;
 use Silex\Provider\ValidatorServiceProvider;
-use Payum\Server\ControllerProvider as PayumControllerProvider;
-use Payum\Server\ServiceProvider as PayumServiceProvider;
-use Payum\Server\ApiProvider as PayumApiProvider;
+use Payum\Server\Provider\ControllerProvider;
+use Payum\Server\Provider\ServiceProvider;
+use Payum\Server\Provider\ApiProvider;
 
 class Application extends SilexApplication
 {
@@ -24,8 +25,9 @@ class Application extends SilexApplication
         $this->register(new ValidatorServiceProvider());
         $this->register(new FormServiceProvider);
         $this->register(new ServiceControllerServiceProvider);
-        $this->register(new PayumServiceProvider);
-        $this->register(new PayumControllerProvider);
-        $this->register(new PayumApiProvider());
+        $this->register(new PayumProvider());
+        $this->register(new ServiceProvider);
+        $this->register(new ControllerProvider);
+        $this->register(new ApiProvider());
     }
 }

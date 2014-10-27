@@ -1,11 +1,7 @@
 <?php
-namespace Payum\Server;
+namespace Payum\Server\Provider;
 
-use Payum\Core\Bridge\Symfony\ReplyToSymfonyResponseConverter;
-use Payum\Core\Bridge\Symfony\Security\HttpRequestVerifier;
-use Payum\Core\Bridge\Symfony\Security\TokenFactory;
 use Payum\Core\PaymentInterface;
-use Payum\Core\Registry\SimpleRegistry;
 use Payum\Server\Factory\Payment\FactoryInterface;
 use Payum\Server\Factory\Payment\PaypalExpressCheckoutFactory;
 use Payum\Server\Factory\Payment\StripeCheckoutFactory;
@@ -57,25 +53,6 @@ class ServiceProvider implements ServiceProviderInterface
 
         $app['payum.security.token_storage'] = $app->share(function($app) {
             return $app['payum.storages']['Payum\Server\Model\SecurityToken'];
-        });
-
-        $app['payum.reply_to_symfony_response_converter'] = $app->share(function($app) {
-            return new ReplyToSymfonyResponseConverter();
-        });
-
-        $app['payum.security.http_request_verifier'] = $app->share(function($app) {
-            return new HttpRequestVerifier($app['payum.security.token_storage']);
-        });
-
-        $app['payum.security.token_factory'] = $app->share(function($app) {
-            return new TokenFactory(
-                $app['url_generator'],
-                $app['payum.security.token_storage'],
-                $app['payum'],
-                'capture',
-                'notify',
-                'authorize'
-            );
         });
 
         $app['payum.payment_factories'] = $app->share(function ($app) {
@@ -147,10 +124,6 @@ class ServiceProvider implements ServiceProviderInterface
             );
 
             return $storages;
-        });
-
-        $app['payum'] = $app->share(function($app) {
-            return new SimpleRegistry($app['payum.payments'], $app['payum.storages'], null, null);
         });
     }
 

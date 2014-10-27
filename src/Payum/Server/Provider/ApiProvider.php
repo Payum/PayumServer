@@ -1,5 +1,5 @@
 <?php
-namespace Payum\Server;
+namespace Payum\Server\Provider;
 
 use Payum\Server\Api\View\FormToJsonConverter;
 use Payum\Server\Api\View\OrderToJsonConverter;

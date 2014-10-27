@@ -1,8 +1,7 @@
 <?php
-namespace Payum\Server;
+namespace Payum\Server\Provider;
 
-use Payum\Core\Bridge\Symfony\ReplyToSymfonyResponseConverter;
-use Payum\Core\Reply\ReplyInterface;
+use Payum\Server\Application;
 use Payum\Server\Controller\ApiHealthController;
 use Payum\Server\Controller\ApiPaymentConfigController;
 use Payum\Server\Controller\ApiOrderController;
@@ -10,7 +9,6 @@ use Payum\Server\Controller\ApiPaymentMetaController;
 use Payum\Server\Controller\ApiStorageConfigController;
 use Payum\Server\Controller\ApiStorageMetaController;
 use Payum\Server\Controller\IndexController;
-use Payum\Server\Controller\PayumController;
 use Silex\Application as SilexApplication;
 use Silex\ServiceProviderInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -80,22 +78,7 @@ class ControllerProvider implements ServiceProviderInterface
             );
         });
 
-        $app['controller.payum'] = $app->share(function() use ($app) {
-            return new PayumController(
-                $app['payum.security.token_factory'],
-                $app['payum.security.http_request_verifier'],
-                $app['payum']
-            );
-        });
-
         $app->get('/', 'controller.index:indexAction');
-
-        $app->get('/capture/{payum_token}', 'controller.payum:captureAction')->bind('capture');
-        $app->post('/capture/{payum_token}', 'controller.payum:captureAction')->bind('capture_post');
-        $app->get('/authorize/{payum_token}', 'controller.payum:authorizeAction')->bind('authorize');
-        $app->post('/authorize/{payum_token}', 'controller.payum:authorizeAction')->bind('authorize_post');
-        $app->get('/notify/{payum_token}', 'controller.payum:notifyAction')->bind('notify');
-        $app->post('/notify/{payum_token}', 'controller.payum:notifyAction')->bind('notify_post');
 
         $app->get('/api/health', 'controller.api_health:checksAction')->bind('api_health_checks');
         $app->get('/api/orders/meta', 'controller.api_order:metaAction')->bind('order_meta');
@@ -142,17 +125,6 @@ class ControllerProvider implements ServiceProviderInterface
         });
 
         $app->after($app["cors"]);
-
-        $app->error(function (\Exception $e, $code) use ($app) {
-            if (false == $e instanceof ReplyInterface) {
-                return;
-            }
-
-            /** @var ReplyToSymfonyResponseConverter $converter */
-            $converter = $app['payum.reply_to_symfony_response_converter'];
-
-            return $converter->convert($e);
-        }, $priority = 100);
 
         $app->error(function (\Exception $e, $code) use ($app) {
             if ('json' !== $app['request']->getContentType()) {
