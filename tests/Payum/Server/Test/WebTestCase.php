@@ -14,6 +14,7 @@ abstract class WebTestCase extends SilexWebTestCase
         $fs = new Filesystem();
         $fs->copy(__DIR__.'/payum.yml.dist', __DIR__.'/payum.yml', true);
         $fs->remove(__DIR__.'/storage');
+        $fs->mkdir(__DIR__.'/storage');
     }
 
     public function createApplication()
