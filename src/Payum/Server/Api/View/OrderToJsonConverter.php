@@ -27,7 +27,6 @@ class OrderToJsonConverter
      */
     public function convert(Order $order)
     {
-
         $orderPayments = array();
         foreach ($order->getPayments() as $orderPayment) {
             if (false == isset($orderPayment['status']) || GetHumanStatus::STATUS_UNKNOWN == $orderPayment['status']) {
@@ -48,6 +47,7 @@ class OrderToJsonConverter
         $order->setPayments($orderPayments);
 
         return [
+            'id' => $order->getPublicId(),
             'number' => $order->getNumber(),
             'totalAmount' => $order->getTotalAmount(),
             'currencyCode' => $order->getCurrencyCode(),

@@ -23,6 +23,13 @@ class Order extends BaseOrder
      *
      * @var string
      */
+    protected $publicId;
+
+    /**
+     * @Mongo\String
+     *
+     * @var string
+     */
     protected $paymentName;
 
     /**
@@ -144,5 +151,21 @@ class Order extends BaseOrder
     public function addLink($name, $link)
     {
         return $this->links[$name] = $link;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getPublicId()
+    {
+        return $this->publicId;
+    }
+
+    /**
+     * @param mixed $publicId
+     */
+    public function setPublicId($publicId)
+    {
+        $this->publicId = $publicId;
     }
 }

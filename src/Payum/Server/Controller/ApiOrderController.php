@@ -96,6 +96,7 @@ class ApiOrderController
         $storage->updateModel($order);
 
         $token = $this->tokenFactory->createToken($order->getPaymentName(), $order, 'order_get');
+        $order->setPublicId($token->getHash());
         $order->addLink('self', $token->getTargetUrl());
         $order->addLink('update', $token->getTargetUrl());
         $order->addLink('delete', $token->getTargetUrl());
