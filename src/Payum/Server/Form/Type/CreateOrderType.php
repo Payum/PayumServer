@@ -6,8 +6,10 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 use Symfony\Component\Validator\Constraints\Choice;
+use Symfony\Component\Validator\Constraints\Email;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\Type;
+use Symfony\Component\Validator\Constraints\Url;
 
 class CreateOrderType extends AbstractType
 {
@@ -36,24 +38,37 @@ class CreateOrderType extends AbstractType
 
         $builder
             ->add('paymentName', 'choice', array(
+                'label' => 'Payment',
                 'choices' => $choices,
                 'constraints' => array(
                     new NotBlank(),
                     new Choice(array('choices' => array_keys($choices)))
                 )
             ))
-            ->add('afterUrl', 'text')
+            ->add('afterUrl', 'text', array(
+                'label' => 'After Url',
+                'constraints' => array(new NotBlank(), new Url())
+            ))
             ->add('totalAmount', 'number', array(
+                'label' => 'Amount',
                 'constraints' => array(new NotBlank(), new Type(['type' => 'numeric']))
             ))
             ->add('currencyCode', 'currency', array(
+                'label' => 'Currency',
                 'data' => 'USD',
                 'constraints' => array(new NotBlank()),
                 'preferred_choices' => array('USD', 'EUR'),
             ))
-            ->add('clientEmail', 'text')
-            ->add('clientId', 'text')
-            ->add('description', 'text')
+            ->add('clientEmail', 'text', array(
+                'required' => false,
+                'constraints' => array(new Email()))
+            )
+            ->add('clientId', 'text', array(
+                'required' => false,
+            ))
+            ->add('description', 'text', array(
+                'required' => false,
+            ))
         ;
     }
 

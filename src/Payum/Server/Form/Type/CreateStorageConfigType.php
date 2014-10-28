@@ -34,8 +34,12 @@ class CreateStorageConfigType extends AbstractType
         }
 
         $builder
-            ->add('name', 'text', array('constraints' => array(new NotBlank)))
+            ->add('name', 'text', array(
+                'label' => 'Name',
+                'constraints' => array(new NotBlank),
+            ))
             ->add('factory', 'choice', array(
+                'label' => 'Storage',
                 'choices' => $choices,
                 'constraints' => array(
                     new NotBlank,

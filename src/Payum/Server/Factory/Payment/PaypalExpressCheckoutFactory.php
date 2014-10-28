@@ -15,18 +15,22 @@ class PaypalExpressCheckoutFactory implements FactoryInterface
     {
         $builder
             ->add('username', 'text', array(
+                'label' => 'Username',
                 'required' => true,
                 'constraints' => array(new NotBlank),
             ))
             ->add('password', 'password', array(
+                'label' => 'Password',
                 'required' => true,
                 'constraints' => array(new NotBlank),
             ))
             ->add('signature', 'password', array(
+                'label' => 'Signature',
                 'required' => true,
                 'constraints' => array(new NotBlank),
             ))
             ->add('sandbox', 'checkbox', array(
+                'label' => 'Sandbox',
                 'required' => false,
                 'data' => true,
                 'empty_data' => true,

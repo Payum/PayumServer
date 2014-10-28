@@ -15,10 +15,12 @@ class StripeJsFactory implements FactoryInterface
     {
         $builder
             ->add('publishable_key', 'text', array(
+                'label' => 'Publishable Key',
                 'required' => true,
                 'constraints' => array(new NotBlank),
             ))
             ->add('secret_key', 'password', array(
+                'label' => 'Secret Key',
                 'required' => true,
                 'constraints' => array(new NotBlank),
             ))

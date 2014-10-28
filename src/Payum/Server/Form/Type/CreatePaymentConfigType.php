@@ -7,6 +7,7 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 use Symfony\Component\Validator\Constraints\Choice;
 use Symfony\Component\Validator\Constraints\NotBlank;
+use Symfony\Component\Validator\Constraints\Regex;
 
 class CreatePaymentConfigType extends AbstractType
 {
@@ -34,8 +35,15 @@ class CreatePaymentConfigType extends AbstractType
         }
 
         $builder
-            ->add('name', 'text', array('constraints' => array(new NotBlank)))
+            ->add('name', 'text', array(
+                'label' => 'Name',
+                'constraints' => array(
+                    new NotBlank,
+                    new Regex(['pattern' => '[\w\d -_]', 'message' => 'The name must match [\w\d -_] regexp.']
+                )),
+            ))
             ->add('factory', 'choice', array(
+                'label' => 'Gateway',
                 'choices' => $choices,
                 'constraints' => array(
                     new NotBlank,
