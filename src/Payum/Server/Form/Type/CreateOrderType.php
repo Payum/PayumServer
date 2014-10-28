@@ -38,17 +38,16 @@ class CreateOrderType extends AbstractType
             ))
             ->add('afterUrl', 'text')
             ->add('totalAmount', 'text', array(
-                'constraints' => array(
-                    new NotBlank(),
-                )
+                'constraints' => array(new NotBlank())
             ))
-            ->add('currencyCode', 'text', array(
-                'constraints' => array(
-                    new NotBlank(),
-                )
+            ->add('currencyCode', 'currency', array(
+                'data' => 'USD',
+                'constraints' => array(new NotBlank()),
+                'preferred_choices' => array('USD', 'EUR'),
             ))
             ->add('clientEmail', 'text')
             ->add('clientId', 'text')
+            ->add('description', 'text')
         ;
     }
 
