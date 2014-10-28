@@ -53,6 +53,7 @@ class OrderToJsonConverter
             'currencyCode' => $order->getCurrencyCode(),
             'clientEmail' => $order->getClientEmail(),
             'clientId' => $order->getClientId(),
+            'description' => $order->getDescription(),
             'payments' => $order->getPayments(),
             '_links' => $links,
         ];
