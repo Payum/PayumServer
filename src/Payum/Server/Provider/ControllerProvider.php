@@ -86,6 +86,7 @@ class ControllerProvider implements ServiceProviderInterface
         $app->put('/api/orders/{payum_token}', 'controller.api_order:updateAction')->bind('order_update');
         $app->delete('/api/orders/{payum_token}', 'controller.api_order:deleteAction')->bind('order_delete');
         $app->post('/api/orders', 'controller.api_order:createAction')->bind('order_create');
+        $app->get('/api/orders', 'controller.api_order:getAllAction')->bind('order_get_all');
 
         $app->get('/api/configs/payments/metas', 'controller.api_payment_factory:getAllAction')->bind('payment_factory_get_all');
         $app->get('/api/configs/payments', 'controller.api_payment_config:getAllAction')->bind('payment_config_get_all');

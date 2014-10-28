@@ -11,9 +11,9 @@ use Doctrine\ODM\MongoDB\Mapping\Driver\XmlDriver;
 use Doctrine\ODM\MongoDB\DocumentManager;
 use Doctrine\ODM\MongoDB\Configuration;
 use Doctrine\MongoDB\Connection;
-use Payum\Core\Bridge\Doctrine\Storage\DoctrineStorage;
 use Payum\Core\PaymentInterface;
 use Payum\Server\Application;
+use Payum\Server\Storage\DoctrineStorage;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Validator\Constraints\NotBlank;
 

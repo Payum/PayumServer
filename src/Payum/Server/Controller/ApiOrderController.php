@@ -9,6 +9,7 @@ use Payum\Core\Security\HttpRequestVerifierInterface;
 use Payum\Server\Api\View\FormToJsonConverter;
 use Payum\Server\Api\View\OrderToJsonConverter;
 use Payum\Server\Model\Order;
+use Payum\Server\Storage\StorageInterface;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -192,6 +193,25 @@ class ApiOrderController
 
         return new JsonResponse(array(
             'order' => $this->orderToJsonConverter->convert($order),
+        ));
+    }
+
+    /**
+     * @return JsonResponse
+     */
+    public function getAllAction()
+    {
+        /** @var StorageInterface $storage */
+        $storage = $this->registry->getStorage(Order::class);
+
+        $jsonOrders = [];
+        foreach ($storage->findAll() as $order) {
+            $jsonOrders[] = $this->orderToJsonConverter->convert($order);
+
+        }
+
+        return new JsonResponse(array(
+            'orders' => $jsonOrders,
         ));
     }
 

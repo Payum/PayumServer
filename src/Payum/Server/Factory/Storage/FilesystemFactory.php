@@ -1,10 +1,8 @@
 <?php
 namespace Payum\Server\Factory\Storage;
 
-use Payum\Core\PaymentInterface;
-use Payum\Core\Storage\FilesystemStorage;
+use Payum\Server\Storage\FilesystemStorage;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\Validator\Constraints\Choice;
 use Symfony\Component\Validator\Constraints\NotBlank;
 
 class FilesystemFactory implements FactoryInterface

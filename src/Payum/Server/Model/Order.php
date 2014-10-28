@@ -50,8 +50,8 @@ class Order extends BaseOrder
     {
         parent::__construct();
 
-        $this->links = array();
-        $this->payments = array();
+        $this->links = [];
+        $this->payments = [];
     }
 
     /**
