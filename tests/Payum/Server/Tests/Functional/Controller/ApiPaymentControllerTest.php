@@ -3,6 +3,7 @@ namespace Payum\Server\Controller;
 
 use Payum\Server\Test\ClientTestCase;
 use Payum\Server\Test\ResponseHelper;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class ApiPaymentControllerTest extends ClientTestCase
 {
@@ -94,5 +95,20 @@ class ApiPaymentControllerTest extends ClientTestCase
         $this->assertEquals('stripe_checkout', $content->payment->name);
 
         $this->assertObjectHasAttribute('options', $content->payment);
+    }
+
+    /**
+     * @test
+     */
+    public function shouldAllowDeletePayment()
+    {
+        $this->getClient()->request('GET', '/api/configs/payments/stripe_checkout');
+        $this->assertClientResponseStatus(200);
+
+        $this->getClient()->request('DELETE', '/api/configs/payments/stripe_checkout');
+        $this->assertClientResponseStatus(204);
+
+        $this->setExpectedException(NotFoundHttpException::class);
+        $this->getClient()->request('GET', '/api/configs/payments/stripe_checkout');
     }
 }

@@ -91,6 +91,7 @@ class ControllerProvider implements ServiceProviderInterface
         $app->get('/api/configs/payments/metas', 'controller.api_payment_factory:getAllAction')->bind('payment_factory_get_all');
         $app->get('/api/configs/payments', 'controller.api_payment_config:getAllAction')->bind('payment_config_get_all');
         $app->get('/api/configs/payments/{name}', 'controller.api_payment_config:getAction')->bind('payment_config_get');
+        $app->delete('/api/configs/payments/{name}', 'controller.api_payment_config:deleteAction')->bind('payment_config_delete');
         $app->post('/api/configs/payments', 'controller.api_payment_config:createAction')->bind('payment_config_create');
 
         $app->get('/api/configs/storages/metas', 'controller.api_storage_factory:getAllAction')->bind('storage_factory_get_all');

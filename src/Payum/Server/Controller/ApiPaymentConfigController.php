@@ -7,6 +7,7 @@ use Payum\Server\Api\View\FormToJsonConverter;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
@@ -110,6 +111,24 @@ class ApiPaymentConfigController
         }
 
         return new JsonResponse(array('payment' => $this->normalizeConfig($name, $this->currentConfig['payments'][$name])));
+    }
+
+    /**
+     * @param string $name
+     *
+     * @return Response
+     */
+    public function deleteAction($name)
+    {
+        if (false == isset($this->currentConfig['payments'][$name])) {
+            throw new NotFoundHttpException(sprintf('Config with name %s was not found.', $name));
+        }
+
+        unset($this->currentConfig['payments'][$name]);
+
+        file_put_contents($this->configFile, Yaml::dump($this->currentConfig, 5));
+
+        return new Response('', 204);
     }
 
     protected function normalizeConfig($name, array $config)
