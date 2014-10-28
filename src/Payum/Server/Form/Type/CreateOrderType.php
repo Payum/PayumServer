@@ -29,16 +29,22 @@ class CreateOrderType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        $choices = [];
+        foreach ($this->currentConfig['payments'] as $name => $data) {
+            $choices[$name] = $name;
+        }
+
         $builder
-            ->add('paymentName', 'text', array(
+            ->add('paymentName', 'choice', array(
+                'choices' => $choices,
                 'constraints' => array(
                     new NotBlank(),
-                    new Choice(array('choices' => array_keys($this->currentConfig['payments'])))
+                    new Choice(array('choices' => array_keys($choices)))
                 )
             ))
             ->add('afterUrl', 'text')
             ->add('totalAmount', 'text', array(
-                'constraints' => array(new NotBlank())
+                'constraints' => array(new NotBlank(), new Type(['type' => 'number']))
             ))
             ->add('currencyCode', 'currency', array(
                 'data' => 'USD',
