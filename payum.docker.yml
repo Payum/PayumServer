@@ -1,0 +1,16 @@
+payments: []
+storages:
+    order:
+        modelClass: Payum\Server\Model\Order
+        idProperty: number
+        factory: doctrine_mongodb
+        options:
+            host: localhost:27017
+            databaseName: payum_server
+    security_token:
+        modelClass: Payum\Server\Model\SecurityToken
+        idProperty: hash
+        factory: doctrine_mongodb
+        options:
+            host: localhost:27017
+            databaseName: payum_server
