@@ -81,7 +81,6 @@ class ApiOrderController
 
         $form = $this->formFactory->create('create_order');
         $form->submit((array) $rawOrder);
-
         if (false == $form->isValid()) {
             return new JsonResponse($this->formToJsonConverter->convertInvalid($form), 400);
         }
