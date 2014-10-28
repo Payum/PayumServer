@@ -19,6 +19,7 @@ class Application extends SilexApplication
         parent::__construct();
 
         $this['payum.root_dir'] = realpath(__DIR__.'/../../../');
+        $app["cors.allowMethods"] = 'GET, OPTIONS, PUT, POST, DELETE';
 
         $this->register(new UrlGeneratorServiceProvider());
         $this->register(new CorsServiceProvider());
