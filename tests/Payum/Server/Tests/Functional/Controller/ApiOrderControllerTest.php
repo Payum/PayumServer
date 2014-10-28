@@ -121,4 +121,36 @@ class ApiOrderControllerTest extends ClientTestCase
 
         $this->assertStringStartsWith('http://localhost/api/orders/', $this->getClient()->getResponse()->headers->get('Location'));
     }
+
+    /**
+     * @test
+     */
+    public function shouldAllowGetOrderLinks()
+    {
+        $this->getClient()->postJson('/api/orders', [
+            'totalAmount' => 123,
+            'currencyCode' => 'USD',
+            'clientEmail' => 'foo@example.com',
+            'clientId' => 'theClientId',
+            'paymentName' => 'stripe_js',
+        ]);
+
+        $this->assertClientResponseStatus(201);
+        $this->assertClientResponseContentJson();
+
+        //guard
+        $this->assertTrue($this->getClient()->getResponse()->headers->has('Location'));
+
+        $this->getClient()->request('GET', $this->getClient()->getResponse()->headers->get('Location'));
+
+        $this->assertClientResponseStatus(200);
+        $this->assertClientResponseContentJson();
+
+        $content = $this->getClientResponseJsonContent();
+
+        $this->assertObjectHasAttribute('order', $content);
+
+        $this->assertObjectHasAttribute('_links', $content->order);
+        $this->assertObjectHasAttribute('self', $content->order->_links);
+    }
 }

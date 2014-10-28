@@ -40,15 +40,21 @@ class OrderToJsonConverter
             $orderPayments[] = $orderPayment;
         }
 
+        $links = [];
+        foreach ($order->getLinks() as $name => $link) {
+            $links[$name] = ['href' => $link];
+        }
+
         $order->setPayments($orderPayments);
 
-        return array(
+        return [
             'number' => $order->getNumber(),
             'totalAmount' => $order->getTotalAmount(),
             'currencyCode' => $order->getCurrencyCode(),
             'clientEmail' => $order->getClientEmail(),
             'clientId' => $order->getClientId(),
             'payments' => $order->getPayments(),
-        );
+            '_links' => $links,
+        ];
     }
 }

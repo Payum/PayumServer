@@ -46,19 +46,11 @@ class Order extends BaseOrder
      */
     protected $links;
 
-    /**
-     * @Mongo\Hash
-     *
-     * @var string[]
-     */
-    protected $tokens;
-
     public function __construct()
     {
         parent::__construct();
 
         $this->links = array();
-        $this->tokens = array();
         $this->payments = array();
     }
 
@@ -137,20 +129,20 @@ class Order extends BaseOrder
     }
 
     /**
+     * @param string$name
+     *
      * @return \string[]
      */
-    public function getTokens()
+    public function getLink($name)
     {
-        return $this->tokens;
+        return $this->links[$name];
     }
 
     /**
-     * @param string $name
-     * @param TokenInterface $token
+     * @return \string[]
      */
-    public function addToken($name, TokenInterface $token)
+    public function addLink($name, $link)
     {
-        $this->tokens[$name] = $token->getHash();
-        $this->links[$name] = $token->getTargetUrl();
+        return $this->links[$name] = $link;
     }
 }

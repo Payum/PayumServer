@@ -94,24 +94,28 @@ class ApiOrderController
         $storage = $this->registry->getStorage($order);
         $storage->updateModel($order);
 
-        $apiToken = $this->tokenFactory->createToken($order->getPaymentName(), $order, 'order_get');
+        $token = $this->tokenFactory->createToken($order->getPaymentName(), $order, 'order_get');
+        $order->addLink('self', $token->getTargetUrl());
+        $order->addLink('update', $token->getTargetUrl());
+        $order->addLink('delete', $token->getTargetUrl());
 
-        $order->addToken('self', $apiToken);
-        $order->addToken('update', $apiToken);
-        $order->addToken('delete', $apiToken);
-        $order->addToken('authorize', $this->tokenFactory->createAuthorizeToken($order->getPaymentName(), $order, $order->getAfterUrl()));
-        $order->addToken('capture', $this->tokenFactory->createCaptureToken($order->getPaymentName(), $order, $order->getAfterUrl()));
-        $order->addToken('notify', $this->tokenFactory->createNotifyToken($order->getPaymentName(), $order));
+        $token = $this->tokenFactory->createAuthorizeToken($order->getPaymentName(), $order, $order->getAfterUrl());
+        $order->addLink('authorize', $token->getTargetUrl());
+
+        $token = $this->tokenFactory->createCaptureToken($order->getPaymentName(), $order, $order->getAfterUrl());
+        $order->addLink('capture', $token->getTargetUrl());
+
+        $token = $this->tokenFactory->createNotifyToken($order->getPaymentName(), $order);
+        $order->addLink('notify', $token->getTargetUrl());
 
         $storage->updateModel($order);
 
         return new JsonResponse(
             array(
                 'order' => $this->orderToJsonConverter->convert($order),
-                '_links' => $order->getLinks(),
             ),
             201,
-            array('Location' => $apiToken->getTargetUrl())
+            array('Location' => $order->getLink('self'))
         );
     }
 
@@ -141,16 +145,19 @@ class ApiOrderController
         $storage = $this->registry->getStorage($order);
         $storage->updateModel($order);
 
-        $order->addToken('api', $this->tokenFactory->createToken($order->getPaymentName(), $order, 'order_get'));
-        $order->addToken('authorize', $this->tokenFactory->createAuthorizeToken($order->getPaymentName(), $order, $order->getAfterUrl()));
-        $order->addToken('capture', $this->tokenFactory->createCaptureToken($order->getPaymentName(), $order, $order->getAfterUrl()));
-        $order->addToken('notify', $this->tokenFactory->createNotifyToken($order->getPaymentName(), $order));
+        $token = $this->tokenFactory->createAuthorizeToken($order->getPaymentName(), $order, $order->getAfterUrl());
+        $order->addLink('authorize', $token->getTargetUrl());
+
+        $token = $this->tokenFactory->createCaptureToken($order->getPaymentName(), $order, $order->getAfterUrl());
+        $order->addLink('capture', $token->getTargetUrl());
+
+        $token = $this->tokenFactory->createNotifyToken($order->getPaymentName(), $order);
+        $order->addLink('notify', $token->getTargetUrl());
 
         $storage->updateModel($order);
 
         return new JsonResponse(array(
             'order' => $this->orderToJsonConverter->convert($order),
-            '_links' => $order->getLinks(),
         ));
     }
 
@@ -185,7 +192,6 @@ class ApiOrderController
 
         return new JsonResponse(array(
             'order' => $this->orderToJsonConverter->convert($order),
-            '_links' => $order->getLinks(),
         ));
     }
 
