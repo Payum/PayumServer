@@ -18,7 +18,7 @@ class StripeJsFactory implements FactoryInterface
                 'required' => true,
                 'constraints' => array(new NotBlank),
             ))
-            ->add('secret_key', 'text', array(
+            ->add('secret_key', 'password', array(
                 'required' => true,
                 'constraints' => array(new NotBlank),
             ))

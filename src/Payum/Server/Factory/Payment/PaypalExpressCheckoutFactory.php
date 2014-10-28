@@ -18,11 +18,11 @@ class PaypalExpressCheckoutFactory implements FactoryInterface
                 'required' => true,
                 'constraints' => array(new NotBlank),
             ))
-            ->add('password', 'text', array(
+            ->add('password', 'password', array(
                 'required' => true,
                 'constraints' => array(new NotBlank),
             ))
-            ->add('signature', 'text', array(
+            ->add('signature', 'password', array(
                 'required' => true,
                 'constraints' => array(new NotBlank),
             ))

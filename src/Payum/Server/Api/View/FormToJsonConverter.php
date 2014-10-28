@@ -22,11 +22,13 @@ class FormToJsonConverter
                 'required' => $child->vars['required'],
             );
 
-            if (in_array('text', $child->vars['block_prefixes'])) {
-                $fields[$name]['type'] = 'text';
-            } elseif (in_array('checkbox', $child->vars['block_prefixes'])) {
+
+            if (in_array('checkbox', $child->vars['block_prefixes'])) {
                 $fields[$name]['type'] = 'checkbox';
-            } elseif (in_array('choice', $child->vars['block_prefixes'])) {
+            } else if (in_array('password', $child->vars['block_prefixes'])) {
+                $fields[$name]['type'] = 'password';
+            }
+            elseif (in_array('choice', $child->vars['block_prefixes'])) {
                 $fields[$name]['type'] = 'choice';
                 $fields[$name]['choices'] = array_values($child->vars['choices']);
             } else {
