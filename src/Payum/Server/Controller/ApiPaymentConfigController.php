@@ -91,7 +91,7 @@ class ApiPaymentConfigController
             ));
         }
 
-        return $this->normalizeInvalidForm($form);
+        return new JsonResponse($this->formToJsonConverter->convertInvalid($form), 400);
     }
 
     public function getAllAction()
