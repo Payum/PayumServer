@@ -53,11 +53,11 @@ class CreateOrderType extends AbstractType
                 'label' => 'Amount',
                 'constraints' => array(new NotBlank(), new Type(['type' => 'numeric']))
             ))
-            ->add('currencyCode', 'currency', array(
+            ->add('currencyCode', 'choice', array(
+                'choices' => ['USD' => 'US Dollar', 'EUR' => 'Euro'],
                 'label' => 'Currency',
                 'data' => 'USD',
-                'constraints' => array(new NotBlank()),
-                'preferred_choices' => array('USD', 'EUR'),
+                'constraints' => array(new NotBlank(), new Choice(['USD', 'EUR'])),
             ))
             ->add('clientEmail', 'text', array(
                 'required' => false,
