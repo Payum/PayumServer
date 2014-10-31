@@ -7,6 +7,8 @@ use Payum\Silex\PayumProvider;
 use Silex\Application as SilexApplication;
 use Silex\Provider\FormServiceProvider;
 use Silex\Provider\ServiceControllerServiceProvider;
+use Silex\Provider\TranslationServiceProvider;
+use Silex\Provider\TwigServiceProvider;
 use Silex\Provider\UrlGeneratorServiceProvider;
 use Silex\Provider\ValidatorServiceProvider;
 use Payum\Server\Provider\ControllerProvider;
@@ -23,10 +25,12 @@ class Application extends SilexApplication
         $app["cors.allowMethods"] = 'GET, OPTIONS, PUT, POST, DELETE';
 
         $this->register(new RavenProvider());
-        $this->register(new UrlGeneratorServiceProvider());
-        $this->register(new CorsServiceProvider());
-        $this->register(new ValidatorServiceProvider());
         $this->register(new FormServiceProvider);
+        $this->register(new ValidatorServiceProvider());
+        $this->register(new UrlGeneratorServiceProvider());
+        $this->register(new TwigServiceProvider());
+        $this->register(new TranslationServiceProvider());
+        $this->register(new CorsServiceProvider());
         $this->register(new ServiceControllerServiceProvider);
         $this->register(new PayumProvider());
         $this->register(new ServiceProvider);

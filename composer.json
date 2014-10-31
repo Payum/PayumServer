@@ -33,6 +33,8 @@
         "payum/payum-silex-provider": "0.12.*@dev",
         "payum/payum": "0.12.*",
         "raven/raven": "~0.10.0",
+        "twig/twig": "~1.12",
+        "symfony/twig-bridge": "~2.6@dev",
         "michelf/php-markdown": "~1.4",
         "egil/php-markdown-extra-extended": "1.0",
         "doctrine/mongodb": "1.0.*@dev",

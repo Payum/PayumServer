@@ -4,7 +4,7 @@
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "10b0fb7a9154606ea326bd53ad44d4e0",
+    "hash": "8cc91e4a8616bbd8b42ae2c2a6832c67",
     "packages": [
         {
             "name": "ajbdev/authorizenet-php-api",
@@ -1314,12 +1314,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/Payum/PayumSilexProvider.git",
-                "reference": "5a3b0ac2b8bff1a8d78e59c554982953442b909b"
+                "reference": "249bc9934ed6aef05834fc06572cbd437693cce9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Payum/PayumSilexProvider/zipball/5a3b0ac2b8bff1a8d78e59c554982953442b909b",
-                "reference": "5a3b0ac2b8bff1a8d78e59c554982953442b909b",
+                "url": "https://api.github.com/repos/Payum/PayumSilexProvider/zipball/249bc9934ed6aef05834fc06572cbd437693cce9",
+                "reference": "249bc9934ed6aef05834fc06572cbd437693cce9",
                 "shasum": ""
             },
             "require": {
@@ -1376,7 +1376,7 @@
                 "recurring payment",
                 "stripe"
             ],
-            "time": "2014-10-30 15:13:15"
+            "time": "2014-10-31 08:41:29"
         },
         {
             "name": "phpxmlrpc/phpxmlrpc",
@@ -2611,6 +2611,80 @@
             "time": "2014-10-26 07:46:28"
         },
         {
+            "name": "symfony/twig-bridge",
+            "version": "dev-master",
+            "target-dir": "Symfony/Bridge/Twig",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/symfony/TwigBridge.git",
+                "reference": "cfc109fd644d34be8c9e420c7a42598a60361413"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/symfony/TwigBridge/zipball/cfc109fd644d34be8c9e420c7a42598a60361413",
+                "reference": "cfc109fd644d34be8c9e420c7a42598a60361413",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.3",
+                "symfony/security-csrf": "~2.4",
+                "twig/twig": "~1.12"
+            },
+            "require-dev": {
+                "symfony/console": "~2.2",
+                "symfony/expression-language": "~2.4",
+                "symfony/form": "~2.6",
+                "symfony/http-kernel": "~2.2",
+                "symfony/routing": "~2.2",
+                "symfony/security": "~2.4",
+                "symfony/stopwatch": "~2.2",
+                "symfony/templating": "~2.1",
+                "symfony/translation": "~2.2",
+                "symfony/var-dumper": "~2.6",
+                "symfony/yaml": "~2.0"
+            },
+            "suggest": {
+                "symfony/expression-language": "For using the ExpressionExtension",
+                "symfony/form": "For using the FormExtension",
+                "symfony/http-kernel": "For using the HttpKernelExtension",
+                "symfony/routing": "For using the RoutingExtension",
+                "symfony/security": "For using the SecurityExtension",
+                "symfony/stopwatch": "For using the StopwatchExtension",
+                "symfony/templating": "For using the TwigEngine",
+                "symfony/translation": "For using the TranslationExtension",
+                "symfony/var-dumper": "For using the DumpExtension",
+                "symfony/yaml": "For using the YamlExtension"
+            },
+            "type": "symfony-bridge",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "2.6-dev"
+                }
+            },
+            "autoload": {
+                "psr-0": {
+                    "Symfony\\Bridge\\Twig\\": ""
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Symfony Community",
+                    "homepage": "http://symfony.com/contributors"
+                },
+                {
+                    "name": "Fabien Potencier",
+                    "email": "fabien@symfony.com"
+                }
+            ],
+            "description": "Symfony Twig Bridge",
+            "homepage": "http://symfony.com",
+            "time": "2014-10-26 07:46:28"
+        },
+        {
             "name": "symfony/validator",
             "version": "dev-master",
             "target-dir": "Symfony/Component/Validator",
@@ -3656,6 +3730,7 @@
         "symfony/security-csrf": 20,
         "symfony/options-resolver": 20,
         "payum/payum-silex-provider": 20,
+        "symfony/twig-bridge": 20,
         "doctrine/mongodb": 20,
         "doctrine/mongodb-odm": 20,
         "symfony/filesystem": 20,

@@ -39,7 +39,7 @@ class CreatePaymentConfigType extends AbstractType
                 'label' => 'Name',
                 'constraints' => array(
                     new NotBlank,
-                    new Regex(['pattern' => '[\w\d -_]', 'message' => 'The name must match [\w\d -_] regexp.']
+                    new Regex(['pattern' => '/[\w\d\_\-]/', 'message' => 'The name must match [^\/\\] regexp.']
                 )),
             ))
             ->add('factory', 'choice', array(

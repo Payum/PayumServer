@@ -2,7 +2,12 @@
 namespace Payum\Server\Provider;
 
 use Payum\Core\PaymentInterface;
+use Payum\Server\Factory\Payment\AuthorizeNetFactory;
+use Payum\Server\Factory\Payment\Be2BillFactory;
+use Payum\Server\Factory\Payment\Be2BillOffsiteFactory;
 use Payum\Server\Factory\Payment\FactoryInterface;
+use Payum\Server\Factory\Payment\OfflineFactory;
+use Payum\Server\Factory\Payment\PayexFactory;
 use Payum\Server\Factory\Payment\PaypalExpressCheckoutFactory;
 use Payum\Server\Factory\Payment\StripeCheckoutFactory;
 use Payum\Server\Factory\Payment\StripeJsFactory;
@@ -58,13 +63,28 @@ class ServiceProvider implements ServiceProviderInterface
         $app['payum.payment_factories'] = $app->share(function ($app) {
             $factories = array();
 
+            $factory = new AuthorizeNetFactory();
+            $factories[$factory->getName()] = $factory;
+
+            $factory = new Be2BillFactory();
+            $factories[$factory->getName()] = $factory;
+
+            $factory = new Be2BillOffsiteFactory();
+            $factories[$factory->getName()] = $factory;
+
+            $factory = new OfflineFactory();
+            $factories[$factory->getName()] = $factory;
+
+            $factory = new PayexFactory();
+            $factories[$factory->getName()] = $factory;
+
             $factory = new PaypalExpressCheckoutFactory;
             $factories[$factory->getName()] = $factory;
 
-            $factory = new StripeJsFactory;
+            $factory = new StripeCheckoutFactory;
             $factories[$factory->getName()] = $factory;
 
-            $factory = new StripeCheckoutFactory;
+            $factory = new StripeJsFactory;
             $factories[$factory->getName()] = $factory;
 
             return $factories;
