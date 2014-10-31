@@ -48,6 +48,8 @@ class OrderToJsonConverter
 
         return [
             'id' => $order->getPublicId(),
+            'paymentName' => $order->getPaymentName(),
+            'afterUrl' => $order->getAfterUrl(),
             'number' => $order->getNumber(),
             'totalAmount' => $order->getTotalAmount(),
             'currencyCode' => $order->getCurrencyCode(),
