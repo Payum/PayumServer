@@ -4,7 +4,7 @@
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "8cc91e4a8616bbd8b42ae2c2a6832c67",
+    "hash": "093c54bfc96062408823433ec58d38dc",
     "packages": [
         {
             "name": "ajbdev/authorizenet-php-api",
@@ -1192,16 +1192,16 @@
         },
         {
             "name": "payum/payum",
-            "version": "0.12.0",
+            "version": "0.12.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Payum/Payum.git",
-                "reference": "453d3f68f0ba92bacb5da7df8af334843daa8c48"
+                "reference": "e1a622e7c5ad0b5e98f3f00fdf46ffcb8e39e75a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Payum/Payum/zipball/453d3f68f0ba92bacb5da7df8af334843daa8c48",
-                "reference": "453d3f68f0ba92bacb5da7df8af334843daa8c48",
+                "url": "https://api.github.com/repos/Payum/Payum/zipball/e1a622e7c5ad0b5e98f3f00fdf46ffcb8e39e75a",
+                "reference": "e1a622e7c5ad0b5e98f3f00fdf46ffcb8e39e75a",
                 "shasum": ""
             },
             "require": {
@@ -1306,11 +1306,11 @@
                 "stripe checkout",
                 "stripe.js"
             ],
-            "time": "2014-10-29 09:36:35"
+            "time": "2014-10-31 09:06:22"
         },
         {
             "name": "payum/payum-silex-provider",
-            "version": "dev-master",
+            "version": "0.12.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Payum/PayumSilexProvider.git",
@@ -3729,7 +3729,6 @@
         "symfony/locale": 20,
         "symfony/security-csrf": 20,
         "symfony/options-resolver": 20,
-        "payum/payum-silex-provider": 20,
         "symfony/twig-bridge": 20,
         "doctrine/mongodb": 20,
         "doctrine/mongodb-odm": 20,
