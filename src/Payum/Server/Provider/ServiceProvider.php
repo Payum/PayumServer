@@ -9,6 +9,7 @@ use Payum\Server\Factory\Payment\FactoryInterface;
 use Payum\Server\Factory\Payment\OfflineFactory;
 use Payum\Server\Factory\Payment\PayexFactory;
 use Payum\Server\Factory\Payment\PaypalExpressCheckoutFactory;
+use Payum\Server\Factory\Payment\PaypalProCheckoutFactory;
 use Payum\Server\Factory\Payment\StripeCheckoutFactory;
 use Payum\Server\Factory\Payment\StripeJsFactory;
 use Payum\Server\Factory\Storage\DoctrineMongoDbFactory;
@@ -79,6 +80,9 @@ class ServiceProvider implements ServiceProviderInterface
             $factories[$factory->getName()] = $factory;
 
             $factory = new PaypalExpressCheckoutFactory;
+            $factories[$factory->getName()] = $factory;
+
+            $factory = new PaypalProCheckoutFactory();
             $factories[$factory->getName()] = $factory;
 
             $factory = new StripeCheckoutFactory;

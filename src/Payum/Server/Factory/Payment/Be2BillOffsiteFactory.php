@@ -1,7 +1,6 @@
 <?php
 namespace Payum\Server\Factory\Payment;
 
-use Buzz\Client\Curl;
 use Payum\Be2Bill\Api;
 use Payum\Be2Bill\OnsitePaymentFactory;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -39,7 +38,7 @@ class Be2BillOffsiteFactory implements FactoryInterface
      */
     public function createPayment(array $options)
     {
-        return OnsitePaymentFactory::create(new Api(new Curl(), $options));
+        return OnsitePaymentFactory::create(new Api($options));
     }
 
     /**

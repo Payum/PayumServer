@@ -1,7 +1,6 @@
 <?php
 namespace Payum\Server\Factory\Payment;
 
-use Buzz\Client\Curl;
 use Payum\Paypal\ProCheckout\Nvp\Api;
 use Payum\Paypal\ProCheckout\Nvp\PaymentFactory;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -15,13 +14,29 @@ class PaypalProCheckoutFactory implements FactoryInterface
     public function configureOptionsFormBuilder(FormBuilderInterface $builder)
     {
         $builder
-            ->add('accountNumber', 'text', array(
-                'label' => 'Account Number',
+            ->add('username', 'text', array(
+                'label' => 'Username',
                 'required' => true,
                 'constraints' => array(new NotBlank),
             ))
-            ->add('accountNumber', 'password', array(
-                'label' => 'Encryption Key',
+            ->add('partner', 'text', array(
+                'label' => 'Partner',
+                'required' => true,
+                'constraints' => array(new NotBlank),
+            ))
+            ->add('vendor', 'text', array(
+                'label' => 'Vendor',
+                'required' => true,
+                'constraints' => array(new NotBlank),
+            ))
+            ->add('tender', 'text', array(
+                'label' => 'Tender',
+                'required' => true,
+                'constraints' => array(new NotBlank),
+                'data' => 'C',
+            ))
+            ->add('password', 'password', array(
+                'label' => 'Password',
                 'required' => true,
                 'constraints' => array(new NotBlank),
             ))
@@ -32,12 +47,6 @@ class PaypalProCheckoutFactory implements FactoryInterface
                 'empty_data' => true,
             ))
         ;
-
-        'username' => 'REPLACE IT',
-        'password' => 'REPLACE IT',
-        'partner' => 'REPLACE IT',
-        'vendor' => 'REPLACE IT',
-        'sandbox' => true
     }
 
     /**
@@ -45,7 +54,7 @@ class PaypalProCheckoutFactory implements FactoryInterface
      */
     public function createPayment(array $options)
     {
-        return PaymentFactory::create(new Api(new Curl(), $options));
+        return PaymentFactory::create(new Api($options));
     }
 
     /**

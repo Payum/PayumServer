@@ -101,10 +101,14 @@ class ApiOrderController
         $order->addLink('update', $token->getTargetUrl());
         $order->addLink('delete', $token->getTargetUrl());
 
-        $token = $this->tokenFactory->createAuthorizeToken($order->getPaymentName(), $order, $order->getAfterUrl());
+        $token = $this->tokenFactory->createAuthorizeToken($order->getPaymentName(), $order, $order->getAfterUrl(), [
+            'payum_token' => null
+        ]);
         $order->addLink('authorize', $token->getTargetUrl());
 
-        $token = $this->tokenFactory->createCaptureToken($order->getPaymentName(), $order, $order->getAfterUrl());
+        $token = $this->tokenFactory->createCaptureToken($order->getPaymentName(), $order, $order->getAfterUrl(), [
+            'payum_token' => null
+        ]);
         $order->addLink('capture', $token->getTargetUrl());
 
         $token = $this->tokenFactory->createNotifyToken($order->getPaymentName(), $order);
