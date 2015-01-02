@@ -31,7 +31,7 @@
         "symfony/security-csrf": "~2.6@dev",
         "symfony/options-resolver": "~2.6@dev",
         "payum/payum-silex-provider": "0.13.*@dev",
-        "payum/payum": "0.13.*@dev",
+        "payum/payum": "0.13.*",
         "raven/raven": "~0.10.0",
         "twig/twig": "~1.12",
         "symfony/twig-bridge": "~2.6@dev",

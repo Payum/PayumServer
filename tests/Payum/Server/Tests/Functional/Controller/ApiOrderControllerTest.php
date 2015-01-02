@@ -18,7 +18,7 @@ class ApiOrderControllerTest extends ClientTestCase
         $order->setClientEmail('theExpectedOrder');
 
         $storage = $this->app['payum']->getStorage($order);
-        $storage->updateModel($order);
+        $storage->update($order);
 
         $token = $this->app['payum.security.token_factory']->createToken('paypal_express_checkout', $order, 'order_get');
 
@@ -44,7 +44,7 @@ class ApiOrderControllerTest extends ClientTestCase
         $order->setClientEmail('theExpectedOrder');
 
         $storage = $this->app['payum']->getStorage($order);
-        $storage->updateModel($order);
+        $storage->update($order);
 
         $token = $this->app['payum.security.token_factory']->createToken('paypal_express_checkout', $order, 'order_get');
 
@@ -70,7 +70,7 @@ class ApiOrderControllerTest extends ClientTestCase
         $order->setAfterUrl('http://example.com');
 
         $storage = $this->app['payum']->getStorage($order);
-        $storage->updateModel($order);
+        $storage->update($order);
 
         $token = $this->app['payum.security.token_factory']->createToken('paypal_express_checkout', $order, 'order_get');
 

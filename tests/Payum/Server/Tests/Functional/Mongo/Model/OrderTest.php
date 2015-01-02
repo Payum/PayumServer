@@ -19,7 +19,7 @@ class OrderTest extends WebTestCase
         ]);
 
         /** @var Order $order */
-        $order = $storage->createModel();
+        $order = $storage->create();
 
         //guard
         $this->assertInstanceOf(Order::class, $order);
@@ -34,7 +34,7 @@ class OrderTest extends WebTestCase
         $order->setNumber('theNumber');
         $order->setPaymentName('thePaymentName');
 
-        $storage->updateModel($order);
+        $storage->update($order);
 
         $this->assertNotNull($order->getId());
 
@@ -43,7 +43,7 @@ class OrderTest extends WebTestCase
         $dm->clear();
 
         /** @var Order $foundOrder */
-        $foundOrder = $storage->findModelById($order->getId());
+        $foundOrder = $storage->find($order->getId());
 
         $this->assertInstanceOf(Order::class, $foundOrder);
         $this->assertNotSame($order, $foundOrder);
@@ -64,7 +64,7 @@ class OrderTest extends WebTestCase
         ]);
 
         /** @var Order $order */
-        $order = $storage->createModel();
+        $order = $storage->create();
 
         //guard
         $this->assertInstanceOf(Order::class, $order);
@@ -79,7 +79,7 @@ class OrderTest extends WebTestCase
         //guard
         $this->assertCount(2, $expectedPayments);
 
-        $storage->updateModel($order);
+        $storage->update($order);
 
         $this->assertNotNull($order->getId());
 
@@ -88,7 +88,7 @@ class OrderTest extends WebTestCase
         $dm->clear();
 
         /** @var Order $foundOrder */
-        $foundOrder = $storage->findModelById($order->getId());
+        $foundOrder = $storage->find($order->getId());
 
         $this->assertInstanceOf(Order::class, $foundOrder);
         $this->assertNotSame($order, $foundOrder);

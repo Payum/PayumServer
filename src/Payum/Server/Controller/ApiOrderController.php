@@ -93,7 +93,7 @@ class ApiOrderController
         $order->setDetails([]);
 
         $storage = $this->registry->getStorage($order);
-        $storage->updateModel($order);
+        $storage->update($order);
 
         $token = $this->tokenFactory->createToken($order->getPaymentName(), $order, 'order_get');
         $order->setPublicId($token->getHash());
@@ -114,7 +114,7 @@ class ApiOrderController
         $token = $this->tokenFactory->createNotifyToken($order->getPaymentName(), $order);
         $order->addLink('notify', $token->getTargetUrl());
 
-        $storage->updateModel($order);
+        $storage->update($order);
 
         return new JsonResponse(
             array(
@@ -149,7 +149,7 @@ class ApiOrderController
         $order->setDetails([]);
 
         $storage = $this->registry->getStorage($order);
-        $storage->updateModel($order);
+        $storage->update($order);
 
         $token = $this->tokenFactory->createAuthorizeToken($order->getPaymentName(), $order, $order->getAfterUrl());
         $order->addLink('authorize', $token->getTargetUrl());
@@ -160,7 +160,7 @@ class ApiOrderController
         $token = $this->tokenFactory->createNotifyToken($order->getPaymentName(), $order);
         $order->addLink('notify', $token->getTargetUrl());
 
-        $storage->updateModel($order);
+        $storage->update($order);
 
         return new JsonResponse(array(
             'order' => $this->orderToJsonConverter->convert($order),
@@ -177,7 +177,7 @@ class ApiOrderController
         $order = $this->findRequestedOrder($request);
 
         $storage = $this->registry->getStorage($order);
-        $storage->deleteModel($order);
+        $storage->delete($order);
 
         $token = $this->httpRequestVerifier->verify($request);
         $this->httpRequestVerifier->invalidate($token);
