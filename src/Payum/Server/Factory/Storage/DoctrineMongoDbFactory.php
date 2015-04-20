@@ -11,9 +11,9 @@ use Doctrine\ODM\MongoDB\Mapping\Driver\XmlDriver;
 use Doctrine\ODM\MongoDB\DocumentManager;
 use Doctrine\ODM\MongoDB\Configuration;
 use Doctrine\MongoDB\Connection;
-use Payum\Core\PaymentInterface;
+use Payum\Core\Bridge\Doctrine\Storage\DoctrineStorage;
+use Payum\Core\GatewayInterface;
 use Payum\Server\Application;
-use Payum\Server\Storage\DoctrineStorage;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Validator\Constraints\NotBlank;
 
@@ -50,7 +50,7 @@ class DoctrineMongoDbFactory implements FactoryInterface
         $driver = new MappingDriverChain;
 
         // payum's basic models
-        $coreRootDir = dirname((new \ReflectionClass(PaymentInterface::class))->getFileName());
+        $coreRootDir = dirname((new \ReflectionClass(GatewayInterface::class))->getFileName());
 
         $driver->addDriver(
             new XmlDriver(

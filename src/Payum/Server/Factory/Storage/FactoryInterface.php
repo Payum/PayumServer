@@ -1,7 +1,7 @@
 <?php
 namespace Payum\Server\Factory\Storage;
 
-use Payum\Core\PaymentInterface;
+use Payum\Core\GatewayInterface;
 use Payum\Core\Storage\StorageInterface;
 use Symfony\Component\Form\FormBuilderInterface;
 

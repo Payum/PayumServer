@@ -5,6 +5,7 @@
 #require valid-user
 
 <IfModule mod_rewrite.c>
+
     RewriteEngine On
 
     RewriteRule ^v/[^/]*/((:?images|styles|css|scripts|js|bundles)/.*)$ $1 [QSA]

@@ -2,7 +2,8 @@
 namespace Payum\Server;
 
 use JDesrosiers\Silex\Provider\CorsServiceProvider;
-use Payum\Server\Provider\RavenProvider;
+use Payum\Server\Api\ApiControllerProvider;
+use Payum\Server\Api\ApiProvider;
 use Payum\Silex\PayumProvider;
 use Silex\Application as SilexApplication;
 use Silex\Provider\FormServiceProvider;
@@ -11,9 +12,6 @@ use Silex\Provider\TranslationServiceProvider;
 use Silex\Provider\TwigServiceProvider;
 use Silex\Provider\UrlGeneratorServiceProvider;
 use Silex\Provider\ValidatorServiceProvider;
-use Payum\Server\Provider\ControllerProvider;
-use Payum\Server\Provider\ServiceProvider;
-use Payum\Server\Provider\ApiProvider;
 
 class Application extends SilexApplication
 {
@@ -21,7 +19,7 @@ class Application extends SilexApplication
     {
         parent::__construct();
 
-        $this['payum.root_dir'] = realpath(__DIR__.'/../../../');
+        $this['payum.root_dir'] = realpath(__DIR__.'/../..');
         $app["cors.allowMethods"] = 'GET, OPTIONS, PUT, POST, DELETE';
 
         $this->register(new RavenProvider());
@@ -34,7 +32,8 @@ class Application extends SilexApplication
         $this->register(new ServiceControllerServiceProvider);
         $this->register(new PayumProvider());
         $this->register(new ServiceProvider);
-        $this->register(new ControllerProvider);
+
         $this->register(new ApiProvider());
+        $this->register(new ApiControllerProvider());
     }
 }

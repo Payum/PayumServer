@@ -22,7 +22,7 @@ _**Note**: Never use built in web server on production. Set apache or nginx serv
 ## Configure
 
 ```bash
-$ curl -i -X POST -H "Content-Type: application/json" http://server.payum.forma-dev.com/api/configs/payments -d  '{"name": "barpaypal", "factory": "paypal", "options": {"username": "foo", "password": "bar", "signature": "baz", "sandbox": true}}'
+$ curl -i -X POST -H "Content-Type: application/json" http://server.payum.forma-dev.com/api/gateways -d  '{"name": "barpaypal", "factory": "paypal", "options": {"username": "foo", "password": "bar", "signature": "baz", "sandbox": true}}'
 ```
 
 _**Note**: You must provide correct Paypal credentials._
@@ -32,7 +32,7 @@ _**Note**: You must provide correct Paypal credentials._
 First of all you have to create an order on the server. After, you have to redirect a payer to capture url:
 
 ```bash
-$ curl -i -X POST -H "Content-Type: application/json" http://server.payum.forma-dev.com/api/orders -d  '{"paymentName": "barpaypal", "totalAmount": 123, "currenctCode": "USD"}'
+$ curl -i -X POST -H "Content-Type: application/json" http://server.payum.forma-dev.com/api/payments -d  '{"paymentName": "barpaypal", "totalAmount": 123, "currenctCode": "USD"}'
 ```
 
 As a response you have to get:
@@ -86,7 +86,7 @@ As a response you have to get:
     "_links": {
         "authorize": "http://server.payum.forma-dev.com/authorize/urd3IGRnMsIiNNMiwqdKzOQFIAbIa-uR3XNAQ2573QA",
         "capture": "http://server.payum.forma-dev.com/capture/gT5OofuBMQp_D4lxfSuM4ZNx9yjgYdXoK96yiTsKHOI",
-        "get": "http://server.payum.forma-dev.com/api/orders/FiZzVbBu5ob2l2x4bvMCKezFU6QyuZRZ7WHlo6PzRU4",
+        "get": "http://server.payum.forma-dev.com/api/payments/FiZzVbBu5ob2l2x4bvMCKezFU6QyuZRZ7WHlo6PzRU4",
         "notify": "http://server.payum.forma-dev.com/notify/VTc1D9U3Ab2AKBUp-kh9ycLf-Bbt608bxHyihYLuJGY"
     },
     "_tokens": {
@@ -111,13 +111,13 @@ http://server.payum.forma-dev.com/capture/gT5OofuBMQp_D4lxfSuM4ZNx9yjgYdXoK96yiT
 * Find out which payment you can use:
 
     ```bash
-    $ curl -i -X GET -H "Content-Type: application/json" http://server.payum.forma-dev.com/api/configs/payments'
+    $ curl -i -X GET -H "Content-Type: application/json" http://server.payum.forma-dev.com/api/gateways'
     ```
     
 * Find out which payments you can configure:
 
     ```bash
-    $ curl -i -X GET -H "Content-Type: application/json" http://server.payum.forma-dev.com/api/configs/payments/meta'
+    $ curl -i -X GET -H "Content-Type: application/json" http://server.payum.forma-dev.com/api/gateways/meta'
     ```
 
 * Find out which storage you can use:

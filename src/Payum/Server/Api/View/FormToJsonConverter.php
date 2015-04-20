@@ -27,8 +27,7 @@ class FormToJsonConverter
                 $fields[$name]['type'] = 'checkbox';
             } else if (in_array('password', $child->vars['block_prefixes'])) {
                 $fields[$name]['type'] = 'password';
-            }
-            elseif (in_array('choice', $child->vars['block_prefixes'])) {
+            } elseif (in_array('choice', $child->vars['block_prefixes'])) {
                 $fields[$name]['type'] = 'choice';
                 $fields[$name]['choices'] = array_values($child->vars['choices']);
             } else {
