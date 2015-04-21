@@ -50,15 +50,29 @@ class GatewayMetaController
             $gatewayConfig = new GatewayConfig();
             $gatewayConfig->setFactoryName($name);
 
-            $form = $this->formFactory->create('payum_gateway_config', $gatewayConfig, [
+            $builder = $this->formFactory->createBuilder('payum_gateway_config', $gatewayConfig, [
+                'csrf_protection' => false,
                 'data_class' => GatewayConfig::class,
             ]);
+
+            $builder
+                ->remove('factoryName')
+                ->add('factoryName', 'hidden')
+            ;
+
+            $form = $builder->getForm();
 
             $normalizedFactories[$name] = $this->formToJsonConverter->convertMeta($form);
             $normalizedFactories[$name]['config'] = $this->formToJsonConverter->convertMeta($form->get('config'));
         }
 
+        $form = $this->formFactory->create('payum_gateway_config', null, [
+            'csrf_protection' => false,
+            'data_class' => GatewayConfig::class,
+        ]);
+
         return new JsonResponse(array(
+            'generic' => $this->formToJsonConverter->convertMeta($form)['factoryName'],
             'metas' => $normalizedFactories,
         ));
     }

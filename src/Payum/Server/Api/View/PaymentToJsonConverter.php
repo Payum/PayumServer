@@ -27,24 +27,10 @@ class PaymentToJsonConverter
      */
     public function convert(Payment $payment)
     {
-        $orderPayments = array();
-        foreach ($payment->getPayments() as $orderPayment) {
-            if (false == isset($orderPayment['status']) || GetHumanStatus::STATUS_UNKNOWN == $orderPayment['status']) {
-                $payment = $this->registry->getGateway($orderPayment['name']);
-
-                $payment->execute($status = new GetHumanStatus($orderPayment['details']));
-                $orderPayment['status'] = $status->getValue();
-            }
-
-            $orderPayments[] = $orderPayment;
-        }
-
         $links = [];
         foreach ($payment->getLinks() as $name => $link) {
             $links[$name] = ['href' => $link];
         }
-
-        $payment->setPayments($orderPayments);
 
         return [
             'id' => $payment->getPublicId(),
@@ -56,7 +42,6 @@ class PaymentToJsonConverter
             'clientEmail' => $payment->getClientEmail(),
             'clientId' => $payment->getClientId(),
             'description' => $payment->getDescription(),
-            'payments' => $payment->getPayments(),
             '_links' => $links,
         ];
     }

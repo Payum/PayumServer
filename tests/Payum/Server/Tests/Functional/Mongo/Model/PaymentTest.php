@@ -32,7 +32,7 @@ class PaymentTest extends WebTestCase
         $payment->setAfterUrl('theAfterUrl');
         $payment->setDescription('theDesc');
         $payment->setNumber('theNumber');
-        $payment->setGatewayName('thePaymentName');
+        $payment->setGatewayName('theGatewayName');
 
         $storage->update($payment);
 
@@ -74,11 +74,6 @@ class PaymentTest extends WebTestCase
         $payment->setDetails(array('foo' => 'bar'));
         $payment->setDetails(array('bar' => array('foo' => 'baz')));
 
-        $expectedPayments = $payment->getPayments();
-
-        //guard
-        $this->assertCount(2, $expectedPayments);
-
         $storage->update($payment);
 
         $this->assertNotNull($payment->getId());
@@ -93,7 +88,5 @@ class PaymentTest extends WebTestCase
         $this->assertInstanceOf(Payment::class, $foundPayment);
         $this->assertNotSame($payment, $foundPayment);
         $this->assertEquals($payment->getId(), $foundPayment->getId());
-
-        $this->assertEquals($expectedPayments, $foundPayment->getPayments());
     }
 }

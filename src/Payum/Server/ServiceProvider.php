@@ -23,7 +23,7 @@ class ServiceProvider implements ServiceProviderInterface
      */
     public function register(SilexApplication $app)
     {
-        $app['debug'] = true; //(boolean) getenv('PAYUM_SERVER_DEBUG');
+        $app['debug'] = (boolean) getenv('PAYUM_SERVER_DEBUG');
         $app['payum.storages_config'] = $app->share(function($app) {
             return [
                 'Payum\Server\Model\Payment' => array(
@@ -68,19 +68,79 @@ class ServiceProvider implements ServiceProviderInterface
             return $app['payum.storages']['Payum\Server\Model\GatewayConfig'];
         });
 
+        $app['payum.authorize_net_aim.gateway_factory'] = $app->share(function ($app) {
+            return new AuthorizeNetAimGatewayFactory([], $app['payum.core_gateway_factory']);
+        });
+
+        $app['payum.be2bill_direct.gateway_factory'] = $app->share(function ($app) {
+            return new Be2BillDirectGatewayFactory([], $app['payum.core_gateway_factory']);
+        });
+
+        $app['payum.be2bill_offsite.gateway_factory'] = $app->share(function ($app) {
+            return new Be2BillOffsiteGatewayFactory([], $app['payum.core_gateway_factory']);
+        });
+
+        $app['payum.offline.gateway_factory'] = $app->share(function ($app) {
+            return new OfflineGatewayFactory([], $app['payum.core_gateway_factory']);
+        });
+
+        $app['payum.payex.gateway_factory'] = $app->share(function ($app) {
+            return new PayexGatewayFactory([], $app['payum.core_gateway_factory']);
+        });
+
+        $app['payum.paypal_express_checkout.gateway_factory'] = $app->share(function ($app) {
+            return new PaypalExpressCheckoutGatewayFactory([], $app['payum.core_gateway_factory']);
+        });
+
+        $app['payum.paypal_pro_checkout.gateway_factory'] = $app->share(function ($app) {
+            return new PaypalProCheckoutGatewayFactory([], $app['payum.core_gateway_factory']);
+        });
+
+        $app['payum.stripe_checkout.gateway_factory'] = $app->share(function ($app) {
+            return new StripeCheckoutGatewayFactory([], $app['payum.core_gateway_factory']);
+        });
+
+        $app['payum.stripe_js.gateway_factory'] = $app->share(function ($app) {
+            return new StripeJsGatewayFactory([], $app['payum.core_gateway_factory']);
+        });
+
+        $app['payum.stripe_direct.gateway_factory'] = $app->share(function ($app) {
+            return new StripeJsGatewayFactory([], $app['payum.core_gateway_factory']);
+        });
+
+        $app['payum.gateway_choices'] = $app->share(function ($app) {
+            return array(
+                'authorize_net_aim' => 'Authorize.NET AIM',
+                'be2bill_direct' => 'Be2Bill Direct',
+                'be2bill_offsite' => 'Be2Bill Offsite',
+                'offline' => 'offline',
+                'payex' => 'Payex Offsite',
+                'paypal_express_checkout' => 'Paypal ExpressCheckout',
+                'paypal_pro_checkout' => 'Paypal ProCheckout',
+                'stripe_checkout' => 'Stripe Checkout',
+                'stripe_js' => 'Stripe.Js',
+                'stripe_direct' => 'Stripe Direct',
+            );
+        });
+
+        $app['payum.stripe_direct.gateway_factory'] = $app->share(function ($app) {
+            return new StripeJsGatewayFactory([], $app['payum.core_gateway_factory']);
+        });
+
         $app['payum.gateway_factories'] = $app->share(function ($app) {
             $factories = array();
 
-            $factories['authorize_net_aim'] = new AuthorizeNetAimGatewayFactory([], $app['payum.core_gateway_factory']);
-            $factories['be2bill_direct'] = new Be2BillDirectGatewayFactory([], $app['payum.core_gateway_factory']);
-            $factories['be2bill_offsite'] = new Be2BillOffsiteGatewayFactory([], $app['payum.core_gateway_factory']);
-            $factories['offline'] = new OfflineGatewayFactory([], $app['payum.core_gateway_factory']);
-            $factories['payex'] = new PayexGatewayFactory([], $app['payum.core_gateway_factory']);
-            $factories['paypal_express_chekcout_nvp'] = new PaypalExpressCheckoutGatewayFactory([], $app['payum.core_gateway_factory']);
-            $factories['paypal_pro_checkout_nvp'] = new PaypalProCheckoutGatewayFactory([], $app['payum.core_gateway_factory']);
-            $factories['stripe_chekcout'] = new StripeCheckoutGatewayFactory([], $app['payum.core_gateway_factory']);
-            $factories['stripe_js'] = new StripeJsGatewayFactory([], $app['payum.core_gateway_factory']);
-            $factories['stripe_direct'] = new StripeJsGatewayFactory([], $app['payum.core_gateway_factory']);
+            // TODO: whenever you add a factory here, add it to choices list too
+            $factories['authorize_net_aim'] = 'payum.authorize_net_aim.gateway_factory';
+            $factories['be2bill_direct'] = 'payum.be2bill_direct.gateway_factory';
+            $factories['be2bill_offsite'] = 'payum.be2bill_offsite.gateway_factory';
+            $factories['offline'] = 'payum.offline.gateway_factory';
+            $factories['payex'] = 'payum.payex.gateway_factory';
+            $factories['paypal_express_checkout'] = 'payum.paypal_express_checkout.gateway_factory';
+            $factories['paypal_pro_checkout'] = 'payum.paypal_pro_checkout.gateway_factory';
+            $factories['stripe_checkout'] = 'payum.stripe_checkout.gateway_factory';
+            $factories['stripe_js'] = 'payum.stripe_js.gateway_factory';
+            $factories['stripe_direct'] = 'payum.stripe_direct.gateway_factory';
 
             return $factories;
         });

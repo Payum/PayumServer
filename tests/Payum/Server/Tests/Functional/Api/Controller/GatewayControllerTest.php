@@ -1,8 +1,8 @@
 <?php
-namespace Payum\Server\Api\Controller;
+namespace Payum\Server\Tests\Functional\Api\Controller;
 
 use Payum\Core\Model\GatewayConfigInterface;
-use Payum\Server\Storage\StorageInterface;
+use Payum\Core\Storage\StorageInterface;
 use Payum\Server\Test\ClientTestCase;
 use Payum\Server\Test\ResponseHelper;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;

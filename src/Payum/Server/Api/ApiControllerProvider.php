@@ -103,6 +103,7 @@ class ApiControllerProvider implements ServiceProviderInterface
                 'code' => $e->getCode(),
                 'file' => $e->getFile(),
                 'line' => $e->getLine(),
+                'stackTrace' => $e->getTraceAsString(),
             ));
         }, $priority = -100);
     }

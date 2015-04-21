@@ -1,5 +1,5 @@
 <?php
-namespace Payum\Server\Api\Controller;
+namespace Payum\Server\Tests\Functional\Api\Controller;
 
 use Payum\Server\Test\ClientTestCase;
 use Payum\Server\Test\ResponseHelper;
@@ -13,7 +13,7 @@ class GatewayMetaControllerTest extends ClientTestCase
      */
     public function shouldAllowGetAllMetasOfStorages()
     {
-        $this->getClient()->request('GET', '/api/gateways/metas');
+        $this->getClient()->request('GET', '/gateways/metas');
 
         $this->assertClientResponseStatus(200);
         $this->assertClientResponseContentJson();

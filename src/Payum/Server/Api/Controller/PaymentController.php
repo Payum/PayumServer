@@ -34,7 +34,7 @@ class PaymentController
     /**
      * @var PaymentToJsonConverter
      */
-    private $orderToJsonConverter;
+    private $paymentToJsonConverter;
 
     /**
      * @var FormFactoryInterface
@@ -50,7 +50,7 @@ class PaymentController
      * @param GenericTokenFactoryInterface $tokenFactory
      * @param HttpRequestVerifierInterface $httpRequestVerifier
      * @param RegistryInterface $registry
-     * @param PaymentToJsonConverter $orderToJsonConverter
+     * @param PaymentToJsonConverter $paymentToJsonConverter
      * @param FormFactoryInterface $formFactory
      * @param FormToJsonConverter $formToJsonConverter
      */
@@ -58,7 +58,7 @@ class PaymentController
         GenericTokenFactoryInterface $tokenFactory,
         HttpRequestVerifierInterface $httpRequestVerifier,
         RegistryInterface $registry,
-        PaymentToJsonConverter $orderToJsonConverter,
+        PaymentToJsonConverter $paymentToJsonConverter,
         FormFactoryInterface $formFactory,
         FormToJsonConverter $formToJsonConverter
     ) {
@@ -67,7 +67,7 @@ class PaymentController
         $this->formFactory = $formFactory;
         $this->formToJsonConverter = $formToJsonConverter;
         $this->httpRequestVerifier = $httpRequestVerifier;
-        $this->orderToJsonConverter = $orderToJsonConverter;
+        $this->paymentToJsonConverter = $paymentToJsonConverter;
     }
 
     /**
@@ -77,10 +77,10 @@ class PaymentController
      */
     public function createAction($content, Request $request)
     {
-        $rawOrder = ArrayObject::ensureArrayObject($content);
+        $rawPayment = ArrayObject::ensureArrayObject($content);
 
         $form = $this->formFactory->create('create_payment');
-        $form->submit((array) $rawOrder);
+        $form->submit((array) $rawPayment);
         if (false == $form->isValid()) {
             return new JsonResponse($this->formToJsonConverter->convertInvalid($form), 400);
         }
@@ -94,7 +94,7 @@ class PaymentController
         $storage = $this->registry->getStorage($payment);
         $storage->update($payment);
 
-        $token = $this->tokenFactory->createToken($payment->getGatewayName(), $payment, 'order_get');
+        $token = $this->tokenFactory->createToken($payment->getGatewayName(), $payment, 'payment_get');
         $payment->setPublicId($token->getHash());
         $payment->addLink('self', $token->getTargetUrl());
         $payment->addLink('update', $token->getTargetUrl());
@@ -117,7 +117,7 @@ class PaymentController
 
         return new JsonResponse(
             array(
-                'order' => $this->orderToJsonConverter->convert($payment),
+                'payment' => $this->paymentToJsonConverter->convert($payment),
             ),
             201,
             array('Location' => $payment->getLink('self'))
@@ -133,10 +133,10 @@ class PaymentController
     {
         $payment = $this->findRequestedPayment($request);
 
-        $rawOrder = ArrayObject::ensureArrayObject($content);
+        $rawPayment = ArrayObject::ensureArrayObject($content);
 
         $form = $this->formFactory->create('update_payment', $payment);
-        $form->submit((array) $rawOrder);
+        $form->submit((array) $rawPayment);
 
         if (false == $form->isValid()) {
             return new JsonResponse($this->formToJsonConverter->convertInvalid($form), 400);
@@ -162,7 +162,7 @@ class PaymentController
         $storage->update($payment);
 
         return new JsonResponse(array(
-            'order' => $this->orderToJsonConverter->convert($payment),
+            'payment' => $this->paymentToJsonConverter->convert($payment),
         ));
     }
 
@@ -196,7 +196,7 @@ class PaymentController
         $payment = $this->findRequestedPayment($request);
 
         return new JsonResponse(array(
-            'order' => $this->orderToJsonConverter->convert($payment),
+            'payment' => $this->paymentToJsonConverter->convert($payment),
         ));
     }
 
@@ -208,14 +208,14 @@ class PaymentController
         /** @var StorageInterface $storage */
         $storage = $this->registry->getStorage(Payment::class);
 
-        $jsonOrders = [];
+        $jsonPayments = [];
         foreach ($storage->findBy([]) as $payment) {
-            $jsonOrders[] = $this->orderToJsonConverter->convert($payment);
+            $jsonPayments[] = $this->paymentToJsonConverter->convert($payment);
 
         }
 
         return new JsonResponse(array(
-            'orders' => $jsonOrders,
+            'payments' => $jsonPayments,
         ));
     }
 

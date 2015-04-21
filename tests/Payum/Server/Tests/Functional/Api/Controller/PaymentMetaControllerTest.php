@@ -1,5 +1,5 @@
 <?php
-namespace Payum\Server\Api\Controller;
+namespace Payum\Server\Tests\Functional\Api\Controller;
 
 use Payum\Server\Test\ClientTestCase;
 use Payum\Server\Test\ResponseHelper;
@@ -11,9 +11,9 @@ class PaymentMetaControllerTest extends ClientTestCase
     /**
      * @test
      */
-    public function shouldAllowGetOrder()
+    public function shouldAllowGetPayment()
     {
-        $this->getClient()->request('GET', '/api/payments/meta');
+        $this->getClient()->request('GET', '/payments/metas');
 
         $this->assertClientResponseStatus(200);
         $this->assertClientResponseContentJson();
@@ -24,7 +24,7 @@ class PaymentMetaControllerTest extends ClientTestCase
 
         $this->assertObjectHasAttribute('totalAmount', $content->meta);
         $this->assertObjectHasAttribute('currencyCode', $content->meta);
-        $this->assertObjectHasAttribute('paymentName', $content->meta);
+        $this->assertObjectHasAttribute('gatewayName', $content->meta);
         $this->assertObjectHasAttribute('clientEmail', $content->meta);
         $this->assertObjectHasAttribute('clientId', $content->meta);
     }

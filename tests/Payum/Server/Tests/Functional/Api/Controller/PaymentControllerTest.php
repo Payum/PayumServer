@@ -1,5 +1,5 @@
 <?php
-namespace Payum\Server\Api\Controller;
+namespace Payum\Server\Tests\Functional\Api\Controller;
 
 use Payum\Server\Model\Payment;
 use Payum\Server\Test\ClientTestCase;
@@ -12,75 +12,75 @@ class PaymentControllerTest extends ClientTestCase
     /**
      * @test
      */
-    public function shouldAllowGetOrder()
+    public function shouldAllowGetPayment()
     {
-        $order = new Payment();
-        $order->setClientEmail('theExpectedOrder');
+        $payment = new Payment();
+        $payment->setClientEmail('theExpectedPayment');
 
-        $storage = $this->app['payum']->getStorage($order);
-        $storage->update($order);
+        $storage = $this->app['payum']->getStorage($payment);
+        $storage->update($payment);
 
-        $token = $this->app['payum.security.token_factory']->createToken('paypal_express_checkout', $order, 'order_get');
+        $token = $this->app['payum.security.token_factory']->createToken('paypal_express_checkout', $payment, 'payment_get');
 
-        $this->getClient()->request('GET', '/api/payments/'.$token->getHash());
+        $this->getClient()->request('GET', '/payments/'.$token->getHash());
 
         $this->assertClientResponseStatus(200);
         $this->assertClientResponseContentJson();
 
         $content = $this->getClientResponseJsonContent();
 
-        $this->assertObjectHasAttribute('order', $content);
+        $this->assertObjectHasAttribute('payment', $content);
 
-        $this->assertObjectHasAttribute('clientEmail', $content->order);
-        $this->assertEquals('theExpectedOrder', $content->order->clientEmail);
+        $this->assertObjectHasAttribute('clientEmail', $content->payment);
+        $this->assertEquals('theExpectedPayment', $content->payment->clientEmail);
     }
 
     /**
      * @test
      */
-    public function shouldAllowDeleteOrder()
+    public function shouldAllowDeletePayment()
     {
-        $order = new Payment();
-        $order->setClientEmail('theExpectedOrder');
+        $payment = new Payment();
+        $payment->setClientEmail('theExpectedPayment');
 
-        $storage = $this->app['payum']->getStorage($order);
-        $storage->update($order);
+        $storage = $this->app['payum']->getStorage($payment);
+        $storage->update($payment);
 
-        $token = $this->app['payum.security.token_factory']->createToken('paypal_express_checkout', $order, 'order_get');
+        $token = $this->app['payum.security.token_factory']->createToken('paypal_express_checkout', $payment, 'payment_get');
 
         //guard
-        $this->getClient()->request('GET', '/api/payments/'.$token->getHash());
+        $this->getClient()->request('GET', '/payments/'.$token->getHash());
         $this->assertClientResponseStatus(200);
 
-        $this->getClient()->request('DELETE', '/api/payments/'.$token->getHash());
+        $this->getClient()->request('DELETE', '/payments/'.$token->getHash());
         $this->assertClientResponseStatus(204);
 
         $this->setExpectedException('Symfony\Component\HttpKernel\Exception\NotFoundHttpException');
-        $this->getClient()->request('GET', '/api/payments/'.$token->getHash());
+        $this->getClient()->request('GET', '/payments/'.$token->getHash());
     }
 
     /**
      * @test
      */
-    public function shouldAllowUpdateOrder()
+    public function shouldAllowUpdatePayment()
     {
-        $order = new Payment();
-        $order->setTotalAmount(123);
-        $order->setClientEmail('theClientEmail@example.com');
-        $order->setAfterUrl('http://example.com');
+        $payment = new Payment();
+        $payment->setTotalAmount(123);
+        $payment->setClientEmail('theClientEmail@example.com');
+        $payment->setAfterUrl('http://example.com');
 
-        $storage = $this->app['payum']->getStorage($order);
-        $storage->update($order);
+        $storage = $this->app['payum']->getStorage($payment);
+        $storage->update($payment);
 
-        $token = $this->app['payum.security.token_factory']->createToken('paypal_express_checkout', $order, 'order_get');
+        $token = $this->app['payum.security.token_factory']->createToken('paypal_express_checkout', $payment, 'payment_get');
 
         //guard
-        $this->getClient()->putJson('/api/payments/'.$token->getHash(), [
+        $this->getClient()->putJson('/payments/'.$token->getHash(), [
             'totalAmount' => 123,
             'currencyCode' => 'USD',
             'clientEmail' => 'theOtherClientEmail@example.com',
             'clientId' => 'theClientId',
-            'paymentName' => 'stripe_js',
+            'gatewayName' => 'stripe_js',
             'afterUrl' => 'http://example.com',
         ]);
 
@@ -89,26 +89,26 @@ class PaymentControllerTest extends ClientTestCase
 
         $content = $this->getClientResponseJsonContent();
 
-        $this->assertObjectHasAttribute('order', $content);
+        $this->assertObjectHasAttribute('payment', $content);
 
-        $this->assertObjectHasAttribute('clientEmail', $content->order);
-        $this->assertEquals('theOtherClientEmail@example.com', $content->order->clientEmail);
+        $this->assertObjectHasAttribute('clientEmail', $content->payment);
+        $this->assertEquals('theOtherClientEmail@example.com', $content->payment->clientEmail);
 
-        $this->assertObjectHasAttribute('totalAmount', $content->order);
-        $this->assertEquals(123, $content->order->totalAmount);
+        $this->assertObjectHasAttribute('totalAmount', $content->payment);
+        $this->assertEquals(123, $content->payment->totalAmount);
     }
 
     /**
      * @test
      */
-    public function shouldAllowCreateOrder()
+    public function shouldAllowCreatePayment()
     {
-        $this->getClient()->postJson('/api/payments', [
+        $this->getClient()->postJson('/payments', [
             'totalAmount' => 123,
             'currencyCode' => 'USD',
             'clientEmail' => 'foo@example.com',
             'clientId' => 'theClientId',
-            'paymentName' => 'stripe_js',
+            'gatewayName' => 'stripe_js',
             'afterUrl' => 'http://example.com',
         ]);
 
@@ -117,25 +117,25 @@ class PaymentControllerTest extends ClientTestCase
 
         $content = $this->getClientResponseJsonContent();
 
-        $this->assertObjectHasAttribute('order', $content);
+        $this->assertObjectHasAttribute('payment', $content);
 
-        $this->assertObjectHasAttribute('clientEmail', $content->order);
-        $this->assertEquals('foo@example.com', $content->order->clientEmail);
+        $this->assertObjectHasAttribute('clientEmail', $content->payment);
+        $this->assertEquals('foo@example.com', $content->payment->clientEmail);
 
-        $this->assertStringStartsWith('http://localhost/api/payments/', $this->getClient()->getResponse()->headers->get('Location'));
+        $this->assertStringStartsWith('http://localhost/payments/', $this->getClient()->getResponse()->headers->get('Location'));
     }
 
     /**
      * @test
      */
-    public function shouldAllowGetOrderLinks()
+    public function shouldAllowGetPaymentLinks()
     {
-        $this->getClient()->postJson('/api/payments', [
+        $this->getClient()->postJson('/payments', [
             'totalAmount' => 123,
             'currencyCode' => 'USD',
             'clientEmail' => 'foo@example.com',
             'clientId' => 'theClientId',
-            'paymentName' => 'stripe_js',
+            'gatewayName' => 'stripe_js',
             'afterUrl' => 'http://example.com',
         ]);
 
@@ -152,9 +152,9 @@ class PaymentControllerTest extends ClientTestCase
 
         $content = $this->getClientResponseJsonContent();
 
-        $this->assertObjectHasAttribute('order', $content);
+        $this->assertObjectHasAttribute('payment', $content);
 
-        $this->assertObjectHasAttribute('_links', $content->order);
-        $this->assertObjectHasAttribute('self', $content->order->_links);
+        $this->assertObjectHasAttribute('_links', $content->payment);
+        $this->assertObjectHasAttribute('self', $content->payment->_links);
     }
 }

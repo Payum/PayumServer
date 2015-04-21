@@ -41,13 +41,6 @@ class Payment extends BasePayment
     /**
      * @Mongo\Hash
      *
-     * @var array
-     */
-    protected $payments;
-
-    /**
-     * @Mongo\Hash
-     *
      * @var string[]
      */
     protected $links;
@@ -57,7 +50,6 @@ class Payment extends BasePayment
         parent::__construct();
 
         $this->links = [];
-        $this->payments = [];
     }
 
     /**
@@ -101,29 +93,9 @@ class Payment extends BasePayment
         $this->links['after'] = $afterUrl;
     }
 
-    public function getPayments()
-    {
-        return $this->payments;
-    }
-
-    /**
-     * @param array $payments
-     */
-    public function setPayments(array $payments)
-    {
-        $this->payments = $payments;
-    }
-
     public function setDetails($details)
     {
         parent::setDetails($details);
-
-        $this->payments[] = array(
-            'status' => GetHumanStatus::STATUS_UNKNOWN,
-            'date' => date(\DateTime::ISO8601),
-            'name' => $this->gatewayName,
-            'details' => $this->details
-        );
     }
 
     /**
