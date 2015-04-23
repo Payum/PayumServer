@@ -54,14 +54,14 @@ class ApiControllerProvider implements ServiceProviderInterface
         });
 
         $app->get('/', 'payum.api.controller.root:rootAction')->bind('api_root');
-        $app->get('/payments/metas', 'payum.api.controller.payment:metaAction')->bind('payment_meta');
+        $app->get('/payments/meta', 'payum.api.controller.payment:metaAction')->bind('payment_meta');
         $app->get('/payments/{payum_token}', 'payum.api.controller.payment:getAction')->bind('payment_get');
         $app->put('/payments/{payum_token}', 'payum.api.controller.payment:updateAction')->bind('payment_update');
         $app->delete('/payments/{payum_token}', 'payum.api.controller.payment:deleteAction')->bind('payment_delete');
         $app->post('/payments', 'payum.api.controller.payment:createAction')->bind('payment_create');
         $app->get('/payments', 'payum.api.controller.payment:allAction')->bind('payment_all');
 
-        $app->get('/gateways/metas', 'payum.api.controller.gateway_meta:getAllAction')->bind('payment_factory_get_all');
+        $app->get('/gateways/meta', 'payum.api.controller.gateway_meta:getAllAction')->bind('payment_factory_get_all');
         $app->get('/gateways', 'payum.api.controller.gateway:allAction')->bind('gateway_all');
         $app->get('/gateways/{name}', 'payum.api.controller.gateway:getAction')->bind('gateway_get');
         $app->delete('/gateways/{name}', 'payum.api.controller.gateway:deleteAction')->bind('gateway_delete');

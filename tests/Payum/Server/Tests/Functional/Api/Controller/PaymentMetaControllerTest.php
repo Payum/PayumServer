@@ -13,7 +13,7 @@ class PaymentMetaControllerTest extends ClientTestCase
      */
     public function shouldAllowGetPayment()
     {
-        $this->getClient()->request('GET', '/payments/metas');
+        $this->getClient()->request('GET', '/payments/meta');
 
         $this->assertClientResponseStatus(200);
         $this->assertClientResponseContentJson();

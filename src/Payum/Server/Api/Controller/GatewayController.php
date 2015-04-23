@@ -64,6 +64,7 @@ class GatewayController
     {
         $form = $this->formFactory->create('payum_gateway_config', null, [
             'data_class' => GatewayConfig::class,
+            'csrf_protection' => false,
         ]);
 
         $form->submit($content);
@@ -73,7 +74,7 @@ class GatewayController
 
             $this->gatewayConfigStorage->update($gatewayConfig);
 
-            $getUrl = $this->urlGenerator->generate('gateway_config_get',
+            $getUrl = $this->urlGenerator->generate('gateway_get',
                 array('name' => $gatewayConfig->getGatewayName()),
                 $absolute = true
             );

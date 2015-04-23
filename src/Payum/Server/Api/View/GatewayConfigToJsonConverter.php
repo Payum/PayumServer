@@ -19,8 +19,8 @@ class GatewayConfigToJsonConverter
         }
 
         return array(
-            'name' => $gatewayConfig->getGatewayName(),
-            'factory' => $gatewayConfig->getFactoryName(),
+            'gatewayName' => $gatewayConfig->getGatewayName(),
+            'factoryName' => $gatewayConfig->getFactoryName(),
             'config' => $config,
         );
     }

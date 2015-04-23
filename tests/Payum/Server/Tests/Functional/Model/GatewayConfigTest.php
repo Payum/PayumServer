@@ -1,5 +1,5 @@
 <?php
-namespace Payum\Server\Tests\Functional\Mongo;
+namespace Payum\Server\Tests\Functional\Model;
 
 use Doctrine\ODM\MongoDB\DocumentManager;
 use Payum\Server\Factory\Storage\FactoryInterface;

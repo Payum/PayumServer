@@ -72,9 +72,9 @@ class DoctrineMongoDbFactory implements FactoryInterface
         );
 
         $config = new Configuration();
-        $config->setProxyDir(\sys_get_temp_dir());
+        $config->setProxyDir(\sys_get_temp_dir().'/PayumServer');
         $config->setProxyNamespace('Proxies');
-        $config->setHydratorDir(\sys_get_temp_dir());
+        $config->setHydratorDir(\sys_get_temp_dir().'/PayumServer');
         $config->setHydratorNamespace('Hydrators');
         $config->setMetadataDriverImpl($driver);
         $config->setMetadataCacheImpl(new ArrayCache());
