@@ -42,6 +42,7 @@ class PaymentToJsonConverter
             'clientEmail' => $payment->getClientEmail(),
             'clientId' => $payment->getClientId(),
             'description' => $payment->getDescription(),
+            'details' => $payment->getDetails(),
             '_links' => $links,
         ];
     }
