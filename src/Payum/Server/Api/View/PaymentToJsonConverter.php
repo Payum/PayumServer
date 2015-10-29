@@ -27,13 +27,8 @@ class PaymentToJsonConverter
      */
     public function convert(Payment $payment)
     {
-        $links = [];
-        foreach ($payment->getLinks() as $name => $link) {
-            $links[$name] = ['href' => $link];
-        }
-
-        return [
-            'id' => $payment->getPublicId(),
+        $normalizedPayment = [
+            'id' => $payment->getId(),
             'gatewayName' => $payment->getGatewayName(),
             'number' => $payment->getNumber(),
             'totalAmount' => $payment->getTotalAmount(),
@@ -42,7 +37,15 @@ class PaymentToJsonConverter
             'clientId' => $payment->getClientId(),
             'description' => $payment->getDescription(),
             'details' => $payment->getDetails(),
-            '_links' => $links,
+            '_links' => [],
         ];
+
+        foreach (['self', 'done', 'capture', 'authorize', 'notify'] as $name) {
+            if ($link = $payment->getValue('links', $name)) {
+                $normalizedPayment['_links'][$name] = ['href' => $link];
+            }
+        }
+
+        return ;
     }
 }

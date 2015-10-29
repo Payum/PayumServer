@@ -1,8 +1,8 @@
 {
     "name": "payum/payum-server",
     "type": "project",
-    "description": "PHP 5.3+ Payment micro service. Setup once and rule them all: Paypal, Stripe, Payex, Authorize.NET, Be2bill, Klarna, IPNs...",
-    "homepage": "http://payum.forma-dev.com",
+    "description": "PHP 5.5+ Payment processing server. Setup once and rule them all",
+    "homepage": "http://payum.org",
     "license": "MIT",
     "authors": [
         {
@@ -11,7 +11,7 @@
         },
         {
             "name":     "Payum project",
-            "homepage": "http://payum.forma-dev.com/"
+            "homepage": "http://payum.org"
         },
         {
             "name":     "Community contributions",
@@ -20,8 +20,11 @@
     ],
     "require": {
         "php": ">=5.5.0",
+        "ext-mongo": "~1.6",
         "silex/silex": "~1.2",
-        "jdesrosiers/silex-cors-provider": "~0.1.3",
+        "payum/payum-silex-provider": "1.0.*@dev",
+        "payum/payum": "1.0.*@dev",
+        "payum/omnipay-bridge": "1.0.*@dev",
         "symfony/yaml": "~2.6",
         "symfony/form": "~2.6",
         "symfony/validator": "~2.6",
@@ -31,13 +34,17 @@
         "symfony/security-csrf": "~2.6",
         "symfony/options-resolver": "~2.6",
         "symfony/twig-bridge": "~2.6",
-        "payum/payum-silex-provider": "0.15.*@dev",
-        "payum/payum": "0.15.*@dev",
+        "doctrine/mongodb": "~1.2",
+        "jdesrosiers/silex-cors-provider": "~0.1.3",
+        "omnipay/omnipay": "~2.3",
         "raven/raven": "~0.10.0",
         "twig/twig": "~1.12",
-        "michelf/php-markdown": "~1.4",
-        "egil/php-markdown-extra-extended": "1.0",
-        "doctrine/mongodb-odm": "1.0.*@beta"
+        "makasim/values": "0.1.*@dev",
+        "paypal/rest-api-sdk-php": "~1.0",
+        "klarna/checkout": "~2.0",
+        "fp/klarna-invoice": "~0.1",
+        "authorizenet/authorizenet": "~1.0",
+        "stripe/stripe-php": "~1.0"
     },
     "require-dev": {
         "phpunit/phpunit": "~4.0",
@@ -45,27 +52,6 @@
         "symfony/browser-kit": "~2.6",
         "symfony/css-selector": "~2.6"
     },
-    "repositories": [
-        {
-            "type":"git",
-            "url":"https://github.com/dflydev/dflydev-markdown"
-        },
-        {
-            "type":"package",
-            "package":{
-                "name":"egil/php-markdown-extra-extended",
-                "version":"1.0",
-                "source":{
-                    "type":"git",
-                    "url":"https://github.com/egil/php-markdown-extra-extended",
-                    "reference":"master"
-                },
-                "autoload":{
-                    "files":["markdown.php", "markdown_extended.php"]
-                }
-            }
-        }
-    ],
     "config": {
         "bin-dir": "bin"
     },
@@ -74,7 +60,7 @@
     },
     "extra": {
         "branch-alias": {
-            "dev-master": "0.15-dev"
+            "dev-master": "1.0-dev"
         }
     }
 }

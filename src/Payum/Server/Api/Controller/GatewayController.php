@@ -139,7 +139,7 @@ class GatewayController
 
         /** @var GatewayConfigInterface $gatewayConfigs */
         $gatewayConfigs = $this->gatewayConfigStorage->findBy([
-            'gatewayName' => $name
+            'self.gatewayName' => $name
         ]);
 
         if (empty($gatewayConfigs)) {

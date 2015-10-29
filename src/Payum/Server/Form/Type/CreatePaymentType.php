@@ -19,8 +19,8 @@ class CreatePaymentType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            // todo must be choice list.
-            ->add('gatewayName', 'text')
+            ->add('gatewayName', 'payum_gateways_choice')
+//            ->add('gatewayName', 'text')
             ->add('totalAmount', 'number', array(
                 'label' => 'Amount',
                 'constraints' => array(new NotBlank(), new Type(['type' => 'numeric']))
@@ -41,15 +41,11 @@ class CreatePaymentType extends AbstractType
             ->add('description', 'text', array(
                 'required' => false,
             ))
-            ->add('links', 'form')
+            ->add('done_link', 'text', [
+                'constraints' => array(new NotBlank()),
+                'mapped' => false,
+            ])
         ;
-
-        $builder->get('links')->add('done', 'text', [
-            'by_reference' => true,
-            'compound' => true,
-            'label' => 'Done url',
-            'constraints' => array(new NotBlank(), new Url())
-        ]);
     }
 
     /**

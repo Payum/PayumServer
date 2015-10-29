@@ -1,47 +1,148 @@
 <?php
 namespace Payum\Server\Model;
 
-use Doctrine\ODM\MongoDB\Mapping\Annotations as Mongo;
-use Payum\Core\Model\Payment as BasePayment;
+use Makasim\Values\ValuesTrait;
+use Payum\Core\Model\CreditCardInterface;
+use Payum\Core\Model\PaymentInterface;
 
-/**
- * @Mongo\Document
- */
-class Payment extends BasePayment
+class Payment implements PaymentInterface
 {
-    /**
-     * @Mongo\Id
-     *
-     * @var string $id
-     */
-    protected $id;
+    use ValuesTrait {
+        setValue as public;
+        getValue as public;
+    }
 
     /**
-     * @Mongo\String
-     *
-     * @var string
+     * @var CreditCardInterface
      */
-    protected $publicId;
+    protected $creditCard;
 
     /**
-     * @Mongo\String
-     *
-     * @var string
+     * {@inheritdoc}
      */
-    protected $gatewayName;
-
-    /**
-     * @Mongo\Hash
-     *
-     * @var string[]
-     */
-    protected $links;
-
-    public function __construct()
+    public function getDetails()
     {
-        parent::__construct();
+        return $this->getSelfValue('details', [], 'array');
+    }
 
-        $this->links = [];
+    /**
+     * {@inheritdoc}
+     */
+    public function setDetails($details)
+    {
+        $this->setSelfValue('details', (array) $details);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getNumber()
+    {
+        return $this->getSelfValue('number');
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setNumber($number)
+    {
+        $this->setSelfValue('number', $number);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getDescription()
+    {
+        return $this->getSelfValue('description');
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setDescription($description)
+    {
+        $this->setSelfValue('description', $description);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getClientEmail()
+    {
+        return $this->getSelfValue('clientEmail');
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setClientEmail($clientEmail)
+    {
+        $this->setSelfValue('clientEmail', $clientEmail);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getClientId()
+    {
+        return $this->getSelfValue('clientId');
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setClientId($clientId)
+    {
+        $this->setSelfValue('clientId', $clientId);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getTotalAmount()
+    {
+        return $this->getSelfValue('totalAmount', null, 'int');
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setTotalAmount($totalAmount)
+    {
+        $this->setSelfValue('totalAmount', $totalAmount);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getCurrencyCode()
+    {
+        return $this->getSelfValue('currencyCode');
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setCurrencyCode($currencyCode)
+    {
+        $this->setSelfValue('currencyCode', $currencyCode);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getCreditCard()
+    {
+        return $this->creditCard;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setCreditCard(CreditCardInterface $creditCard)
+    {
+        $this->creditCard = $creditCard;
     }
 
     /**
@@ -49,7 +150,15 @@ class Payment extends BasePayment
      */
     public function getId()
     {
-        return $this->id;
+        return $this->getSelfValue('id');
+    }
+
+    /**
+     * @param string $id
+     */
+    public function setId($id)
+    {
+        $this->setSelfValue('id', $id);
     }
 
     /**
@@ -57,7 +166,7 @@ class Payment extends BasePayment
      */
     public function getGatewayName()
     {
-        return $this->gatewayName;
+        return $this->getSelfValue('gatewayName');
     }
 
     /**
@@ -65,48 +174,6 @@ class Payment extends BasePayment
      */
     public function setGatewayName($gatewayName)
     {
-        $this->gatewayName = $gatewayName;
-    }
-
-    /**
-     * @return \string[]
-     */
-    public function getLinks()
-    {
-        return $this->links;
-    }
-
-    /**
-     * @param string$name
-     *
-     * @return \string[]
-     */
-    public function getLink($name)
-    {
-        return $this->links[$name];
-    }
-
-    /**
-     * @return \string[]
-     */
-    public function addLink($name, $link)
-    {
-        return $this->links[$name] = $link;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getPublicId()
-    {
-        return $this->publicId;
-    }
-
-    /**
-     * @param mixed $publicId
-     */
-    public function setPublicId($publicId)
-    {
-        $this->publicId = $publicId;
+        $this->setSelfValue('gatewayName', $gatewayName);
     }
 }

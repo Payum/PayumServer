@@ -1,26 +1,59 @@
 <?php
 namespace Payum\Server\Model;
 
-use Doctrine\ODM\MongoDB\Mapping\Annotations as Mongo;
-use Payum\Core\Model\GatewayConfig as BaseGatewayConfig;
+use Makasim\Values\ValuesTrait;
+use Payum\Core\Model\GatewayConfigInterface;
 
-/**
- * @Mongo\Document
- */
-class GatewayConfig extends BaseGatewayConfig
+class GatewayConfig implements GatewayConfigInterface
 {
-    /**
-     * @Mongo\Id
-     *
-     * @var string $id
-     */
-    protected $id;
+    use ValuesTrait;
 
     /**
-     * @return string
+     * {@inheritdoc}
      */
-    public function getId()
+    public function getGatewayName()
     {
-        return $this->id;
+        return $this->getSelfValue('gatewayName');
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setGatewayName($gatewayName)
+    {
+        $this->values['gatewayName'] = $gatewayName;
+        $this->setSelfValue('gatewayName', $gatewayName);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getFactoryName()
+    {
+        return $this->getSelfValue('factoryName');
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setFactoryName($name)
+    {
+        $this->setSelfValue('factoryName', $name);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setConfig(array $config)
+    {
+        $this->setSelfValue('config', $config);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getConfig()
+    {
+        return $this->getSelfValue('config', [], 'array');
     }
 }

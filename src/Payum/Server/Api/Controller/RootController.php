@@ -9,10 +9,9 @@ class RootController
     public function rootAction()
     {
         return new JsonResponse([
-            'status' => 200,
             'name' => 'PayumServer',
-            'version' => '0.15.x',
-            'tagline' => 'You Know, for processing payments',
+            'version' => '1.0.x',
+            'tagline' => 'Payment processing server. Setup once and rule them all',
         ]);
     }
 }
