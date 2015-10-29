@@ -169,6 +169,10 @@ class ServiceProvider implements ServiceProviderInterface
 
             return $storages;
         });
+
+        $app['payum.reply_to_symfony_response_converter'] = $app->share(function ($app) {
+            return new ReplyToSymfonyResponseConverter($app);
+        });
     }
 
     /**

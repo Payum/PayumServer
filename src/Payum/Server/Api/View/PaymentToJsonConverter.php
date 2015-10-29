@@ -35,7 +35,6 @@ class PaymentToJsonConverter
         return [
             'id' => $payment->getPublicId(),
             'gatewayName' => $payment->getGatewayName(),
-            'afterUrl' => $payment->getAfterUrl(),
             'number' => $payment->getNumber(),
             'totalAmount' => $payment->getTotalAmount(),
             'currencyCode' => $payment->getCurrencyCode(),

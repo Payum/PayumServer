@@ -3,8 +3,10 @@ namespace Payum\Server\Api\Controller;
 
 use Payum\Core\Bridge\Spl\ArrayObject;
 use Payum\Core\Registry\RegistryInterface;
+use Payum\Core\Request\Convert;
 use Payum\Core\Security\GenericTokenFactoryInterface;
 use Payum\Core\Security\HttpRequestVerifierInterface;
+use Payum\Core\Security\Util\Random;
 use Payum\Core\Storage\StorageInterface;
 use Payum\Server\Api\View\FormToJsonConverter;
 use Payum\Server\Api\View\PaymentToJsonConverter;
@@ -13,6 +15,7 @@ use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 class PaymentController
 {
@@ -47,12 +50,18 @@ class PaymentController
     private $formToJsonConverter;
 
     /**
+     * @var UrlGeneratorInterface
+     */
+    private $urlGenerator;
+
+    /**
      * @param GenericTokenFactoryInterface $tokenFactory
      * @param HttpRequestVerifierInterface $httpRequestVerifier
      * @param RegistryInterface $registry
      * @param PaymentToJsonConverter $paymentToJsonConverter
      * @param FormFactoryInterface $formFactory
      * @param FormToJsonConverter $formToJsonConverter
+     * @param UrlGeneratorInterface $urlGenerator
      */
     public function __construct(
         GenericTokenFactoryInterface $tokenFactory,
@@ -60,7 +69,8 @@ class PaymentController
         RegistryInterface $registry,
         PaymentToJsonConverter $paymentToJsonConverter,
         FormFactoryInterface $formFactory,
-        FormToJsonConverter $formToJsonConverter
+        FormToJsonConverter $formToJsonConverter,
+        UrlGeneratorInterface $urlGenerator
     ) {
         $this->tokenFactory = $tokenFactory;
         $this->registry = $registry;
@@ -68,6 +78,7 @@ class PaymentController
         $this->formToJsonConverter = $formToJsonConverter;
         $this->httpRequestVerifier = $httpRequestVerifier;
         $this->paymentToJsonConverter = $paymentToJsonConverter;
+        $this->urlGenerator = $urlGenerator;
     }
 
     /**
@@ -87,26 +98,30 @@ class PaymentController
 
         /** @var Payment $payment */
         $payment = $form->getData();
-        $payment->setAfterUrl($payment->getAfterUrl() ?: $request->getSchemeAndHttpHost());
+        $payment->setPublicId(Random::generateToken());
         $payment->setNumber($payment->getNumber() ?: date('Ymd-'.mt_rand(10000, 99999)));
-        $payment->setDetails([]);
+
+        $gateway = $this->registry->getGateway($payment->getGatewayName());
+        $gateway->execute($convert = new Convert($payment, 'array'));
+        $payment->setDetails($convert->getResult());
+
+        $payment->addLink('self', $this->urlGenerator->generate('gateway_get',
+            array('id' => $payment->getPublicId()),
+            $absolute = true
+        ));
 
         $storage = $this->registry->getStorage($payment);
         $storage->update($payment);
 
-        $token = $this->tokenFactory->createToken($payment->getGatewayName(), $payment, 'payment_get');
-        $payment->setPublicId($token->getHash());
-        $payment->addLink('self', $token->getTargetUrl());
-        $payment->addLink('update', $token->getTargetUrl());
-        $payment->addLink('delete', $token->getTargetUrl());
 
-        $token = $this->tokenFactory->createAuthorizeToken($payment->getGatewayName(), $payment, $payment->getAfterUrl(), [
-            'payum_token' => null
+        $token = $this->tokenFactory->createAuthorizeToken($payment->getGatewayName(), $payment, $payment->getLink('done'), [
+            'payum_token' => null,
         ]);
-        $payment->addLink('authorize', $token->getTargetUrl());
-
-        $token = $this->tokenFactory->createCaptureToken($payment->getGatewayName(), $payment, $payment->getAfterUrl(), [
-            'payum_token' => null
+        $payment->addLink('authorize', $token->getTargetUrl(), [
+            'payum_token' => null,
+        ]);
+        $token = $this->tokenFactory->createCaptureToken($payment->getGatewayName(), $payment, $payment->getLink('done'), [
+            'payum_token' => null,
         ]);
         $payment->addLink('capture', $token->getTargetUrl());
 
@@ -144,21 +159,12 @@ class PaymentController
 
         /** @var Payment $payment */
         $payment = $form->getData();
-        $payment->setAfterUrl($payment->getAfterUrl() ?: $request->getSchemeAndHttpHost());
-        $payment->setDetails([]);
+
+        $gateway = $this->registry->getGateway($payment->getGatewayName());
+        $gateway->execute($convert = new Convert($payment, 'array'));
+        $payment->setDetails($convert->getResult());
 
         $storage = $this->registry->getStorage($payment);
-        $storage->update($payment);
-
-        $token = $this->tokenFactory->createAuthorizeToken($payment->getGatewayName(), $payment, $payment->getAfterUrl());
-        $payment->addLink('authorize', $token->getTargetUrl());
-
-        $token = $this->tokenFactory->createCaptureToken($payment->getGatewayName(), $payment, $payment->getAfterUrl());
-        $payment->addLink('capture', $token->getTargetUrl());
-
-        $token = $this->tokenFactory->createNotifyToken($payment->getGatewayName(), $payment);
-        $payment->addLink('notify', $token->getTargetUrl());
-
         $storage->update($payment);
 
         return new JsonResponse(array(
@@ -238,10 +244,13 @@ class PaymentController
      */
     protected function findRequestedPayment(Request $request)
     {
-        $token = $this->httpRequestVerifier->verify($request);
+        // TODO: add validation that id is not empty and model actually exists.
+        $storage = $this->registry->getStorage(Payment::class);
 
-        $storage = $this->registry->getStorage('Payum\Server\Model\Payment');
+        $payments = $storage->findBy([
+            'publicId' => $request->attributes->get('id')
+        ]);
 
-        return $storage->find($token->getDetails());
+        return array_shift($payments);
     }
 }

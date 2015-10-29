@@ -21,10 +21,6 @@ class CreatePaymentType extends AbstractType
         $builder
             // todo must be choice list.
             ->add('gatewayName', 'text')
-            ->add('afterUrl', 'text', array(
-                'label' => 'After Url',
-                'constraints' => array(new NotBlank(), new Url())
-            ))
             ->add('totalAmount', 'number', array(
                 'label' => 'Amount',
                 'constraints' => array(new NotBlank(), new Type(['type' => 'numeric']))
@@ -45,7 +41,15 @@ class CreatePaymentType extends AbstractType
             ->add('description', 'text', array(
                 'required' => false,
             ))
+            ->add('links', 'form')
         ;
+
+        $builder->get('links')->add('done', 'text', [
+            'by_reference' => true,
+            'compound' => true,
+            'label' => 'Done url',
+            'constraints' => array(new NotBlank(), new Url())
+        ]);
     }
 
     /**

@@ -3,7 +3,6 @@ namespace Payum\Server\Model;
 
 use Doctrine\ODM\MongoDB\Mapping\Annotations as Mongo;
 use Payum\Core\Model\Payment as BasePayment;
-use Payum\Core\Request\GetHumanStatus;
 
 /**
  * @Mongo\Document
@@ -30,13 +29,6 @@ class Payment extends BasePayment
      * @var string
      */
     protected $gatewayName;
-
-    /**
-     * @Mongo\String
-     *
-     * @var string
-     */
-    protected $afterUrl;
 
     /**
      * @Mongo\Hash
@@ -74,28 +66,6 @@ class Payment extends BasePayment
     public function setGatewayName($gatewayName)
     {
         $this->gatewayName = $gatewayName;
-    }
-
-    /**
-     * @return string
-     */
-    public function getAfterUrl()
-    {
-        return $this->afterUrl;
-    }
-
-    /**
-     * @param string $afterUrl
-     */
-    public function setAfterUrl($afterUrl)
-    {
-        $this->afterUrl = $afterUrl;
-        $this->links['after'] = $afterUrl;
-    }
-
-    public function setDetails($details)
-    {
-        parent::setDetails($details);
     }
 
     /**

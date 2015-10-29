@@ -30,8 +30,13 @@ class FormToJsonConverter
             } elseif (in_array('choice', $child->vars['block_prefixes'])) {
                 $fields[$name]['type'] = 'choice';
                 $fields[$name]['choices'] = array_values($child->vars['choices']);
-            } else {
+            } elseif (in_array('text', $child->vars['block_prefixes'])) {
                 $fields[$name]['type'] = 'text';
+            } elseif (in_array('number', $child->vars['block_prefixes'])) {
+                $fields[$name]['type'] = 'text';
+            } else {
+                $fields[$name]['type'] = 'form';
+                $fields[$name]['children'] = $this->convertMeta($form->get($name));
             }
         }
 
