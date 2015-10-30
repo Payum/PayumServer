@@ -6,9 +6,12 @@ use Payum\Server\Api\View\FormToJsonConverter;
 use Payum\Server\Model\GatewayConfig;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Request;
 
 class GatewayMetaController
 {
+    use ForwardExtensionTrait;
+
     /**
      * @var FormFactoryInterface
      */
@@ -42,7 +45,7 @@ class GatewayMetaController
     /**
      * @return JsonResponse
      */
-    public function getAllAction()
+    public function getAllAction(Request $request)
     {
         $normalizedFactories = [];
 

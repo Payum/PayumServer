@@ -1,11 +1,13 @@
 <?php
 namespace Payum\Server\Api;
 
+use Payum\Core\Reply\ReplyInterface;
 use Payum\Server\Api\Controller\GatewayController;
 use Payum\Server\Api\Controller\GatewayMetaController;
 use Payum\Server\Api\Controller\PaymentController;
 use Payum\Server\Application;
 use Payum\Server\Api\Controller\RootController;
+use Payum\Server\ReplyToJsonResponseConverter;
 use Silex\Application as SilexApplication;
 use Silex\ServiceProviderInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -67,20 +69,17 @@ class ApiControllerProvider implements ServiceProviderInterface
         $app->post('/gateways', 'payum.api.controller.gateway:createAction')->bind('gateway_create');
 
         $app->before(function (Request $request, Application $app) {
-            if (in_array($request->getMethod(), array('GET', 'OPTIONS', 'DELETE'))) {
-                return;
-            }
+            if ('json' == $request->getContentType()) {
+                $decodedContent = [];
+                if ($request->getContent()) {
+                    $decodedContent = json_decode($request->getContent(), true);
+                    if (null === $decodedContent) {
+                        throw new BadRequestHttpException('The request content is not valid json.');
+                    }
+                }
 
-            if ('json' !== $request->getContentType()) {
-                throw new BadRequestHttpException('The request content type is invalid. It must be application/json');
+                $request->attributes->set('content', $decodedContent);
             }
-
-            $decodedContent = json_decode($request->getContent(), true);
-            if (null ===  $decodedContent) {
-                throw new BadRequestHttpException('The request content is not valid json.');
-            }
-
-            $request->attributes->set('content', $decodedContent);
         });
 
         $app->after(function (Request $request, Response $response) use ($app) {
@@ -90,6 +89,19 @@ class ApiControllerProvider implements ServiceProviderInterface
         });
 
         $app->after($app["cors"]);
+
+        $app->error(function (\Exception $e, $code) use ($app) {
+            if (false == $e instanceof ReplyInterface) {
+                return;
+            }
+
+            if ('json' === $app['request']->getContentType()) {
+                /** @var ReplyToJsonResponseConverter $converter */
+                $converter = $app['payum.reply_to_json_response_converter'];
+
+                return $converter->convert($e);
+            }
+        }, $priority = -7);
 
         $app->error(function (\Exception $e, $code) use ($app) {
             if ('json' !== $app['request']->getContentType()) {

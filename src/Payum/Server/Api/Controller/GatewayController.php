@@ -8,12 +8,15 @@ use Payum\Server\Api\View\GatewayConfigToJsonConverter;
 use Payum\Server\Model\GatewayConfig;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 class GatewayController
 {
+    use ForwardExtensionTrait;
+
     /**
      * @var FormFactoryInterface
      */
@@ -60,8 +63,10 @@ class GatewayController
         $this->gatewayConfigToJsonConverter = $gatewayConfigToJsonConverter;
     }
 
-    public function createAction($content)
+    public function createAction($content, Request $request)
     {
+        $this->forward400Unless('json' == $request->getContentType());
+
         $form = $this->formFactory->create('payum_gateway_config', null, [
             'data_class' => GatewayConfig::class,
             'csrf_protection' => false,
@@ -93,7 +98,7 @@ class GatewayController
         return new JsonResponse($this->formToJsonConverter->convertInvalid($form), 400);
     }
 
-    public function allAction()
+    public function allAction(Request $request)
     {
         $convertedGatewayConfigs = array();
         foreach ($this->gatewayConfigStorage->findBy([]) as $gatewayConfig) {
@@ -105,7 +110,7 @@ class GatewayController
         return new JsonResponse(array('gateways' => $convertedGatewayConfigs));
     }
 
-    public function getAction($name)
+    public function getAction($name, Request $request)
     {
         $gatewayConfig = $this->findGatewayConfigByName($name);
 
@@ -117,7 +122,7 @@ class GatewayController
      *
      * @return Response
      */
-    public function deleteAction($name)
+    public function deleteAction($name, Request $request)
     {
         $gatewayConfig = $this->findGatewayConfigByName($name);
 

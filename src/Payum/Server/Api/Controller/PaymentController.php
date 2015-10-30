@@ -20,6 +20,8 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 class PaymentController
 {
+    use ForwardExtensionTrait;
+
     /**
      * @var GenericTokenFactoryInterface
      */
@@ -83,6 +85,8 @@ class PaymentController
      */
     public function createAction($content, Request $request)
     {
+        $this->forward400Unless('json' == $request->getContentType());
+
         $rawPayment = ArrayObject::ensureArrayObject($content);
 
         $form = $this->formFactory->create('create_payment');
@@ -106,7 +110,9 @@ class PaymentController
 
         $storage->update($payment);
 
-        $payment->setValue('links', 'done', $form->get('done_link')->getData());
+        // TODO
+        $payment->setValue('links', 'done', 'http://google.com');
+
         $payment->setValue('links', 'self', $this->urlGenerator->generate('payment_get', ['id' => $payment->getId()], true));
 
         $token = $this->payum->getTokenFactory()->createAuthorizeToken($payment->getGatewayName(), $payment, $payment->getValue('links', 'done'), [
@@ -140,6 +146,8 @@ class PaymentController
      */
     public function updateAction($content, Request $request)
     {
+        $this->forward400Unless('json' == $request->getContentType());
+
         $payment = $this->findRequestedPayment($request);
 
         $rawPayment = ArrayObject::ensureArrayObject($content);
@@ -201,9 +209,11 @@ class PaymentController
     }
 
     /**
+     * @param Request $request
+     *
      * @return JsonResponse
      */
-    public function allAction()
+    public function allAction(Request $request)
     {
         /** @var StorageInterface $storage */
         $storage = $this->payum->getStorage(Payment::class);
@@ -220,9 +230,11 @@ class PaymentController
     }
 
     /**
+     * @param Request $request
+     *
      * @return JsonResponse
      */
-    public function metaAction()
+    public function metaAction(Request $request)
     {
         $form = $this->formFactory->create('create_payment');
 
@@ -241,10 +253,6 @@ class PaymentController
         // TODO: add validation that id is not empty and model actually exists.
         $storage = $this->payum->getStorage(Payment::class);
 
-        $payments = $storage->findBy([
-            'self.id' => $request->attributes->get('id')
-        ]);
-
-        return array_shift($payments);
+        return $storage->find($request->attributes->get('id'));
     }
 }

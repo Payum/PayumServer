@@ -23,7 +23,7 @@
         "ext-mongo": "~1.6",
         "silex/silex": "~1.2",
         "payum/payum-silex-provider": "1.0.*@dev",
-        "payum/payum": "1.0.*@dev",
+        "payum/payum": "dev-payum-server-fixes as 1.0.0",
         "payum/omnipay-bridge": "1.0.*@dev",
         "symfony/yaml": "~2.6",
         "symfony/form": "~2.6",
@@ -52,6 +52,12 @@
         "symfony/browser-kit": "~2.6",
         "symfony/css-selector": "~2.6"
     },
+    "repositories": [
+        {
+            "type": "vcs",
+            "url": "git@github.com:formapro-forks/Payum.git"
+        }
+    ],
     "config": {
         "bin-dir": "bin"
     },

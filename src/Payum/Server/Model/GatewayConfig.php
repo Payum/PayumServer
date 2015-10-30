@@ -9,6 +9,14 @@ class GatewayConfig implements GatewayConfigInterface
     use ValuesTrait;
 
     /**
+     * @return string
+     */
+    public function getId()
+    {
+        return $this->getSelfValue('id');
+    }
+
+    /**
      * {@inheritdoc}
      */
     public function getGatewayName()
@@ -23,6 +31,7 @@ class GatewayConfig implements GatewayConfigInterface
     {
         $this->values['gatewayName'] = $gatewayName;
         $this->setSelfValue('gatewayName', $gatewayName);
+        $this->setSelfValue('id', $gatewayName);
     }
 
     /**

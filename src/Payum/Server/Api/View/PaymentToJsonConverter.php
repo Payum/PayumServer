@@ -46,6 +46,6 @@ class PaymentToJsonConverter
             }
         }
 
-        return ;
+        return $normalizedPayment;
     }
 }

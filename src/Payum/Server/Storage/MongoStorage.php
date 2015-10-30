@@ -36,12 +36,12 @@ class MongoStorage extends AbstractStorage
 
         $values = json_decode(json_encode($values), true);
 
-        if ($id = $this->getModelId($model, false)) {
+        if (isset($values['_id'])) {
 
             $valuesToSave = $values;
             unset($valuesToSave['_id']);
 
-            $this->collection->update(['_id' => new \MongoId($id)], $valuesToSave);
+            $this->collection->update(['_id' => new \MongoId($values['_id'])], $valuesToSave);
         } else {
             $this->collection->insert($values);
         }
@@ -59,7 +59,7 @@ class MongoStorage extends AbstractStorage
     protected function doDeleteModel($model)
     {
         if ($id = $this->getModelId($model, false)) {
-            $this->collection->remove(['_id' => new \MongoId($id)]);
+            $this->collection->remove(['self.id' => (string) $id]);
         }
     }
 
@@ -76,7 +76,7 @@ class MongoStorage extends AbstractStorage
      */
     protected function doFind($id)
     {
-        if ($values = $this->collection->findOne(['_id' => new \MongoId((string) $id)])) {
+        if ($values = $this->collection->findOne(['self.id' => (string) $id])) {
             return $this->hydrate($values);
         }
 
@@ -104,14 +104,11 @@ class MongoStorage extends AbstractStorage
      */
     protected function getModelId($model, $strict = true)
     {
-        $values = \Makasim\Values\get_values($model);
-
-        $id = isset($values['_id']) ? $values['_id'] : null;
-        if ($strict && false == $id) {
+        if ($strict && false == $model->getId()) {
             throw new \LogicException('The id is missing');
         }
 
-        return (string) $id;
+        return (string) $model->getId();
     }
 
     /**

@@ -40,6 +40,14 @@ class SecurityToken implements TokenInterface
     }
 
     /**
+     * @return string
+     */
+    public function getId()
+    {
+        return $this->getSelfValue('id');
+    }
+
+    /**
      * {@inheritdoc}
      */
     public function getHash()
@@ -53,6 +61,7 @@ class SecurityToken implements TokenInterface
     public function setHash($hash)
     {
         $this->setSelfValue('hash', $hash);
+        $this->setSelfValue('id', $hash);
     }
 
     /**

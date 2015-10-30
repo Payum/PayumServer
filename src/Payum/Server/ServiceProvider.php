@@ -53,8 +53,8 @@ class ServiceProvider implements ServiceProviderInterface
             return $types;
         }));
 
-        $app['payum.reply_to_symfony_response_converter'] = $app->share(function ($app) {
-            return new ReplyToSymfonyResponseConverter($app);
+        $app['payum.reply_to_json_response_converter'] = $app->share(function ($app) {
+            return new ReplyToJsonResponseConverter();
         });
 
         $app['doctrine.mongo.connection'] = $app->share(function ($app) {

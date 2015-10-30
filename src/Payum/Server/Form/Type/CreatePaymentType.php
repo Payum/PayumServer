@@ -41,10 +41,6 @@ class CreatePaymentType extends AbstractType
             ->add('description', 'text', array(
                 'required' => false,
             ))
-            ->add('done_link', 'text', [
-                'constraints' => array(new NotBlank()),
-                'mapped' => false,
-            ])
         ;
     }
 

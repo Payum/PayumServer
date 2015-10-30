@@ -13,6 +13,22 @@ class Payment implements PaymentInterface
     }
 
     /**
+     * @return string
+     */
+    public function getId()
+    {
+        return $this->getSelfValue('id');
+    }
+
+    /**
+     * @param string $id
+     */
+    public function setId($id)
+    {
+        $this->setSelfValue('id', $id);
+    }
+
+    /**
      * @var CreditCardInterface
      */
     protected $creditCard;
@@ -143,22 +159,6 @@ class Payment implements PaymentInterface
     public function setCreditCard(CreditCardInterface $creditCard)
     {
         $this->creditCard = $creditCard;
-    }
-
-    /**
-     * @return string
-     */
-    public function getId()
-    {
-        return $this->getSelfValue('id');
-    }
-
-    /**
-     * @param string $id
-     */
-    public function setId($id)
-    {
-        $this->setSelfValue('id', $id);
     }
 
     /**
