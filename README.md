@@ -3,7 +3,7 @@
 [![Total Downloads](https://poser.pugx.org/payum/payum-server/d/total.png)](https://packagist.org/packages/payum/payum-server)
 [![Latest Stable Version](https://poser.pugx.org/payum/payum-server/version.png)](https://packagist.org/packages/payum/payum-server)
 
-Payment server. Setup your personal payment server and rule them all.
+PHP 5.5+ Payment processing server. Setup once and rule them all. The demo server is located here: [http://server.payum.org](http://server.payum.org) and the client for it [here](http://server.payum.org/client/index.html#/app/settings?api=http:%2F%2Fserver.payum.org)
 
 ## Installation
 
