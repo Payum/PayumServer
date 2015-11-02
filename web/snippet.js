@@ -13,7 +13,7 @@ Payum = {
             complete: function(data) {
                 console.log(data);
                 if (data.status == 302) {
-                    window.location = data.responseJSON.headers.location;
+                    window.location.replace(data.responseJSON.headers.Location);
                 }
                 if (data.status >= 200 && data.status < 300) {
                     $(container).html(data.responseJSON.content);
