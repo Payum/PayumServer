@@ -4,6 +4,7 @@ namespace Payum\Server\Model;
 use Makasim\Values\ValuesTrait;
 use Payum\Core\Model\CreditCardInterface;
 use Payum\Core\Model\PaymentInterface;
+use Payum\Core\Request\GetHumanStatus;
 
 class Payment implements PaymentInterface
 {
@@ -26,6 +27,22 @@ class Payment implements PaymentInterface
     public function setId($id)
     {
         $this->setSelfValue('id', $id);
+    }
+
+    /**
+     * @return string
+     */
+    public function getStatus()
+    {
+        return $this->getSelfValue('status', GetHumanStatus::STATUS_NEW);
+    }
+
+    /**
+     * @param string $status
+     */
+    public function setStatus($status)
+    {
+        $this->setSelfValue('status', $status);
     }
 
     /**

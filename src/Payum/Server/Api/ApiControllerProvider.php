@@ -89,21 +89,19 @@ class ApiControllerProvider implements ServiceProviderInterface
             }
         });
 
-        $app->after($app["cors"]);
-
         $app->after(function (Request $request, Response $response) use ($app) {
-            if ('OPTIONS' === $request->getMethod()) {
+            if ('OPTIONS' == $request->getMethod()) {
                 return $response;
             }
 
-            if ('application/vnd.payum+json' == $response->headers->get('content-type')) {
+            if ('application/vnd.payum+json' == $response->headers->get('Content-Type')) {
                 return $response;
             }
-            if ('application/json' == $response->headers->get('content-type')) {
+            if ('application/json' == $response->headers->get('Content-Type')) {
                 return $response;
             }
 
-            if ('application/vnd.payum+json' == $request->headers->get('content-type')) {
+            if ('application/vnd.payum+json' == $request->headers->get('Content-Type')) {
                 /** @var ReplyToJsonResponseConverter $converter */
                 $converter = $app['payum.reply_to_json_response_converter'];
 
@@ -120,7 +118,7 @@ class ApiControllerProvider implements ServiceProviderInterface
                 return;
             }
 
-            if ('application/vnd.payum+json' == $app['request']->headers->get('content-type')) {
+            if ('application/vnd.payum+json' == $app['request']->headers->get('Content-Type')) {
                 /** @var ReplyToJsonResponseConverter $converter */
                 $converter = $app['payum.reply_to_json_response_converter'];
 
@@ -135,7 +133,7 @@ class ApiControllerProvider implements ServiceProviderInterface
 
             if (
                 'json' == $app['request']->getContentType() ||
-                'application/vnd.payum+json' == $app['request']->headers->get('content-type')
+                'application/vnd.payum+json' == $app['request']->headers->get('Content-Type')
             ) {
                 return new JsonResponse(
                     [
@@ -148,7 +146,7 @@ class ApiControllerProvider implements ServiceProviderInterface
                     ],
                     200,
                     [
-                        'content-type' => 'application/vnd.payum+json',
+                        'Content-Type' => 'application/vnd.payum+json',
                     ]
                 );
             }

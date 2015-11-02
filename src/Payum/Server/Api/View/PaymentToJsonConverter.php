@@ -29,6 +29,7 @@ class PaymentToJsonConverter
     {
         $normalizedPayment = [
             'id' => $payment->getId(),
+            'status' => $payment->getStatus(),
             'gatewayName' => $payment->getGatewayName(),
             'number' => $payment->getNumber(),
             'totalAmount' => $payment->getTotalAmount(),

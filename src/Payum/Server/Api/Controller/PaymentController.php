@@ -104,9 +104,11 @@ class PaymentController
 
         $payment->setNumber($payment->getNumber() ?: date('Ymd-'.mt_rand(10000, 99999)));
 
-        $gateway = $this->payum->getGateway($payment->getGatewayName());
-        $gateway->execute($convert = new Convert($payment, 'array'));
-        $payment->setDetails($convert->getResult());
+        if ($payment->getGatewayName()) {
+            $gateway = $this->payum->getGateway($payment->getGatewayName());
+            $gateway->execute($convert = new Convert($payment, 'array'));
+            $payment->setDetails($convert->getResult());
+        }
 
         $storage->update($payment);
 
@@ -162,9 +164,11 @@ class PaymentController
         /** @var Payment $payment */
         $payment = $form->getData();
 
-        $gateway = $this->payum->getGateway($payment->getGatewayName());
-        $gateway->execute($convert = new Convert($payment, 'array'));
-        $payment->setDetails($convert->getResult());
+        if ($payment->getGatewayName()) {
+            $gateway = $this->payum->getGateway($payment->getGatewayName());
+            $gateway->execute($convert = new Convert($payment, 'array'));
+            $payment->setDetails($convert->getResult());
+        }
 
         $storage = $this->payum->getStorage($payment);
         $storage->update($payment);
