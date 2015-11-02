@@ -3079,12 +3079,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/formapro-forks/Payum.git",
-                "reference": "7138ad923a197e2d25f85ef9404218a33bec843f"
+                "reference": "111ffeb51d0c14ddb7a46814afa0660228d82050"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/formapro-forks/Payum/zipball/7138ad923a197e2d25f85ef9404218a33bec843f",
-                "reference": "7138ad923a197e2d25f85ef9404218a33bec843f",
+                "url": "https://api.github.com/repos/formapro-forks/Payum/zipball/111ffeb51d0c14ddb7a46814afa0660228d82050",
+                "reference": "111ffeb51d0c14ddb7a46814afa0660228d82050",
                 "shasum": ""
             },
             "require": {
@@ -3201,7 +3201,7 @@
             "support": {
                 "source": "https://github.com/formapro-forks/Payum/tree/payum-server-fixes"
             },
-            "time": "2015-10-30 21:24:26"
+            "time": "2015-11-02 18:07:54"
         },
         {
             "name": "payum/payum-silex-provider",
