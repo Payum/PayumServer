@@ -7,13 +7,17 @@ Payum = {
         jQuery.ajax(url, {
             type: "GET",
             async: true,
-            contentType: 'application/json',
+            contentType: 'application/vnd.payum+json',
             success: function(data) {
-                if (data.status < 400) {
-                    $(container).html(data.content);
-                }
             },
-            complete: function() {
+            complete: function(data) {
+                console.log(data);
+                if (data.status == 302) {
+                    window.location = data.responseJSON.headers.location;
+                }
+                if (data.status >= 200 && data.status < 300) {
+                    $(container).html(data.responseJSON.content);
+                }
             },
             error: function() {
             }

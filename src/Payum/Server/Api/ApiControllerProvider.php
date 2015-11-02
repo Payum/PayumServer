@@ -1,6 +1,7 @@
 <?php
 namespace Payum\Server\Api;
 
+use Payum\Core\Bridge\Symfony\Reply\HttpResponse;
 use Payum\Core\Reply\ReplyInterface;
 use Payum\Server\Api\Controller\GatewayController;
 use Payum\Server\Api\Controller\GatewayMetaController;
@@ -90,12 +91,36 @@ class ApiControllerProvider implements ServiceProviderInterface
 
         $app->after($app["cors"]);
 
+        $app->after(function (Request $request, Response $response) use ($app) {
+            if ('OPTIONS' === $request->getMethod()) {
+                return $response;
+            }
+
+            if ('application/vnd.payum+json' == $response->headers->get('content-type')) {
+                return $response;
+            }
+            if ('application/json' == $response->headers->get('content-type')) {
+                return $response;
+            }
+
+            if ('application/vnd.payum+json' == $request->headers->get('content-type')) {
+                /** @var ReplyToJsonResponseConverter $converter */
+                $converter = $app['payum.reply_to_json_response_converter'];
+
+                return $converter->convert(new HttpResponse($response));
+            }
+
+        }, 100);
+
         $app->error(function (\Exception $e, $code) use ($app) {
+            if ('OPTIONS' === $app['request']->getMethod()) {
+                return;
+            }
             if (false == $e instanceof ReplyInterface) {
                 return;
             }
 
-            if ('json' === $app['request']->getContentType()) {
+            if ('application/vnd.payum+json' == $app['request']->headers->get('content-type')) {
                 /** @var ReplyToJsonResponseConverter $converter */
                 $converter = $app['payum.reply_to_json_response_converter'];
 
@@ -104,18 +129,29 @@ class ApiControllerProvider implements ServiceProviderInterface
         }, $priority = -7);
 
         $app->error(function (\Exception $e, $code) use ($app) {
-            if ('json' !== $app['request']->getContentType()) {
+            if ('OPTIONS' === $app['request']->getMethod()) {
                 return;
             }
 
-            return new JsonResponse(array(
-                'exception' => get_class($e),
-                'message' => $e->getMessage(),
-                'code' => $e->getCode(),
-                'file' => $e->getFile(),
-                'line' => $e->getLine(),
-                'stackTrace' => $e->getTraceAsString(),
-            ));
+            if (
+                'json' == $app['request']->getContentType() ||
+                'application/vnd.payum+json' == $app['request']->headers->get('content-type')
+            ) {
+                return new JsonResponse(
+                    [
+                        'exception' => get_class($e),
+                        'message' => $e->getMessage(),
+                        'code' => $e->getCode(),
+                        'file' => $e->getFile(),
+                        'line' => $e->getLine(),
+                        'stackTrace' => $e->getTraceAsString(),
+                    ],
+                    200,
+                    [
+                        'content-type' => 'application/vnd.payum+json',
+                    ]
+                );
+            }
         }, $priority = -100);
     }
 
