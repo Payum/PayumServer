@@ -13,6 +13,8 @@ Payum = {
                 Accept: 'application/vnd.payum+json'
             },
             success: function(data) {
+            },
+            complete: function(data) {
                 payum.updateContainer(data, container);
 
                 $(container + ' form').on('submit', function (e) {
@@ -32,22 +34,16 @@ Payum = {
                         },
                         data: values,
                         success: function(data) {
+                        },
+                        complete: function(data) {
                             payum.updateContainer(data, container);
                         },
-                        complete: function() {
-                            //console.log('complete', arguments);
-                        },
                         error: function() {
-                            //console.log('complete', arguments);
                         }
                     });
                 });
             },
-            complete: function() {
-                //console.log('complete', arguments);
-            },
             error: function() {
-                //console.log('complete', arguments);
             }
         });
     },
@@ -55,10 +51,10 @@ Payum = {
     updateContainer: function(data, container)
     {
         if (data.status == 302) {
-            window.location.replace(data.headers.Location);
+            window.location.replace(data.responseJSON.headers.Location);
         }
         if (data.status >= 200 && data.status < 300) {
-            $(container).html(data.content);
+            $(container).html(data.responseJSON.content);
         }
     }
 };
