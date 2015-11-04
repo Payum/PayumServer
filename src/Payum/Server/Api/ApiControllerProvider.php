@@ -6,15 +6,14 @@ use Payum\Core\Reply\ReplyInterface;
 use Payum\Server\Api\Controller\GatewayController;
 use Payum\Server\Api\Controller\GatewayMetaController;
 use Payum\Server\Api\Controller\PaymentController;
-use Payum\Server\Application;
 use Payum\Server\Api\Controller\RootController;
 use Payum\Server\ReplyToJsonResponseConverter;
 use Silex\Application as SilexApplication;
+use Silex\ControllerCollection;
 use Silex\ServiceProviderInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
 class ApiControllerProvider implements ServiceProviderInterface
 {
@@ -56,101 +55,37 @@ class ApiControllerProvider implements ServiceProviderInterface
         });
 
         $app->get('/', 'payum.api.controller.root:rootAction')->bind('api_root');
-        $app->get('/payments/meta', 'payum.api.controller.payment:metaAction')->bind('payment_meta');
-        $app->get('/payments/{id}', 'payum.api.controller.payment:getAction')->bind('payment_get');
-        $app->put('/payments/{id}', 'payum.api.controller.payment:updateAction')->bind('payment_update');
-        $app->delete('/payments/{id}', 'payum.api.controller.payment:deleteAction')->bind('payment_delete');
-        $app->post('/payments', 'payum.api.controller.payment:createAction')->bind('payment_create');
-        $app->get('/payments', 'payum.api.controller.payment:allAction')->bind('payment_all');
 
-        $app->get('/gateways/meta', 'payum.api.controller.gateway_meta:getAllAction')->bind('payment_factory_get_all');
-        $app->get('/gateways', 'payum.api.controller.gateway:allAction')->bind('gateway_all');
-        $app->get('/gateways/{name}', 'payum.api.controller.gateway:getAction')->bind('gateway_get');
-        $app->delete('/gateways/{name}', 'payum.api.controller.gateway:deleteAction')->bind('gateway_delete');
-        $app->post('/gateways', 'payum.api.controller.gateway:createAction')->bind('gateway_create');
+        /** @var ControllerCollection $payments */
+        $payments = $app['controllers_factory'];
+        $payments->get('/meta', 'payum.api.controller.payment:metaAction')->bind('payment_meta');
+        $payments->get('/{id}', 'payum.api.controller.payment:getAction')->bind('payment_get');
+        $payments->put('/{id}', 'payum.api.controller.payment:updateAction')->bind('payment_update');
+        $payments->delete('/{id}', 'payum.api.controller.payment:deleteAction')->bind('payment_delete');
+        $payments->post('/', 'payum.api.controller.payment:createAction')->bind('payment_create');
+        $payments->get('/', 'payum.api.controller.payment:allAction')->bind('payment_all');
+        $app->mount('/payments', $payments);
 
-        $app->before(function (Request $request, Application $app) {
-            if ('json' == $request->getContentType()) {
-                $decodedContent = [];
-                if ($request->getContent()) {
-                    $decodedContent = json_decode($request->getContent(), true);
-                    if (null === $decodedContent) {
-                        throw new BadRequestHttpException('The request content is not valid json.');
-                    }
-                }
+        /** @var ControllerCollection $gateways */
+        $gateways = $app['controllers_factory'];
+        $gateways->get('/meta', 'payum.api.controller.gateway_meta:getAllAction')->bind('payment_factory_get_all');
+        $gateways->get('/', 'payum.api.controller.gateway:allAction')->bind('gateway_all');
+        $gateways->get('/{name}', 'payum.api.controller.gateway:getAction')->bind('gateway_get');
+        $gateways->delete('/{name}', 'payum.api.controller.gateway:deleteAction')->bind('gateway_delete');
+        $gateways->post('/', 'payum.api.controller.gateway:createAction')->bind('gateway_create');
+        $app->mount('/gateways', $gateways);
 
-                $request->attributes->set('content', $decodedContent);
-            }
-        });
 
-        $app->after(function (Request $request, Response $response) use ($app) {
-            if($response instanceof JsonResponse && $app['debug']) {
-                $response->setEncodingOptions($response->getEncodingOptions() | JSON_PRETTY_PRINT);
-            }
-        });
+        $gateways->before($app['api.parse_json_request']);
+        $payments->before($app['api.parse_json_request']);
 
-        $app->after(function (Request $request, Response $response) use ($app) {
-            if ('OPTIONS' == $request->getMethod()) {
-                return $response;
-            }
+        $gateways->before($app['api.parse_post_request']);
+        $payments->before($app['api.parse_post_request']);
 
-            if ('application/vnd.payum+json' == $response->headers->get('Content-Type')) {
-                return $response;
-            }
-            if ('application/json' == $response->headers->get('Content-Type')) {
-                return $response;
-            }
-
-            if ('application/vnd.payum+json' == $request->headers->get('Content-Type')) {
-                /** @var ReplyToJsonResponseConverter $converter */
-                $converter = $app['payum.reply_to_json_response_converter'];
-
-                return $converter->convert(new HttpResponse($response));
-            }
-
-        }, 100);
-
-        $app->error(function (\Exception $e, $code) use ($app) {
-            if ('OPTIONS' === $app['request']->getMethod()) {
-                return;
-            }
-            if (false == $e instanceof ReplyInterface) {
-                return;
-            }
-
-            if ('application/vnd.payum+json' == $app['request']->headers->get('Content-Type')) {
-                /** @var ReplyToJsonResponseConverter $converter */
-                $converter = $app['payum.reply_to_json_response_converter'];
-
-                return $converter->convert($e);
-            }
-        }, $priority = -7);
-
-        $app->error(function (\Exception $e, $code) use ($app) {
-            if ('OPTIONS' === $app['request']->getMethod()) {
-                return;
-            }
-
-            if (
-                'json' == $app['request']->getContentType() ||
-                'application/vnd.payum+json' == $app['request']->headers->get('Content-Type')
-            ) {
-                return new JsonResponse(
-                    [
-                        'exception' => get_class($e),
-                        'message' => $e->getMessage(),
-                        'code' => $e->getCode(),
-                        'file' => $e->getFile(),
-                        'line' => $e->getLine(),
-                        'stackTrace' => $e->getTraceAsString(),
-                    ],
-                    200,
-                    [
-                        'Content-Type' => 'application/vnd.payum+json',
-                    ]
-                );
-            }
-        }, $priority = -100);
+        if ($app['debug']) {
+            $gateways->after($app['api.view.pretty_print_json']);
+            $payments->after($app['api.view.pretty_print_json']);
+        }
     }
 
     /**

@@ -2,10 +2,12 @@
 namespace Payum\Server;
 
 use Doctrine\MongoDB\Connection;
+use Payum\Core\Bridge\Symfony\Reply\HttpResponse;
 use Payum\Core\Bridge\Twig\TwigFactory;
 use Payum\Core\Model\GatewayConfigInterface;
 use Payum\Core\Payum;
 use Payum\Core\PayumBuilder;
+use Payum\Core\Reply\ReplyInterface;
 use Payum\Core\Storage\StorageInterface;
 use Payum\Server\Extension\UpdatePaymentStatusExtension;
 use Payum\Server\Form\Type\CreatePaymentType;
@@ -15,8 +17,10 @@ use Payum\Server\Model\Payment;
 use Payum\Server\Model\SecurityToken;
 use Payum\Server\Storage\MongoStorage;
 use Silex\Application as SilexApplication;
+use Silex\ControllerCollection;
 use Silex\ServiceProviderInterface;
 use Symfony\Component\Form\FormFactoryInterface;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Validator\Constraints\NotBlank;
@@ -91,56 +95,72 @@ class ServiceProvider implements ServiceProviderInterface
             return $loader;
         }));
 
-        $app->after($app["cors"], 1000);
+        $app['payum.controller.capture'] = $app->share(function() use ($app) {
+            return new CaptureController($app);
+        });
 
-        $app->before(function (Request $request, Application $app) {
-            if (0 !== strpos($request->getPathInfo(), '/payment/capture')) {
+        $app->after($app["cors"]);
+
+        /** @var ControllerCollection $payment */
+        $payment = $app['payum.payments_controller_collection'];
+        $payment->after(function (Request $request, Response $response) use ($app) {
+            if ('OPTIONS' == $request->getMethod()) {
                 return;
             }
 
-            /** @var Payum $payum */
-            $payum = $app['payum'];
-
-            $token = $payum->getHttpRequestVerifier()->verify($request);
-
-            /** @var StorageInterface $paymentStorage */
-            $paymentStorage = $payum->getStorage($token->getDetails()->getClass());
-
-            /** @var Payment $payment */
-            $payment = $paymentStorage->find($token->getDetails()->getId());
-
-            if (false == $payment->getGatewayName()) {
-                /** @var FormFactoryInterface $formFactory */
-                $formFactory = $app['form.factory'];
-
-                $form = $formFactory->createBuilder('form', $payment, ['method' => 'POST'])
-                    ->add('gatewayName', 'payum_gateways_choice', ['constraints' => [new NotBlank()]])
-                    ->add('choose', 'submit')
-
-                    ->getForm()
-                ;
-
-                $form->handleRequest($request);
-                if ($form->isSubmitted() && $form->isValid()) {
-                    $paymentStorage->update($payment);
-                } else {
-                    /** @var \Twig_Environment $twig */
-                    $twig = $app['twig'];
-
-                    return new Response($twig->render('@PayumServer/chooseGateway.html.twig', [
-                        'form' => $form->createView(),
-                        'layout' => '@PayumCore/layout.html.twig',
-                    ]));
-                }
-            } else {
-                $token->setGatewayName($payment->getGatewayName());
-
-                $payum->getTokenStorage()->update($token);
+            if ('application/vnd.payum+json' == $response->headers->get('Content-Type')) {
+                return;
+            }
+            if ('application/json' == $response->headers->get('Content-Type')) {
+                return;
             }
 
-            // do not verify it second time.
-            $request->attributes->set('payum_token', $token);
+            if ('application/vnd.payum+json' == $request->headers->get('Accept')) {
+                throw new HttpResponse($response);
+            }
         });
+
+        $app->error(function (\Exception $e, $code) use ($app) {
+            if ('OPTIONS' === $app['request']->getMethod()) {
+                return;
+            }
+            if (false == $e instanceof ReplyInterface) {
+                return;
+            }
+
+            if ('application/vnd.payum+json' == $app['request']->headers->get('Accept')) {
+                /** @var ReplyToJsonResponseConverter $converter */
+                $converter = $app['payum.reply_to_json_response_converter'];
+
+                return $converter->convert($e);
+            }
+        }, $priority = -7);
+
+        $app->error(function (\Exception $e, $code) use ($app) {
+            if ('OPTIONS' === $app['request']->getMethod()) {
+                return;
+            }
+
+            if (
+                'json' == $app['request']->getContentType() ||
+                'application/vnd.payum+json' == $app['request']->headers->get('Accept')
+            ) {
+                return new JsonResponse(
+                    [
+                        'exception' => get_class($e),
+                        'message' => $e->getMessage(),
+                        'code' => $e->getCode(),
+                        'file' => $e->getFile(),
+                        'line' => $e->getLine(),
+                        'stackTrace' => $e->getTraceAsString(),
+                    ],
+                    200,
+                    [
+                        'Content-Type' => 'application/vnd.payum+json',
+                    ]
+                );
+            }
+        }, $priority = -100);
     }
 
     /**

@@ -85,7 +85,7 @@ class PaymentController
      */
     public function createAction($content, Request $request)
     {
-        $this->forward400Unless('json' == $request->getContentType());
+        $this->forward400Unless('json' == $request->getContentType() || 'form' == $request->getContentType());
 
         $rawPayment = ArrayObject::ensureArrayObject($content);
 
