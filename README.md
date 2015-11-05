@@ -44,7 +44,7 @@ This is just the smallest example:
 
             $('#pay-btn').click(function() {
                 payum.payment.create(100, 'USD', function(payment) {
-                    var afterUrl = 'http://yourapp.com/payment/done;
+                    var afterUrl = 'http://yourapp.com/payment/done';
 
                     payum.token.create('capture', payment.id, afterUrl, function(token) {
                         payum.execute(token.targetUrl, '#payum-container');
