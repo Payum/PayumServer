@@ -44,7 +44,7 @@ This is just the smallest example:
 
             $('#pay-btn').click(function() {
                 payum.payment.create(100, 'USD', function(payment) {
-                    var afterUrl = 'http://dev.payum-server.com/client/index.html#/app/payments/details/'+payment.id;
+                    var afterUrl = 'http://yourapp.com/payment/done;
 
                     payum.token.create('capture', payment.id, afterUrl, function(token) {
                         payum.execute(token.targetUrl, '#payum-container');
@@ -58,7 +58,7 @@ This is just the smallest example:
 
 _**Note**: We advice you to move payment and token creation code to the server side._
 
-Try it:
+## Try it:
 
 * Server: [http://server.payum.org/](http://server.payum.org/)
 * Web client: [http://server.payum.org/client/index.html](http://server.payum.org/client/index.html#/app/settings?api=http:%2F%2Fserver.payum.org)
