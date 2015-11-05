@@ -56,7 +56,7 @@ This is just the smallest example:
 </html>
 ```
 
-_**Note**: We advice you to me payment and token creation code to your server side._
+_**Note**: We advice you to move payment and token creation code to the server side._
 
 Try it:
 
