@@ -3,7 +3,7 @@
 [![Total Downloads](https://poser.pugx.org/payum/payum-server/d/total.png)](https://packagist.org/packages/payum/payum-server)
 [![Latest Stable Version](https://poser.pugx.org/payum/payum-server/version.png)](https://packagist.org/packages/payum/payum-server)
 
-PHP 5.5+ Payment processing server. Setup once and rule them all. The demo server is located here: [http://server.payum.org](http://server.payum.org) and the client for it [here](http://server.payum.org/client/index.html#/app/settings?api=http:%2F%2Fserver.payum.org)
+PHP 5.5+ Payment processing server. Setup once and rule them all.
 
 ## Installation
 
@@ -61,7 +61,7 @@ _**Note**: We advice you to me payment and token creation code to your server si
 Try it:
 
 * Server: [http://server.payum.org/](http://server.payum.org/)
-* Web client: [http://server.payum.org/client/index.html](http://server.payum.org/client/index.html)
+* Web client: [http://server.payum.org/client/index.html](http://server.payum.org/client/index.html#/app/settings?api=http:%2F%2Fserver.payum.org)
 * Demo: [http://server.payum.org/demo.html](http://server.payum.org/demo.html)
 
 ## License
