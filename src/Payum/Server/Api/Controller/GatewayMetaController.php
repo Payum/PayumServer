@@ -3,6 +3,7 @@ namespace Payum\Server\Api\Controller;
 
 use Payum\Core\Registry\GatewayFactoryRegistryInterface;
 use Payum\Server\Api\View\FormToJsonConverter;
+use Payum\Server\Controller\ForwardExtensionTrait;
 use Payum\Server\Model\GatewayConfig;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;

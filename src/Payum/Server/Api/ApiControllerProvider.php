@@ -7,6 +7,7 @@ use Payum\Server\Api\Controller\GatewayController;
 use Payum\Server\Api\Controller\GatewayMetaController;
 use Payum\Server\Api\Controller\PaymentController;
 use Payum\Server\Api\Controller\RootController;
+use Payum\Server\Api\Controller\TokenController;
 use Payum\Server\ReplyToJsonResponseConverter;
 use Silex\Application as SilexApplication;
 use Silex\ControllerCollection;
@@ -29,10 +30,19 @@ class ApiControllerProvider implements ServiceProviderInterface
         $app['payum.api.controller.payment'] = $app->share(function() use ($app) {
             return new PaymentController(
                 $app['payum'],
-                $app['api.view.order_to_json_converter'],
+                $app['api.view.payment_to_json_converter'],
                 $app['form.factory'],
                 $app['api.view.form_to_json_converter'],
                 $app['url_generator']
+            );
+        });
+
+        $app['payum.api.controller.token'] = $app->share(function() use ($app) {
+            return new TokenController(
+                $app['payum'],
+                $app['form.factory'],
+                $app['api.view.token_to_json_converter'],
+                $app['api.view.form_to_json_converter']
             );
         });
 
@@ -75,16 +85,24 @@ class ApiControllerProvider implements ServiceProviderInterface
         $gateways->post('/', 'payum.api.controller.gateway:createAction')->bind('gateway_create');
         $app->mount('/gateways', $gateways);
 
+        /** @var ControllerCollection $tokens */
+        $tokens = $app['controllers_factory'];
+        $tokens->post('/', 'payum.api.controller.token:createAction')->bind('token_create');
+        $app->mount('/tokens', $tokens);
+
 
         $gateways->before($app['api.parse_json_request']);
         $payments->before($app['api.parse_json_request']);
+        $tokens->before($app['api.parse_json_request']);
 
         $gateways->before($app['api.parse_post_request']);
         $payments->before($app['api.parse_post_request']);
+        $tokens->before($app['api.parse_post_request']);
 
         if ($app['debug']) {
             $gateways->after($app['api.view.pretty_print_json']);
             $payments->after($app['api.view.pretty_print_json']);
+            $tokens->after($app['api.view.pretty_print_json']);
         }
     }
 

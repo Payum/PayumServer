@@ -14,38 +14,47 @@ $ php composer.phar create-project payum/payum-server --stability=dev
 ## Run
 
 ```bash
+$ cd payum-server
 $ php -S 127.0.0.1:8000 web/index.php
 ```
 
-## Configure gateway
+_**Note**: You might need a [web client](https://github.com/Payum/PayumServerUI) to manage payments gateways or you can use REST API._
 
-Here we use a paypal as an example, but you can configure any other supported payments similar way.
+## Demo
 
-```bash
-$ curl -i -X POST -H "Content-Type: application/json" 127.0.0.1:8000/gateways -d  '{"gatewayName": "paypal", "factoryName": "paypal_express_checkout", "config": {"username": "foo", "password": "bar", "signature": "baz", "sandbox": true}}'
+```
+<html>
+    <head>
+        <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+
+        <script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+        <script src="http://server.payum.org/payum.js"></script>
+    </head>
+
+    <body style="margin: 20px;">
+        <button id="pay-btn" class="btn" value="Create">Pay 1$</button>
+
+        <div id="payum-container"></div>
+
+        <script>
+            var payum = new Payum("http://"+window.location.hostname);
+
+            $('#pay-btn').click(function() {
+                payum.payment.create(100, 'USD', function(payment) {
+                    var afterUrl = 'http://dev.payum-server.com/client/index.html#/app/payments/details/'+payment.id;
+
+                    payum.token.create('capture', payment.id, afterUrl, function(token) {
+                        payum.execute(token.targetUrl, '#payum-container');
+                    });
+                });
+            });
+        </script>
+    </body>
+</html>
 ```
 
-_**Note**: You must provide correct Paypal credentials._
-
-## Create payment
- 
-You are ready to create a payment and purchase just do:
-
-```bash
-$ curl -i -X POST -H "Content-Type: application/json" 127.0.0.1:8000/payments -d  '{"gatewayName": "paypal", "totalAmount": 123, "currenctCode": "USD"}'
-```
-
-## Purchase
-
-Redirect user to capture url you get with payment response, It should be something like this:
-
-```bash
-http://127.0.0.1:8000/payment/capture/gT5OofuBMQp_D4lxfSuM4ZNx9yjgYdXoK96yiTsKHOI
-```
-
-## GUI
-
-There is a [client](https://github.com/Payum/PayumServerUI).    
+_**Note**: This is just the smallest example. We advice you to me payment and token creation code to your server side._
 
 ## License
 

@@ -2,17 +2,51 @@ if("undefined"==typeof jQuery) {
     throw new Error("Payum's JavaScript requires jQuery");
 }
 
-Payum = {
-    render: function(url, container) {
-        var payum = this;
+Payum = function(serverUrl) {
+    var payum = this;
 
+    payum.serverUrl = serverUrl;
+
+    payum.payment = {
+        create: function(amount, currency, callback) {
+            $.ajax(payum.serverUrl + '/payments', {
+                'data': JSON.stringify({'totalAmount': amount, 'currencyCode': currency}),
+                'type': 'POST',
+                'processData': false,
+                'contentType': 'application/json',
+                success: function(data) {
+                    callback(data.payment);
+                }
+            });
+        },
+        get: function(id, callback) {
+            $.get(payum.serverUrl + '/payments/'+id, {success: callback});
+        }
+    };
+
+    payum.token = {
+        create: function(type, paymentId, afterUrl, callback) {
+            $.ajax(payum.serverUrl + '/tokens', {
+                'data': JSON.stringify({'type': type, 'paymentId': paymentId, 'afterUrl': afterUrl}),
+                'type': 'POST',
+                'processData': false,
+                'contentType': 'application/json',
+                success: function(data) {
+                    callback(data.token);
+                }
+            });
+        },
+        get: function(id, callback) {
+            $.get(payum.serverUrl + '/payments/'+id, {success: callback});
+        }
+    };
+
+    payum.execute = function(url, container) {
         jQuery.ajax(url, {
             type: "GET",
             async: true,
             headers: {
                 Accept: 'application/vnd.payum+json'
-            },
-            success: function(data) {
             },
             complete: function(data) {
                 payum.updateContainer(data, container);
@@ -42,19 +76,16 @@ Payum = {
                         }
                     });
                 });
-            },
-            error: function() {
             }
         });
-    },
+    };
 
-    updateContainer: function(data, container)
-    {
+    payum.updateContainer = function updateContainer(data, container) {
         if (data.status == 302) {
             window.location.replace(data.responseJSON.headers.Location);
         }
         if (data.status >= 200 && data.status < 300) {
             $(container).html(data.responseJSON.content);
         }
-    }
+    };
 };

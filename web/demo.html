@@ -1,0 +1,30 @@
+<html>
+    <head>
+        <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+
+        <script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+        <script src="payum.js"></script>
+    </head>
+
+    <body style="margin: 20px;">
+        <button id="pay-btn" class="btn" value="Create">Pay 1$</button>
+
+        <div id="payum-container"></div>
+
+        <script>
+            var payumServerUrl = "http://"+window.location.hostname;
+            var payum = new Payum(payumServerUrl);
+
+            $('#pay-btn').click(function() {
+                payum.payment.create(100, 'USD', function(payment) {
+                    var afterUrl = 'http://dev.payum-server.com/client/index.html#/app/payments/details/'+payment.id;
+
+                    payum.token.create('capture', payment.id, afterUrl, function(token) {
+                        payum.execute(token.targetUrl, '#payum-container');
+                    });
+                });
+            });
+        </script>
+    </body>
+</html>

@@ -4,6 +4,7 @@ namespace Payum\Server\Api;
 use Payum\Server\Api\View\FormToJsonConverter;
 use Payum\Server\Api\View\GatewayConfigToJsonConverter;
 use Payum\Server\Api\View\PaymentToJsonConverter;
+use Payum\Server\Api\View\TokenToJsonConverter;
 use Payum\Server\Application;
 use Silex\Application as SilexApplication;
 use Silex\ServiceProviderInterface;
@@ -19,8 +20,12 @@ class ApiProvider implements ServiceProviderInterface
      */
     public function register(SilexApplication $app)
     {
-        $app['api.view.order_to_json_converter'] = function() use ($app) {
+        $app['api.view.payment_to_json_converter'] = function() use ($app) {
             return new PaymentToJsonConverter($app['payum']);
+        };
+
+        $app['api.view.token_to_json_converter'] = function() use ($app) {
+            return new TokenToJsonConverter();
         };
 
         $app['api.view.form_to_json_converter'] = function() {

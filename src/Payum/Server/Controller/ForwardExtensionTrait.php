@@ -1,13 +1,5 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: makasim
- * Date: 10/30/15
- * Time: 9:50 PM
- */
-
-namespace Payum\Server\Api\Controller;
-
+namespace Payum\Server\Controller;
 
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 

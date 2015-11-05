@@ -5,12 +5,13 @@ use Doctrine\MongoDB\Connection;
 use Payum\Core\Bridge\Symfony\Reply\HttpResponse;
 use Payum\Core\Bridge\Twig\TwigFactory;
 use Payum\Core\Model\GatewayConfigInterface;
-use Payum\Core\Payum;
 use Payum\Core\PayumBuilder;
 use Payum\Core\Reply\ReplyInterface;
 use Payum\Core\Storage\StorageInterface;
+use Payum\Server\Controller\CaptureController;
 use Payum\Server\Extension\UpdatePaymentStatusExtension;
 use Payum\Server\Form\Type\CreatePaymentType;
+use Payum\Server\Form\Type\CreateTokenType;
 use Payum\Server\Form\Type\UpdatePaymentType;
 use Payum\Server\Model\GatewayConfig;
 use Payum\Server\Model\Payment;
@@ -19,11 +20,9 @@ use Payum\Server\Storage\MongoStorage;
 use Silex\Application as SilexApplication;
 use Silex\ControllerCollection;
 use Silex\ServiceProviderInterface;
-use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Validator\Constraints\NotBlank;
 
 class ServiceProvider implements ServiceProviderInterface
 {
@@ -65,6 +64,7 @@ class ServiceProvider implements ServiceProviderInterface
         $app['form.types'] = $app->share($app->extend('form.types', function ($types) use ($app) {
             $types[] = new CreatePaymentType();
             $types[] = new UpdatePaymentType();
+            $types[] = new CreateTokenType();
 
             return $types;
         }));

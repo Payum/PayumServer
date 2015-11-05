@@ -1,8 +1,8 @@
 <?php
-namespace Payum\Server;
+namespace Payum\Server\Controller;
 
-use Payum\Core\Payum;
 use Payum\Core\Storage\StorageInterface;
+use Payum\Server\Application;
 use Payum\Server\Model\Payment;
 use Payum\Silex\CaptureController as BaseCaptureController;
 use Symfony\Component\Form\FormFactoryInterface;

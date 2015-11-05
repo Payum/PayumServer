@@ -5,12 +5,11 @@ use Payum\Core\Bridge\Spl\ArrayObject;
 use Payum\Core\Payum;
 use Payum\Core\Registry\RegistryInterface;
 use Payum\Core\Request\Convert;
-use Payum\Core\Security\GenericTokenFactoryInterface;
-use Payum\Core\Security\HttpRequestVerifierInterface;
 use Payum\Core\Security\Util\Random;
 use Payum\Core\Storage\StorageInterface;
 use Payum\Server\Api\View\FormToJsonConverter;
 use Payum\Server\Api\View\PaymentToJsonConverter;
+use Payum\Server\Controller\ForwardExtensionTrait;
 use Payum\Server\Model\Payment;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -21,16 +20,6 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 class PaymentController
 {
     use ForwardExtensionTrait;
-
-    /**
-     * @var GenericTokenFactoryInterface
-     */
-    protected $tokenFactory;
-
-    /**
-     * @var HttpRequestVerifierInterface
-     */
-    protected $httpRequestVerifier;
 
     /**
      * @var RegistryInterface
@@ -113,17 +102,19 @@ class PaymentController
         $storage->update($payment);
 
         // TODO
-        $payment->setValue('links', 'done', 'http://google.com');
+        $payment->setValue('links', 'done', 'http://dev.payum-server.com/client/index.html');
 
         $payment->setValue('links', 'self', $this->urlGenerator->generate('payment_get', ['id' => $payment->getId()], true));
 
         $token = $this->payum->getTokenFactory()->createAuthorizeToken($payment->getGatewayName(), $payment, $payment->getValue('links', 'done'), [
             'payum_token' => null,
+            'payment' => $payment->getId(),
         ]);
         $payment->setValue('links', 'authorize', $token->getTargetUrl());
 
         $token = $this->payum->getTokenFactory()->createCaptureToken($payment->getGatewayName(), $payment, $payment->getValue('links', 'done'), [
             'payum_token' => null,
+            'payment' => $payment->getId(),
         ]);
         $payment->setValue('links', 'capture', $token->getTargetUrl());
 
@@ -191,7 +182,7 @@ class PaymentController
         $storage->delete($payment);
 
         $token = $this->payum->getHttpRequestVerifier()->verify($request);
-        $this->httpRequestVerifier->invalidate($token);
+        $this->payum->getHttpRequestVerifier()->invalidate($token);
 
         //TODO remove tokens.
 

@@ -5,6 +5,7 @@ use Payum\Core\Model\GatewayConfigInterface;
 use Payum\Core\Storage\StorageInterface;
 use Payum\Server\Api\View\FormToJsonConverter;
 use Payum\Server\Api\View\GatewayConfigToJsonConverter;
+use Payum\Server\Controller\ForwardExtensionTrait;
 use Payum\Server\Model\GatewayConfig;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
