@@ -22,12 +22,6 @@ _**Note**: You might need a [web client](https://github.com/Payum/PayumServerUI)
 
 ## Demo
 
-Try it online:
-
-* Server: http://server.payum.org/
-* Web client: http://server.payum.org/client.index.html
-* Demo: http://server.payum.org/demo.html
-
 This is just the smallest example:
 
 ```
@@ -63,6 +57,12 @@ This is just the smallest example:
 ```
 
 _**Note**: We advice you to me payment and token creation code to your server side._
+
+Try it:
+
+* Server: [http://server.payum.org/](http://server.payum.org/)
+* Web client: [http://server.payum.org/client/index.html](http://server.payum.org/client/index.html)
+* Demo: [http://server.payum.org/demo.html](http://server.payum.org/demo.html)
 
 ## License
 
