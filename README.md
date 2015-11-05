@@ -5,15 +5,10 @@
 
 PHP 5.5+ Payment processing server. Setup once and rule them all.
 
-## Installation
+## Setup & Run
 
 ```bash
 $ php composer.phar create-project payum/payum-server --stability=dev
-```
-
-## Run
-
-```bash
 $ cd payum-server
 $ php -S 127.0.0.1:8000 web/index.php
 ```
