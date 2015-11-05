@@ -38,18 +38,15 @@ class UpdatePaymentStatusExtension implements ExtensionInterface
         if (false == $request instanceof Generic) {
             return;
         }
-        if (false == $request instanceof GetStatusInterface) {
+        if ($request instanceof GetStatusInterface) {
             return;
         }
 
-        /** @var Payment $payment */
-        $payment = $request->getFirstModel();
-        if (false == $payment instanceof Payment) {
-            return;
-        }
+        if ($request->getFirstModel() instanceof Payment) {
+            /** @var Payment $payment */
+            $payment = $request->getFirstModel();
 
-        $context->getGateway()->execute($status = new GetHumanStatus($payment));
-        if ($payment->getStatus() != $status->getValue()) {
+            $context->getGateway()->execute($status = new GetHumanStatus($payment));
             $payment->setStatus($status->getValue());
         }
     }

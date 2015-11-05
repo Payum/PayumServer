@@ -52,7 +52,10 @@ class ServiceProvider implements ServiceProviderInterface
                 ->setGatewayConfigStorage($app['payum.gateway_config_storage'])
                 ->addStorage(Payment::class, new MongoStorage(Payment::class, $db->selectCollection('payments')))
 
-                ->addCoreGatewayFactoryConfig(['payum.extension.update_payment_status' => new UpdatePaymentStatusExtension()])
+                ->addCoreGatewayFactoryConfig([
+                    'payum.extension.update_payment_status' => new UpdatePaymentStatusExtension(),
+                    'payum.prepend_extensions' => ['payum.extension.update_payment_status'],
+                ])
             ;
 
 
