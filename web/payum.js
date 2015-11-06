@@ -20,7 +20,12 @@ Payum = function(serverUrl) {
             });
         },
         get: function(id, callback) {
-            $.get(payum.serverUrl + '/payments/'+id, {success: callback});
+            $.ajax(payum.serverUrl + '/payments/'+id, {
+                'type': 'GET',
+                success: function(data) {
+                    callback(data.payment);
+                }
+            });
         }
     };
 
