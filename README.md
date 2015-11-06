@@ -25,21 +25,31 @@ This is just the smallest example:
         <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
 
         <script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/js-url/2.0.2/url.js"></script>
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
-        <script src="http://server.payum.org/payum.js"></script>
+        <script src="payum.js"></script>
     </head>
 
     <body style="margin: 20px;">
+        <div id="payum-previous-payment"></div>
+
         <button id="pay-btn" class="btn" value="Create">Pay 1$</button>
 
         <div id="payum-container"></div>
 
         <script>
-            var payum = new Payum("http://"+window.location.hostname);
+            var payumServerUrl = "http://"+window.location.hostname;
+            var payum = new Payum(payumServerUrl);
+
+            if (paymentId = url('?paymentId', window.location.href)) {
+                payum.payment.get(paymentId, function(payment) {
+                    $('#payum-previous-payment').text('Previous payment '+paymentId+' status: '+ payment.status);
+                });
+            }
 
             $('#pay-btn').click(function() {
                 payum.payment.create(100, 'USD', function(payment) {
-                    var afterUrl = 'http://yourapp.com/payment/done';
+                    var afterUrl = "http://"+window.location.hostname +'/demo.html';
 
                     payum.token.create('capture', payment.id, afterUrl, function(token) {
                         payum.execute(token.targetUrl, '#payum-container');
@@ -49,6 +59,7 @@ This is just the smallest example:
         </script>
     </body>
 </html>
+
 ```
 
 _**Note**: We advice you to move payment and token creation code to the server side._
