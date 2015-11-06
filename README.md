@@ -41,12 +41,7 @@ This is just the smallest example:
             var payumServerUrl = "http://"+window.location.hostname;
             var payum = new Payum(payumServerUrl);
 
-            if (paymentId = url('?paymentId', window.location.href)) {
-                payum.payment.get(paymentId, function(payment) {
-                    $('#payum-previous-payment').text('Previous payment '+paymentId+' status: '+ payment.status);
-                });
-            }
-
+            // do new payment
             $('#pay-btn').click(function() {
                 payum.payment.create(100, 'USD', function(payment) {
                     var afterUrl = "http://"+window.location.hostname +'/demo.html';
@@ -56,10 +51,16 @@ This is just the smallest example:
                     });
                 });
             });
+
+            // show status of previous payment.
+            if (paymentId = url('?paymentId', window.location.href)) {
+                payum.payment.get(paymentId, function(payment) {
+                    $('#payum-previous-payment').text('Previous payment '+paymentId+' status: '+ payment.status);
+                });
+            }
         </script>
     </body>
 </html>
-
 ```
 
 _**Note**: We advice you to move payment and token creation code to the server side._
