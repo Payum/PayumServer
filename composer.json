@@ -23,7 +23,7 @@
         "ext-mongo": "~1.6",
         "silex/silex": "~1.2",
         "payum/payum-silex-provider": "1.0.*@dev",
-        "payum/payum": "dev-payum-server-fixes as 1.0.0",
+        "payum/payum": "1.0.*@dev",
         "payum/omnipay-bridge": "1.0.*@dev",
         "symfony/yaml": "~2.6",
         "symfony/form": "~2.6",
