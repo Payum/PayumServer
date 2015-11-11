@@ -8,6 +8,7 @@ use Payum\Silex\PayumProvider;
 use Silex\Application as SilexApplication;
 use Silex\Provider\FormServiceProvider;
 use Silex\Provider\ServiceControllerServiceProvider;
+use Silex\Provider\SessionServiceProvider;
 use Silex\Provider\TranslationServiceProvider;
 use Silex\Provider\TwigServiceProvider;
 use Silex\Provider\UrlGeneratorServiceProvider;
@@ -25,6 +26,7 @@ class Application extends SilexApplication
         $this->register(new CorsServiceProvider());
         $this->register(new RavenProvider());
         $this->register(new TwigServiceProvider());
+        $this->register(new SessionServiceProvider());
         $this->register(new UrlGeneratorServiceProvider());
         $this->register(new FormServiceProvider);
         $this->register(new ValidatorServiceProvider());

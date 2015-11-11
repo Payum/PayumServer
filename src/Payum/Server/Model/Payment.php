@@ -1,17 +1,18 @@
 <?php
 namespace Payum\Server\Model;
 
+use Makasim\Values\ObjectsTrait;
 use Makasim\Values\ValuesTrait;
 use Payum\Core\Model\CreditCardInterface;
-use Payum\Core\Model\PaymentInterface;
 use Payum\Core\Request\GetHumanStatus;
 
-class Payment implements PaymentInterface
+class Payment
 {
     use ValuesTrait {
         setValue as public;
         getValue as public;
     }
+    use ObjectsTrait;
 
     /**
      * @return string
@@ -192,5 +193,17 @@ class Payment implements PaymentInterface
     public function setGatewayName($gatewayName)
     {
         $this->setSelfValue('gatewayName', $gatewayName);
+    }
+
+    /**
+     * @return Payer
+     */
+    public function getPayer()
+    {
+        if (false == $this->getValue('self', 'payer')) {
+            $this->setObject('self', 'payer', new Payer());
+        }
+
+        return $this->getObject('self', 'payer', Payer::class);
     }
 }

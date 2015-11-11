@@ -41,10 +41,11 @@ class CaptureController extends BaseCaptureController
             /** @var FormFactoryInterface $formFactory */
             $formFactory = $this->app['form.factory'];
 
-            $form = $formFactory->createBuilder('form', $payment, [
+            $form = $formFactory->createNamedBuilder('', 'form', $payment, [
                 'method' => 'POST',
                 'action' => $token->getTargetUrl(),
                 'csrf_protection' => false,
+                'attr' => ['class' => 'payum-choose-gateway'],
             ])
                 ->add('gatewayName', 'payum_gateways_choice', ['constraints' => [new NotBlank()]])
                 ->add('choose', 'submit')

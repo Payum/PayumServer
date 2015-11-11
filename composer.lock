@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "ac1e5385e48f103d613657d6f23b7f93",
-    "content-hash": "eaa1b3fed29af1dd2f47a55812d4ce6b",
+    "hash": "12630f5fa007ca4e2bde0fda1b8ae398",
+    "content-hash": "029b3c59a86add7673b1e1d5fb88ceb4",
     "packages": [
         {
             "name": "authorizenet/authorizenet",
@@ -3075,16 +3075,16 @@
         },
         {
             "name": "payum/payum",
-            "version": "dev-master",
+            "version": "dev-payum-server-fixes",
             "source": {
                 "type": "git",
-                "url": "https://github.com/Payum/Payum.git",
-                "reference": "df32af9076820fc83053428004e5a3774a153a3a"
+                "url": "https://github.com/formapro-forks/Payum.git",
+                "reference": "42fe7f099557e6480b35a55171c3d9cfed8f8003"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Payum/Payum/zipball/df32af9076820fc83053428004e5a3774a153a3a",
-                "reference": "df32af9076820fc83053428004e5a3774a153a3a",
+                "url": "https://api.github.com/repos/formapro-forks/Payum/zipball/42fe7f099557e6480b35a55171c3d9cfed8f8003",
+                "reference": "42fe7f099557e6480b35a55171c3d9cfed8f8003",
                 "shasum": ""
             },
             "require": {
@@ -3161,15 +3161,10 @@
                     "Payum": "src/"
                 }
             },
-            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "MIT"
             ],
             "authors": [
-                {
-                    "name": "Community contributions",
-                    "homepage": "https://github.com/Payum/Payum/contributors"
-                },
                 {
                     "name": "Kotlyar Maksim",
                     "email": "kotlyar.maksim@gmail.com"
@@ -3177,6 +3172,10 @@
                 {
                     "name": "Payum project",
                     "homepage": "http://payum.org/"
+                },
+                {
+                    "name": "Community contributions",
+                    "homepage": "https://github.com/Payum/Payum/contributors"
                 }
             ],
             "description": "Payum offers everything you need to work with payments. From simplest use cases to very advanced ones.",
@@ -3199,7 +3198,10 @@
                 "stripe checkout",
                 "stripe.js"
             ],
-            "time": "2015-11-09 09:29:05"
+            "support": {
+                "source": "https://github.com/formapro-forks/Payum/tree/payum-server-fixes"
+            },
+            "time": "2015-11-11 21:39:26"
         },
         {
             "name": "payum/payum-silex-provider",
@@ -3207,12 +3209,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/Payum/PayumSilexProvider.git",
-                "reference": "5dd1a7c968ca1ad489a2005813bcfd10df1582d8"
+                "reference": "6451db685222c6ab8620e2967e77a187459e697b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Payum/PayumSilexProvider/zipball/5dd1a7c968ca1ad489a2005813bcfd10df1582d8",
-                "reference": "5dd1a7c968ca1ad489a2005813bcfd10df1582d8",
+                "url": "https://api.github.com/repos/Payum/PayumSilexProvider/zipball/6451db685222c6ab8620e2967e77a187459e697b",
+                "reference": "6451db685222c6ab8620e2967e77a187459e697b",
                 "shasum": ""
             },
             "require": {
@@ -3258,7 +3260,7 @@
                 "payment",
                 "silex"
             ],
-            "time": "2015-11-04 08:27:54"
+            "time": "2015-11-11 21:25:02"
         },
         {
             "name": "phpcollection/phpcollection",
@@ -5240,16 +5242,16 @@
         },
         {
             "name": "phpunit/phpunit",
-            "version": "4.8.16",
+            "version": "4.8.18",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/phpunit.git",
-                "reference": "625f8c345606ed0f3a141dfb88f4116f0e22978e"
+                "reference": "fa33d4ad96481b91df343d83e8c8aabed6b1dfd3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/625f8c345606ed0f3a141dfb88f4116f0e22978e",
-                "reference": "625f8c345606ed0f3a141dfb88f4116f0e22978e",
+                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/fa33d4ad96481b91df343d83e8c8aabed6b1dfd3",
+                "reference": "fa33d4ad96481b91df343d83e8c8aabed6b1dfd3",
                 "shasum": ""
             },
             "require": {
@@ -5308,7 +5310,7 @@
                 "testing",
                 "xunit"
             ],
-            "time": "2015-10-23 06:48:33"
+            "time": "2015-11-11 11:32:49"
         },
         {
             "name": "phpunit/phpunit-mock-objects",
@@ -5894,7 +5896,14 @@
             "time": "2015-10-11 09:39:48"
         }
     ],
-    "aliases": [],
+    "aliases": [
+        {
+            "alias": "1.0.0",
+            "alias_normalized": "1.0.0.0",
+            "version": "dev-payum-server-fixes",
+            "package": "payum/payum"
+        }
+    ],
     "minimum-stability": "stable",
     "stability-flags": {
         "payum/payum-silex-provider": 20,

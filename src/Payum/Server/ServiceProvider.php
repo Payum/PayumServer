@@ -2,12 +2,17 @@
 namespace Payum\Server;
 
 use Doctrine\MongoDB\Connection;
+use Doctrine\MongoDB\Database;
 use Payum\Core\Bridge\Symfony\Reply\HttpResponse;
 use Payum\Core\Bridge\Twig\TwigFactory;
 use Payum\Core\Model\GatewayConfigInterface;
 use Payum\Core\PayumBuilder;
 use Payum\Core\Reply\ReplyInterface;
 use Payum\Core\Storage\StorageInterface;
+use Payum\Server\Action\CapturePaymentAction;
+use Payum\Server\Action\ExecuteSameRequestWithPaymentDetailsAction;
+use Payum\Server\Action\ObtainMissingDetailsAction;
+use Payum\Server\Action\ObtainMissingDetailsForBe2BillAction;
 use Payum\Server\Controller\CaptureController;
 use Payum\Server\Extension\UpdatePaymentStatusExtension;
 use Payum\Server\Form\Type\CreatePaymentType;
@@ -35,17 +40,15 @@ class ServiceProvider implements ServiceProviderInterface
         $app['mongo.database'] = 'payum_server';
 
         $app['payum.gateway_config_storage'] = $app->share(function ($app) {
-            /** @var Connection $connection */
-            $connection = $app['doctrine.mongo.connection'];
-            $db = $connection->selectDatabase($app['mongo.database']);
+            /** @var Database $db */
+            $db = $app['doctrine.mongo.database'];
 
             return new MongoStorage(GatewayConfig::class, $db->selectCollection('gateway_configs'));
         });
 
         $app['payum.builder'] = $app->share($app->extend('payum.builder', function (PayumBuilder $builder) use ($app) {
-            /** @var Connection $connection */
-            $connection = $app['doctrine.mongo.connection'];
-            $db = $connection->selectDatabase($app['mongo.database']);
+            /** @var Database $db */
+            $db = $app['doctrine.mongo.database'];
 
             $builder
                 ->setTokenStorage(new MongoStorage(SecurityToken::class, $db->selectCollection('security_tokens')))
@@ -55,9 +58,33 @@ class ServiceProvider implements ServiceProviderInterface
                 ->addCoreGatewayFactoryConfig([
                     'payum.extension.update_payment_status' => new UpdatePaymentStatusExtension(),
                     'payum.prepend_extensions' => ['payum.extension.update_payment_status'],
+                    'payum.action.server.capture_payment' => new CapturePaymentAction(),
+                    'payum.action.server.execute_same_request_with_payment_details' => new ExecuteSameRequestWithPaymentDetailsAction(),
+                    'payum.action.server.obtain_missing_details' => function() use ($app) {
+                        return new ObtainMissingDetailsAction(
+                            $app['form.factory'],
+                            '@PayumServer/obtainMissingDetails.html.twig'
+                        );
+                    },
+                ])
+
+                ->addGatewayFactoryConfig('be2bill_offsite', [
+                    'payum.action.server.obtain_missing_details' => function() use ($app) {
+                        return new ObtainMissingDetailsForBe2BillAction(
+                            $app['form.factory'],
+                            '@PayumServer/obtainMissingDetails.html.twig'
+                        );
+                    },
+                ])
+                ->addGatewayFactoryConfig('be2bill_direct', [
+                    'payum.action.server.obtain_missing_details' => function() use ($app) {
+                        return new ObtainMissingDetailsForBe2BillAction(
+                            $app['form.factory'],
+                            '@PayumServer/obtainMissingDetails.html.twig'
+                        );
+                    },
                 ])
             ;
-
 
             return $builder;
         }));
@@ -77,6 +104,11 @@ class ServiceProvider implements ServiceProviderInterface
         $app['doctrine.mongo.connection'] = $app->share(function ($app) {
             return new Connection();
         });
+
+        $app['doctrine.mongo.database'] = $app->share(function ($app) {
+            return $app['doctrine.mongo.connection']->selectDatabase($app['mongo.database']);
+        });
+
 
         $app['payum.gateway_choices'] = $app->extend('payum.gateway_choices', function (array $choices) use ($app) {
             /** @var StorageInterface $gatewayConfigStorage */
