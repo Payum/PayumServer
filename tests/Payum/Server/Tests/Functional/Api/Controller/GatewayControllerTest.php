@@ -42,7 +42,7 @@ class GatewayControllerTest extends ClientTestCase
      */
     public function shouldAllowGetAllGateways()
     {
-        $this->getClient()->request('GET', '/gateways');
+        $this->getClient()->request('GET', '/gateways/');
 
         $this->assertClientResponseStatus(200);
         $this->assertClientResponseContentJson();
@@ -70,11 +70,11 @@ class GatewayControllerTest extends ClientTestCase
 
         $this->assertObjectHasAttribute('gateway', $content);
 
-        $this->assertObjectHasAttribute('factory', $content->gateway);
-        $this->assertEquals('paypal_express_checkout', $content->gateway->factory);
+        $this->assertObjectHasAttribute('factoryName', $content->gateway);
+        $this->assertEquals('paypal_express_checkout', $content->gateway->factoryName);
 
-        $this->assertObjectHasAttribute('name', $content->gateway);
-        $this->assertEquals('paypal_express_checkout', $content->gateway->name);
+        $this->assertObjectHasAttribute('gatewayName', $content->gateway);
+        $this->assertEquals('paypal_express_checkout', $content->gateway->gatewayName);
 
         $this->assertObjectHasAttribute('config', $content->gateway);
     }
@@ -93,11 +93,11 @@ class GatewayControllerTest extends ClientTestCase
 
         $this->assertObjectHasAttribute('gateway', $content);
 
-        $this->assertObjectHasAttribute('factory', $content->gateway);
-        $this->assertEquals('stripe_js', $content->gateway->factory);
+        $this->assertObjectHasAttribute('factoryName', $content->gateway);
+        $this->assertEquals('stripe_js', $content->gateway->factoryName);
 
-        $this->assertObjectHasAttribute('name', $content->gateway);
-        $this->assertEquals('stripe_js', $content->gateway->name);
+        $this->assertObjectHasAttribute('gatewayName', $content->gateway);
+        $this->assertEquals('stripe_js', $content->gateway->gatewayName);
 
         $this->assertObjectHasAttribute('config', $content->gateway);
     }
@@ -116,11 +116,11 @@ class GatewayControllerTest extends ClientTestCase
 
         $this->assertObjectHasAttribute('gateway', $content);
 
-        $this->assertObjectHasAttribute('factory', $content->gateway);
-        $this->assertEquals('stripe_checkout', $content->gateway->factory);
+        $this->assertObjectHasAttribute('factoryName', $content->gateway);
+        $this->assertEquals('stripe_checkout', $content->gateway->factoryName);
 
-        $this->assertObjectHasAttribute('name', $content->gateway);
-        $this->assertEquals('stripe_checkout', $content->gateway->name);
+        $this->assertObjectHasAttribute('gatewayName', $content->gateway);
+        $this->assertEquals('stripe_checkout', $content->gateway->gatewayName);
 
         $this->assertObjectHasAttribute('config', $content->gateway);
     }

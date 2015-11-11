@@ -1,9 +1,11 @@
 <?php
 namespace Payum\Server\Tests\Functional\Api\Controller;
 
+use Payum\Core\Payum;
 use Payum\Server\Model\Payment;
 use Payum\Server\Test\ClientTestCase;
 use Payum\Server\Test\ResponseHelper;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class PaymentControllerTest extends ClientTestCase
 {
@@ -15,14 +17,13 @@ class PaymentControllerTest extends ClientTestCase
     public function shouldAllowGetPayment()
     {
         $payment = new Payment();
+        $payment->setId(uniqid());
         $payment->setClientEmail('theExpectedPayment');
 
         $storage = $this->app['payum']->getStorage($payment);
         $storage->update($payment);
 
-        $token = $this->app['payum.security.token_factory']->createToken('paypal_express_checkout', $payment, 'payment_get');
-
-        $this->getClient()->request('GET', '/payments/'.$token->getHash());
+        $this->getClient()->request('GET', '/payments/'.$payment->getId());
 
         $this->assertClientResponseStatus(200);
         $this->assertClientResponseContentJson();
@@ -41,22 +42,21 @@ class PaymentControllerTest extends ClientTestCase
     public function shouldAllowDeletePayment()
     {
         $payment = new Payment();
+        $payment->setId(uniqid());
         $payment->setClientEmail('theExpectedPayment');
 
         $storage = $this->app['payum']->getStorage($payment);
         $storage->update($payment);
 
-        $token = $this->app['payum.security.token_factory']->createToken('paypal_express_checkout', $payment, 'payment_get');
-
         //guard
-        $this->getClient()->request('GET', '/payments/'.$token->getHash());
+        $this->getClient()->request('GET', '/payments/'.$payment->getId());
         $this->assertClientResponseStatus(200);
 
-        $this->getClient()->request('DELETE', '/payments/'.$token->getHash());
+        $this->getClient()->request('DELETE', '/payments/'.$payment->getId());
         $this->assertClientResponseStatus(204);
 
-        $this->setExpectedException('Symfony\Component\HttpKernel\Exception\NotFoundHttpException');
-        $this->getClient()->request('GET', '/payments/'.$token->getHash());
+        $this->setExpectedException(NotFoundHttpException::class);
+        $this->getClient()->request('GET', '/payments/'.$payment->getId());
     }
 
     /**
@@ -65,23 +65,19 @@ class PaymentControllerTest extends ClientTestCase
     public function shouldAllowUpdatePayment()
     {
         $payment = new Payment();
+        $payment->setId(uniqid());
         $payment->setTotalAmount(123);
         $payment->setClientEmail('theClientEmail@example.com');
-        $payment->setAfterUrl('http://example.com');
 
         $storage = $this->app['payum']->getStorage($payment);
         $storage->update($payment);
 
-        $token = $this->app['payum.security.token_factory']->createToken('paypal_express_checkout', $payment, 'payment_get');
-
         //guard
-        $this->getClient()->putJson('/payments/'.$token->getHash(), [
+        $this->getClient()->putJson('/payments/'.$payment->getId(), [
             'totalAmount' => 123,
             'currencyCode' => 'USD',
             'clientEmail' => 'theOtherClientEmail@example.com',
             'clientId' => 'theClientId',
-            'gatewayName' => 'stripe_js',
-            'afterUrl' => 'http://example.com',
         ]);
 
         $this->assertClientResponseStatus(200);
@@ -103,13 +99,11 @@ class PaymentControllerTest extends ClientTestCase
      */
     public function shouldAllowCreatePayment()
     {
-        $this->getClient()->postJson('/payments', [
+        $this->getClient()->postJson('/payments/', [
             'totalAmount' => 123,
             'currencyCode' => 'USD',
             'clientEmail' => 'foo@example.com',
             'clientId' => 'theClientId',
-            'gatewayName' => 'stripe_js',
-            'afterUrl' => 'http://example.com',
         ]);
 
         $this->assertClientResponseStatus(201);
@@ -125,36 +119,36 @@ class PaymentControllerTest extends ClientTestCase
         $this->assertStringStartsWith('http://localhost/payments/', $this->getClient()->getResponse()->headers->get('Location'));
     }
 
-    /**
-     * @test
-     */
-    public function shouldAllowGetPaymentLinks()
-    {
-        $this->getClient()->postJson('/payments', [
-            'totalAmount' => 123,
-            'currencyCode' => 'USD',
-            'clientEmail' => 'foo@example.com',
-            'clientId' => 'theClientId',
-            'gatewayName' => 'stripe_js',
-            'afterUrl' => 'http://example.com',
-        ]);
-
-        $this->assertClientResponseStatus(201);
-        $this->assertClientResponseContentJson();
-
-        //guard
-        $this->assertTrue($this->getClient()->getResponse()->headers->has('Location'));
-
-        $this->getClient()->request('GET', $this->getClient()->getResponse()->headers->get('Location'));
-
-        $this->assertClientResponseStatus(200);
-        $this->assertClientResponseContentJson();
-
-        $content = $this->getClientResponseJsonContent();
-
-        $this->assertObjectHasAttribute('payment', $content);
-
-        $this->assertObjectHasAttribute('_links', $content->payment);
-        $this->assertObjectHasAttribute('self', $content->payment->_links);
-    }
+//    /**
+//     * @test
+//     */
+//    public function shouldAllowGetPaymentLinks()
+//    {
+//        $this->getClient()->postJson('/payments', [
+//            'totalAmount' => 123,
+//            'currencyCode' => 'USD',
+//            'clientEmail' => 'foo@example.com',
+//            'clientId' => 'theClientId',
+//            'gatewayName' => 'stripe_js',
+//            'afterUrl' => 'http://example.com',
+//        ]);
+//
+//        $this->assertClientResponseStatus(201);
+//        $this->assertClientResponseContentJson();
+//
+//        //guard
+//        $this->assertTrue($this->getClient()->getResponse()->headers->has('Location'));
+//
+//        $this->getClient()->request('GET', $this->getClient()->getResponse()->headers->get('Location'));
+//
+//        $this->assertClientResponseStatus(200);
+//        $this->assertClientResponseContentJson();
+//
+//        $content = $this->getClientResponseJsonContent();
+//
+//        $this->assertObjectHasAttribute('payment', $content);
+//
+//        $this->assertObjectHasAttribute('_links', $content->payment);
+//        $this->assertObjectHasAttribute('self', $content->payment->_links);
+//    }
 }

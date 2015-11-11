@@ -140,8 +140,7 @@ class PaymentController
     public function updateAction($content, Request $request)
     {
         $this->forward400Unless('json' == $request->getContentType());
-
-        $payment = $this->findRequestedPayment($request);
+        $this->forward404Unless($payment = $this->findRequestedPayment($request));
 
         $rawPayment = ArrayObject::ensureArrayObject($content);
 
@@ -176,15 +175,12 @@ class PaymentController
      */
     public function deleteAction(Request $request)
     {
-        $payment = $this->findRequestedPayment($request);
+        $this->forward404Unless($payment = $this->findRequestedPayment($request));
 
         $storage = $this->payum->getStorage($payment);
         $storage->delete($payment);
 
-        $token = $this->payum->getHttpRequestVerifier()->verify($request);
-        $this->payum->getHttpRequestVerifier()->invalidate($token);
-
-        //TODO remove tokens.
+        //TODO remove related tokens.
 
         return new Response('', 204);
     }
@@ -196,7 +192,7 @@ class PaymentController
      */
     public function getAction(Request $request)
     {
-        $payment = $this->findRequestedPayment($request);
+        $this->forward404Unless($payment = $this->findRequestedPayment($request));
 
         return new JsonResponse(array(
             'payment' => $this->paymentToJsonConverter->convert($payment),

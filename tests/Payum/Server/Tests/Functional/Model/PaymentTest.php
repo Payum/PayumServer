@@ -2,6 +2,7 @@
 namespace Payum\Server\Tests\Functional\Model;
 
 use Doctrine\ODM\MongoDB\DocumentManager;
+use Payum\Core\Payum;
 use Payum\Server\Factory\Storage\FactoryInterface;
 use Payum\Server\Model\Payment;
 use Payum\Server\Test\WebTestCase;
@@ -10,13 +11,10 @@ class PaymentTest extends WebTestCase
 {
     public function testShouldAllowPersistPaymentToMongo()
     {
-        /** @var FactoryInterface $factory */
-        $factory = $this->app['payum.storage_factories']['doctrine_mongodb'];
+        /** @var Payum $payum */
+        $payum = $this->app['payum'];
 
-        $storage = $factory->createStorage(Payment::class, 'id', [
-            'host' => 'localhost:27017',
-            'databaseName' => 'payum_server_tests',
-        ]);
+        $storage = $payum->getStorage(Payment::class);
 
         /** @var Payment $payment */
         $payment = $storage->create();
@@ -25,11 +23,11 @@ class PaymentTest extends WebTestCase
         $this->assertInstanceOf(Payment::class, $payment);
         $this->assertNull($payment->getId());
 
+        $payment->setId(uniqid());
         $payment->setClientEmail('theClientEmail');
         $payment->setClientId('theClientId');
         $payment->setTotalAmount(123);
         $payment->setCurrencyCode('USD');
-        $payment->setAfterUrl('theAfterUrl');
         $payment->setDescription('theDesc');
         $payment->setNumber('theNumber');
         $payment->setGatewayName('theGatewayName');
@@ -37,10 +35,6 @@ class PaymentTest extends WebTestCase
         $storage->update($payment);
 
         $this->assertNotNull($payment->getId());
-
-        /** @var DocumentManager $dm */
-        $dm = $this->readAttribute($storage, 'objectManager');
-        $dm->clear();
 
         /** @var Payment $foundPayment */
         $foundPayment = $storage->find($payment->getId());
@@ -55,21 +49,18 @@ class PaymentTest extends WebTestCase
 
     public function testShouldAllowStorePaymentsDetails()
     {
-        /** @var FactoryInterface $factory */
-        $factory = $this->app['payum.storage_factories']['doctrine_mongodb'];
+        /** @var Payum $payum */
+        $payum = $this->app['payum'];
 
-        $storage = $factory->createStorage(Payment::class, 'id', [
-            'host' => 'localhost:27017',
-            'databaseName' => 'payum_server_tests',
-        ]);
+        $storage = $payum->getStorage(Payment::class);
 
         /** @var Payment $payment */
         $payment = $storage->create();
 
         //guard
         $this->assertInstanceOf(Payment::class, $payment);
-        $this->assertNull($payment->getId());
 
+        $payment->setId(uniqid());
         $payment->setClientEmail('theClientEmail');
         $payment->setDetails(array('foo' => 'bar'));
         $payment->setDetails(array('bar' => array('foo' => 'baz')));
@@ -77,10 +68,6 @@ class PaymentTest extends WebTestCase
         $storage->update($payment);
 
         $this->assertNotNull($payment->getId());
-
-        /** @var DocumentManager $dm */
-        $dm = $this->readAttribute($storage, 'objectManager');
-        $dm->clear();
 
         /** @var Payment $foundPayment */
         $foundPayment = $storage->find($payment->getId());

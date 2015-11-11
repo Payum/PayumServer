@@ -11,6 +11,7 @@ abstract class WebTestCase extends SilexWebTestCase
         $app = new Application();
         $app['payum.root_dir'] = __DIR__;
         $app['exception_handler']->disable();
+        $app['mongo.database'] = 'payum_server_test';
 
         return $app;
     }

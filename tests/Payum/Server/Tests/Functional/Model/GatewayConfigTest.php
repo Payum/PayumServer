@@ -2,21 +2,19 @@
 namespace Payum\Server\Tests\Functional\Model;
 
 use Doctrine\ODM\MongoDB\DocumentManager;
+use Payum\Core\Payum;
+use Payum\Core\Storage\StorageInterface;
 use Payum\Server\Factory\Storage\FactoryInterface;
 use Payum\Server\Model\GatewayConfig;
+use Payum\Server\Storage\MongoStorage;
 use Payum\Server\Test\WebTestCase;
 
 class GatewayConfigTest extends WebTestCase
 {
     public function testShouldAllowPersistGatewayConfigToMongo()
     {
-        /** @var FactoryInterface $factory */
-        $factory = $this->app['payum.storage_factories']['doctrine_mongodb'];
-
-        $storage = $factory->createStorage(GatewayConfig::class, 'id', [
-            'host' => 'localhost:27017',
-            'databaseName' => 'payum_server_tests',
-        ]);
+        /** @var StorageInterface $storage */
+        $storage = $this->app['payum.gateway_config_storage'];
 
         /** @var GatewayConfig $gatewayConfig */
         $gatewayConfig = $storage->create();
@@ -32,10 +30,6 @@ class GatewayConfigTest extends WebTestCase
         $storage->update($gatewayConfig);
 
         $this->assertNotNull($gatewayConfig->getId());
-
-        /** @var DocumentManager $dm */
-        $dm = $this->readAttribute($storage, 'objectManager');
-        $dm->clear();
 
         /** @var GatewayConfig $foundGatewayConfig */
         $foundGatewayConfig = $storage->find($gatewayConfig->getId());

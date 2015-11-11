@@ -32,11 +32,12 @@ class ServiceProvider implements ServiceProviderInterface
     public function register(SilexApplication $app)
     {
         $app['debug'] = (boolean) getenv('PAYUM_SERVER_DEBUG');
+        $app['mongo.database'] = 'payum_server';
 
         $app['payum.gateway_config_storage'] = $app->share(function ($app) {
             /** @var Connection $connection */
             $connection = $app['doctrine.mongo.connection'];
-            $db = $connection->selectDatabase('payum_server');
+            $db = $connection->selectDatabase($app['mongo.database']);
 
             return new MongoStorage(GatewayConfig::class, $db->selectCollection('gateway_configs'));
         });
@@ -44,7 +45,7 @@ class ServiceProvider implements ServiceProviderInterface
         $app['payum.builder'] = $app->share($app->extend('payum.builder', function (PayumBuilder $builder) use ($app) {
             /** @var Connection $connection */
             $connection = $app['doctrine.mongo.connection'];
-            $db = $connection->selectDatabase('payum_server');
+            $db = $connection->selectDatabase($app['mongo.database']);
 
             $builder
                 ->setTokenStorage(new MongoStorage(SecurityToken::class, $db->selectCollection('security_tokens')))

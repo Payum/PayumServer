@@ -3,6 +3,7 @@ namespace Payum\Server\Tests\Functional\Model;
 
 use Doctrine\ODM\MongoDB\DocumentManager;
 use Payum\Core\Model\Identity;
+use Payum\Core\Payum;
 use Payum\Server\Factory\Storage\FactoryInterface;
 use Payum\Server\Model\SecurityToken;
 use Payum\Server\Test\WebTestCase;
@@ -11,13 +12,10 @@ class SecurityTokenTest extends WebTestCase
 {
     public function testShouldAllowPersistSecurityTokenToMongo()
     {
-        /** @var FactoryInterface $factory */
-        $factory = $this->app['payum.storage_factories']['doctrine_mongodb'];
+        /** @var Payum $payum */
+        $payum = $this->app['payum'];
 
-        $storage = $factory->createStorage(SecurityToken::class, 'hash', [
-            'host' => 'localhost:27017',
-            'databaseName' => 'payum_server_tests',
-        ]);
+        $storage = $payum->getTokenStorage();
 
         /** @var SecurityToken $token */
         $token = $storage->create();
@@ -25,6 +23,7 @@ class SecurityTokenTest extends WebTestCase
         //guard
         $this->assertInstanceOf(SecurityToken::class, $token);
 
+        $token->setHash(uniqid());
         $token->setGatewayName('theGatewayName');
         $token->setTargetUrl('theTargetUrl');
         $token->setAfterUrl('theAfterUrl');
@@ -32,10 +31,6 @@ class SecurityTokenTest extends WebTestCase
         $storage->update($token);
 
         $this->assertNotEmpty($token->getHash());
-
-        /** @var DocumentManager $dm */
-        $dm = $this->readAttribute($storage, 'objectManager');
-        $dm->clear();
 
         /** @var SecurityToken $foundToken */
         $foundToken = $storage->find($token->getHash());
@@ -51,13 +46,10 @@ class SecurityTokenTest extends WebTestCase
 
     public function testShouldAllowStoreTokenDetails()
     {
-        /** @var FactoryInterface $factory */
-        $factory = $this->app['payum.storage_factories']['doctrine_mongodb'];
+        /** @var Payum $payum */
+        $payum = $this->app['payum'];
 
-        $storage = $factory->createStorage(SecurityToken::class, 'hash', [
-            'host' => 'localhost:27017',
-            'databaseName' => 'payum_server_tests',
-        ]);
+        $storage = $payum->getTokenStorage();
 
         /** @var SecurityToken $token */
         $token = $storage->create();
@@ -65,16 +57,13 @@ class SecurityTokenTest extends WebTestCase
         //guard
         $this->assertInstanceOf(SecurityToken::class, $token);
 
+        $token->setHash(uniqid());
         $token->setGatewayName('theGatewayName');
         $token->setDetails($identity = new Identity('anId', 'stdClass'));
 
         $storage->update($token);
 
         $this->assertNotEmpty($token->getHash());
-
-        /** @var DocumentManager $dm */
-        $dm = $this->readAttribute($storage, 'objectManager');
-        $dm->clear();
 
         /** @var SecurityToken $foundToken */
         $foundToken = $storage->find($token->getHash());
