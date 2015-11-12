@@ -24,6 +24,7 @@ class CreateTokenType extends AbstractType
                 'empty_value' => false,
                 'choices' => [
                     'capture' => 'Capture',
+                    'authorize' => 'Authorize',
                 ],
                 'constraints' => array(new NotBlank())
             ])

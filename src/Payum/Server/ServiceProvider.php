@@ -13,6 +13,7 @@ use Payum\Server\Action\CapturePaymentAction;
 use Payum\Server\Action\ExecuteSameRequestWithPaymentDetailsAction;
 use Payum\Server\Action\ObtainMissingDetailsAction;
 use Payum\Server\Action\ObtainMissingDetailsForBe2BillAction;
+use Payum\Server\Controller\AuthorizeController;
 use Payum\Server\Controller\CaptureController;
 use Payum\Server\Extension\UpdatePaymentStatusExtension;
 use Payum\Server\Form\Type\CreatePaymentType;
@@ -133,6 +134,10 @@ class ServiceProvider implements ServiceProviderInterface
 
         $app['payum.controller.capture'] = $app->share(function() use ($app) {
             return new CaptureController($app);
+        });
+
+        $app['payum.controller.authorize'] = $app->share(function() use ($app) {
+            return new AuthorizeController($app);
         });
 
         $app->after($app["cors"]);

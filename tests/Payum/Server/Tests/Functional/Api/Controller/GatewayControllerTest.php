@@ -133,8 +133,8 @@ class GatewayControllerTest extends ClientTestCase
         $this->getClient()->request('DELETE', '/gateways/stripe_checkout');
         $this->assertClientResponseStatus(204);
 
-        //
-//        $this->setExpectedException(NotFoundHttpException::class);
-//        $this->getClient()->request('GET', '/gateways/stripe_checkout');
+
+        $this->setExpectedException(NotFoundHttpException::class);
+        $this->getClient()->request('GET', '/gateways/stripe_checkout');
     }
 }

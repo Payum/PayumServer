@@ -81,6 +81,11 @@ class TokenController
                 'payum_token' => null,
                 'paymentId' => $payment->getId(),
             ]);
+        } else if ($data['type'] == 'authorize') {
+            $token = $this->payum->getTokenFactory()->createAuthorizeToken('', $payment, $data['afterUrl'], [
+                'payum_token' => null,
+                'paymentId' => $payment->getId(),
+            ]);
         } else {
             $this->forward400(sprintf('The token type %s is not supported', $data['type']));
         }
