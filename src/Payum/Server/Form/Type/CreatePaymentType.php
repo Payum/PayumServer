@@ -28,10 +28,10 @@ class CreatePaymentType extends AbstractType
                 'constraints' => array(new NotBlank(), new Type(['type' => 'numeric']))
             ))
             ->add('currencyCode', 'choice', array(
-                'choices' => ['USD' => 'US Dollar', 'EUR' => 'Euro'],
+                'choices' => ['USD' => 'US Dollar', 'EUR' => 'Euro', 'SEK' => 'Swedish krona'],
                 'label' => 'Currency',
                 'data' => 'USD',
-                'constraints' => array(new NotBlank(), new Choice(['USD', 'EUR'])),
+                'constraints' => array(new NotBlank(), new Choice(['USD', 'EUR', 'SEK'])),
             ))
             ->add('clientEmail', 'text', array(
                 'required' => false,

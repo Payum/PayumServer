@@ -9,6 +9,7 @@ use Payum\Core\Model\GatewayConfigInterface;
 use Payum\Core\PayumBuilder;
 use Payum\Core\Reply\ReplyInterface;
 use Payum\Core\Storage\StorageInterface;
+use Payum\Server\Action\AuthorizePaymentAction;
 use Payum\Server\Action\CapturePaymentAction;
 use Payum\Server\Action\ExecuteSameRequestWithPaymentDetailsAction;
 use Payum\Server\Action\ObtainMissingDetailsAction;
@@ -60,6 +61,7 @@ class ServiceProvider implements ServiceProviderInterface
                     'payum.extension.update_payment_status' => new UpdatePaymentStatusExtension(),
                     'payum.prepend_extensions' => ['payum.extension.update_payment_status'],
                     'payum.action.server.capture_payment' => new CapturePaymentAction(),
+                    'payum.action.server.authorize_payment' => new AuthorizePaymentAction(),
                     'payum.action.server.execute_same_request_with_payment_details' => new ExecuteSameRequestWithPaymentDetailsAction(),
                     'payum.action.server.obtain_missing_details' => function() use ($app) {
                         return new ObtainMissingDetailsAction(
