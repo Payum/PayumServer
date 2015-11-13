@@ -46,7 +46,7 @@
                 payum.payment.create(100, 'SEK', function(payment) {
                     var afterUrl = "http://"+window.location.hostname +'/demo.html';
 
-                    payum.token.create('capture', payment.id, afterUrl, function(token) {
+                    payum.token.create('authorize', payment.id, afterUrl, function(token) {
                         payum.execute(token.targetUrl, '#payum-container');
                     });
                 });
