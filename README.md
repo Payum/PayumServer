@@ -27,6 +27,8 @@ _**Note**: You might need a [web client](https://github.com/Payum/PayumServerUI)
 
 ## Support us
 
+There are lots of features were done and even more lots of staff in todo list. If the library made your life easier cosider support me. You can eiether hire me to do some payment related stuff or donate. You can also send a mail with a feedback. Tell me about your expiriens with Payum. 
+
 <a href='https://pledgie.com/campaigns/30526'><img alt='Click here to lend your support to: Your private payment processing server. Setup it once and rule them all and make a donation at pledgie.com !' src='https://pledgie.com/campaigns/30526.png?skin_name=chrome' border='0' ></a>
 
 ## License
