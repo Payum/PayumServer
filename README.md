@@ -11,6 +11,10 @@ PHP 5.5+ Payment processing server. Setup once and rule them all.
 * Web client: [http://server.payum.org/client/index.html](http://server.payum.org/client/index.html#/app/settings?api=http:%2F%2Fserver.payum.org)
 * Demo: [http://server.payum.org/demo.html](http://server.payum.org/demo.html)
 
+## Distribution 
+
+Docker container on docker hub. to be done. 
+
 ## Setup & Run
 
 ```bash
