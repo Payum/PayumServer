@@ -25,7 +25,7 @@ $ php -S 127.0.0.1:8000 web/index.php
 
 _**Note**: You might need a [web client](https://github.com/Payum/PayumServerUI) to manage payments gateways or you can use REST API._
 
-## Support us
+## Support me
 
 There are lots of features were done and even more stuff in todo list. If the library made your life easier cosider support me. You can eiether hire me to do some payment related stuff or donate. You can also send a mail with a feedback. [Tell me](https://github.com/makasim) about your expiriens with Payum. 
 
