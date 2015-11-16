@@ -1,0 +1,14 @@
+web:
+  build: .
+  command: apachectl -e info -DFOREGROUND
+  environment:
+      - PAYUM_MONGO_SERVER=mongodb://mongo:27017
+      - PAYUM_DEBUG=1
+  ports:
+   - "80:80"
+  volumes:
+   - .:/app
+  links:
+   - mongo
+mongo:
+  image: mongo
