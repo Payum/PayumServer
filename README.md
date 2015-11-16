@@ -27,7 +27,7 @@ $ php -S 127.0.0.1:8000 web/index.php
   // do new payment
   var payum = new Payum('http://localhost:8000');
   payum.payment.create(100, 'USD', function(payment) {
-      var afterUrl = "http://afterPaymentIsDoneUrl';
+      var afterUrl = 'http://afterPaymentIsDoneUrl';
 
       payum.token.create('capture', payment.id, afterUrl, function(token) {
           payum.execute(token.targetUrl, '#payum-container');
