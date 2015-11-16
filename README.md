@@ -32,6 +32,7 @@ An example on javascript:
       var afterUrl = 'http://afterPaymentIsDoneUrl';
 
       payum.token.create('capture', payment.id, afterUrl, function(token) {
+          // do redirect to token.targetUrl or process at the same page like this:
           payum.execute(token.targetUrl, '#payum-container');
       });
   });
