@@ -39,7 +39,8 @@ class ServiceProvider implements ServiceProviderInterface
     public function register(SilexApplication $app)
     {
         $app['debug'] = (boolean) getenv('PAYUM_SERVER_DEBUG');
-        $app['mongo.database'] = 'payum_server';
+        $app['mongo.database'] = getenv('PAYUM_MONGO_DATABASE') ?: 'payum_server';
+        $app['mongo.server'] = getenv('PAYUM_MONGO_SERVER') ?: 'mongodb://localhost:27017';
 
         $app['payum.gateway_config_storage'] = $app->share(function ($app) {
             /** @var Database $db */
@@ -105,7 +106,7 @@ class ServiceProvider implements ServiceProviderInterface
         });
 
         $app['doctrine.mongo.connection'] = $app->share(function ($app) {
-            return new Connection();
+            return new Connection($app['mongo.server']);
         });
 
         $app['doctrine.mongo.database'] = $app->share(function ($app) {
