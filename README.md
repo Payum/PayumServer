@@ -7,9 +7,9 @@ PHP 5.5+ Payment processing server. Setup once and rule them all.
 
 ## Try it:
 
-* Server: [http://server.payum.org/](http://server.payum.org/)
-* Web client: [http://server.payum.org/client/index.html](http://server.payum.org/client/index.html#/app/settings?api=http:%2F%2Fserver.payum.org)
 * Demo: [http://server.payum.org/demo.html](http://server.payum.org/demo.html)
+* Backend: [http://server.payum.org/client/index.html](http://server.payum.org/client/index.html#/app/settings?api=http:%2F%2Fserver.payum.org)
+* Server: [http://server.payum.org/](http://server.payum.org/)
 
 ## Distribution 
 
@@ -21,6 +21,18 @@ Docker container on docker hub. to be done.
 $ php composer.phar create-project payum/payum-server --stability=dev
 $ cd payum-server
 $ php -S 127.0.0.1:8000 web/index.php
+```
+
+```javascript
+  // do new payment
+  var payum = new Payum('http://localhost:8000');
+  payum.payment.create(100, 'USD', function(payment) {
+      var afterUrl = "http://afterPaymentIsDoneUrl';
+
+      payum.token.create('capture', payment.id, afterUrl, function(token) {
+          payum.execute(token.targetUrl, '#payum-container');
+      });
+  });
 ```
 
 _**Note**: You might need a [web client](https://github.com/Payum/PayumServerUI) to manage payments gateways or you can use REST API._
