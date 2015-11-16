@@ -23,6 +23,8 @@ $ cd payum-server
 $ php -S 127.0.0.1:8000 web/index.php
 ```
 
+An example on javascript:
+
 ```javascript
   // do new payment
   var payum = new Payum('http://localhost:8000');
