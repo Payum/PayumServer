@@ -23,7 +23,7 @@ web:
       - PAYUM_MONGO_SERVER=mongodb://mongo:27017
       - PAYUM_DEBUG=1
   ports:
-   - "80:8080"
+   - "80:80"
   links:
    - mongo
 mongo:
