@@ -2903,16 +2903,16 @@
         },
         {
             "name": "paypal/rest-api-sdk-php",
-            "version": "v1.6.1",
+            "version": "v1.6.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/paypal/PayPal-PHP-SDK.git",
-                "reference": "89bc07aa1eae833b6d1f38188fe1787b8141685b"
+                "reference": "7493e7aa5e384e897636d6073493ef0a865695ea"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/paypal/PayPal-PHP-SDK/zipball/89bc07aa1eae833b6d1f38188fe1787b8141685b",
-                "reference": "89bc07aa1eae833b6d1f38188fe1787b8141685b",
+                "url": "https://api.github.com/repos/paypal/PayPal-PHP-SDK/zipball/7493e7aa5e384e897636d6073493ef0a865695ea",
+                "reference": "7493e7aa5e384e897636d6073493ef0a865695ea",
                 "shasum": ""
             },
             "require": {
@@ -2947,7 +2947,7 @@
                 "rest",
                 "sdk"
             ],
-            "time": "2015-10-29 18:18:16"
+            "time": "2015-11-16 19:40:00"
         },
         {
             "name": "payum/iso4217",
@@ -3019,12 +3019,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/Payum/OmnipayBridge.git",
-                "reference": "b80e8508a1bd5c19af3a89570a5465e17742084e"
+                "reference": "2e7595d3172328d28e22041cb10d26a5f94fec46"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Payum/OmnipayBridge/zipball/b80e8508a1bd5c19af3a89570a5465e17742084e",
-                "reference": "b80e8508a1bd5c19af3a89570a5465e17742084e",
+                "url": "https://api.github.com/repos/Payum/OmnipayBridge/zipball/2e7595d3172328d28e22041cb10d26a5f94fec46",
+                "reference": "2e7595d3172328d28e22041cb10d26a5f94fec46",
                 "shasum": ""
             },
             "require": {
@@ -3071,7 +3071,7 @@
                 "omnipay",
                 "payment"
             ],
-            "time": "2015-10-29 14:45:50"
+            "time": "2015-11-16 08:06:03"
         },
         {
             "name": "payum/payum",

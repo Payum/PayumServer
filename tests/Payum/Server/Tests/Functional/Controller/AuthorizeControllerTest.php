@@ -44,7 +44,7 @@ class AuthorizeControllerTest extends ClientTestCase
 
         $store->update($payment);
 
-        $token = $payum->getTokenFactory()->createAuthorizeToken('', $payment, 'http://localhost');
+        $token = $payum->getTokenFactory()->createAuthorizeToken('itDoesNotMatter', $payment, 'http://localhost');
 
         $crawler = $this->getClient()->request('GET', $token->getTargetUrl());
 

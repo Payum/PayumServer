@@ -4,12 +4,18 @@ namespace Payum\Server\Model;
 use Makasim\Values\ValuesTrait;
 use Payum\Core\Exception\LogicException;
 use Payum\Core\Model\Identity;
+use Payum\Core\Registry\StorageRegistryInterface;
 use Payum\Core\Security\TokenInterface;
 use Payum\Core\Storage\IdentityInterface;
 
 class SecurityToken implements TokenInterface
 {
     use ValuesTrait;
+
+    /**
+     * @var StorageRegistryInterface
+     */
+    protected static $storageRegistry;
 
     /**
      * {@inheritdoc}
@@ -37,6 +43,16 @@ class SecurityToken implements TokenInterface
 
         $this->setValue('identity', 'id', $details->getId());
         $this->setValue('identity', 'class', $details->getClass());
+    }
+
+    /**
+     * @return Payment
+     */
+    public function getPayment()
+    {
+        if ($identity = $this->getDetails()) {
+            return static::$storageRegistry->getStorage($identity->getClass())->find($identity);
+        }
     }
 
     /**
@@ -101,7 +117,9 @@ class SecurityToken implements TokenInterface
      */
     public function getGatewayName()
     {
-        return $this->getSelfValue('gatewayName');
+        $payment = $this->getPayment();
+
+        return $payment ? $payment->getGatewayName() : null;
     }
 
     /**
@@ -109,6 +127,14 @@ class SecurityToken implements TokenInterface
      */
     public function setGatewayName($gatewayName)
     {
-        $this->setSelfValue('gatewayName', $gatewayName);
+        // the gateway name is taken from the underlying payment model.
+    }
+
+    /**
+     * @param StorageRegistryInterface $storageRegistry
+     */
+    public static function injectStorageRegistry(StorageRegistryInterface $storageRegistry)
+    {
+        static::$storageRegistry = $storageRegistry;
     }
 }

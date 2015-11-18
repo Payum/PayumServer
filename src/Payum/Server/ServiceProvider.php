@@ -5,9 +5,12 @@ use Doctrine\MongoDB\Connection;
 use Doctrine\MongoDB\Database;
 use Payum\Core\Bridge\Symfony\Reply\HttpResponse;
 use Payum\Core\Bridge\Twig\TwigFactory;
+use Payum\Core\Exception\LogicException;
 use Payum\Core\Model\GatewayConfigInterface;
+use Payum\Core\Payum;
 use Payum\Core\PayumBuilder;
 use Payum\Core\Reply\ReplyInterface;
+use Payum\Core\Security\TokenInterface;
 use Payum\Core\Storage\StorageInterface;
 use Payum\Server\Action\AuthorizePaymentAction;
 use Payum\Server\Action\CapturePaymentAction;
@@ -17,6 +20,7 @@ use Payum\Server\Action\ObtainMissingDetailsForBe2BillAction;
 use Payum\Server\Controller\AuthorizeController;
 use Payum\Server\Controller\CaptureController;
 use Payum\Server\Extension\UpdatePaymentStatusExtension;
+use Payum\Server\Form\Type\ChooseGatewayType;
 use Payum\Server\Form\Type\CreatePaymentType;
 use Payum\Server\Form\Type\CreateTokenType;
 use Payum\Server\Form\Type\UpdatePaymentType;
@@ -27,9 +31,11 @@ use Payum\Server\Storage\MongoStorage;
 use Silex\Application as SilexApplication;
 use Silex\ControllerCollection;
 use Silex\ServiceProviderInterface;
+use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Validator\Constraints\NotBlank;
 
 class ServiceProvider implements ServiceProviderInterface
 {
@@ -97,6 +103,7 @@ class ServiceProvider implements ServiceProviderInterface
             $types[] = new CreatePaymentType();
             $types[] = new UpdatePaymentType();
             $types[] = new CreateTokenType();
+            $types[] = new ChooseGatewayType();
 
             return $types;
         }));
@@ -135,12 +142,48 @@ class ServiceProvider implements ServiceProviderInterface
             return $loader;
         }));
 
-        $app['payum.controller.capture'] = $app->share(function() use ($app) {
-            return new CaptureController($app);
+        $app['payum.listener.choose_gateway'] = $app->share(function() use ($app) {
+            return function(Request $request, Application $app) {
+                /** @var Payum $payum */
+                $payum = $app['payum'];
+
+                /** @var SecurityToken $token */
+                $token = $payum->getHttpRequestVerifier()->verify($request);
+
+                /** @var Payment $payment */
+                $payment = $token->getPayment();
+                if ($payment && false == $payment->getGatewayConfig()->getGatewayName()) {
+                    /** @var FormFactoryInterface $formFactory */
+                    $formFactory = $app['form.factory'];
+
+                    $form = $formFactory->createNamed('', 'choose_gateway', $payment, [
+                        'action' => $token->getTargetUrl(),
+                    ]);
+
+                    $form->handleRequest($request);
+                    if ($form->isSubmitted() && $form->isValid()) {
+                        $payum->getStorage($payment)->update($payment);
+                    } else {
+                        /** @var \Twig_Environment $twig */
+                        $twig = $app['twig'];
+
+                        return new Response($twig->render('@PayumServer/chooseGateway.html.twig', [
+                            'form' => $form->createView(),
+                            'payment' => $payment,
+                            'layout' => '@PayumCore/layout.html.twig',
+                        ]));
+                    }
+                }
+
+                // do not verify it second time.
+                $request->attributes->set('payum_token', $token);
+            };
         });
 
-        $app['payum.controller.authorize'] = $app->share(function() use ($app) {
-            return new AuthorizeController($app);
+        $app->before(function(Request $request, Application $app) {
+            if (0 === strpos($request->getPathInfo(), '/payment/capture') || 0 === strpos($request->getPathInfo(), '/payment/authorize')) {
+                return call_user_func($app['payum.listener.choose_gateway'], $request, $app);
+            }
         });
 
         $app->after($app["cors"]);
@@ -212,5 +255,6 @@ class ServiceProvider implements ServiceProviderInterface
      */
     public function boot(SilexApplication $app)
     {
+        SecurityToken::injectStorageRegistry($app['payum']);
     }
 }

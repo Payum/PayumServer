@@ -1,10 +1,9 @@
 <?php
 namespace Payum\Server\Tests\Functional\Model;
 
-use Doctrine\ODM\MongoDB\DocumentManager;
 use Payum\Core\Model\Identity;
 use Payum\Core\Payum;
-use Payum\Server\Factory\Storage\FactoryInterface;
+use Payum\Server\Model\Payment;
 use Payum\Server\Model\SecurityToken;
 use Payum\Server\Test\WebTestCase;
 
@@ -24,7 +23,6 @@ class SecurityTokenTest extends WebTestCase
         $this->assertInstanceOf(SecurityToken::class, $token);
 
         $token->setHash(uniqid());
-        $token->setGatewayName('theGatewayName');
         $token->setTargetUrl('theTargetUrl');
         $token->setAfterUrl('theAfterUrl');
 
@@ -39,7 +37,7 @@ class SecurityTokenTest extends WebTestCase
         $this->assertNotSame($token, $foundToken);
         $this->assertEquals($token->getHash(), $foundToken->getHash());
 
-        $this->assertEquals('theGatewayName', $foundToken->getGatewayName());
+        $this->assertNull($foundToken->getGatewayName());
         $this->assertEquals('theTargetUrl', $foundToken->getTargetUrl());
         $this->assertEquals('theAfterUrl', $foundToken->getAfterUrl());
     }
@@ -49,10 +47,10 @@ class SecurityTokenTest extends WebTestCase
         /** @var Payum $payum */
         $payum = $this->app['payum'];
 
-        $storage = $payum->getTokenStorage();
+        $tokenStorage = $payum->getTokenStorage();
 
         /** @var SecurityToken $token */
-        $token = $storage->create();
+        $token = $tokenStorage->create();
 
         //guard
         $this->assertInstanceOf(SecurityToken::class, $token);
@@ -61,22 +59,57 @@ class SecurityTokenTest extends WebTestCase
         $token->setGatewayName('theGatewayName');
         $token->setDetails($identity = new Identity('anId', 'stdClass'));
 
-        $storage->update($token);
+        $tokenStorage->update($token);
 
         $this->assertNotEmpty($token->getHash());
 
         /** @var SecurityToken $foundToken */
-        $foundToken = $storage->find($token->getHash());
+        $foundToken = $tokenStorage->find($token->getHash());
 
         $this->assertInstanceOf(SecurityToken::class, $foundToken);
         $this->assertNotSame($token, $foundToken);
         $this->assertEquals($token->getHash(), $foundToken->getHash());
 
-        $this->assertEquals('theGatewayName', $foundToken->getGatewayName());
-
         $this->assertInstanceOf(Identity::class, $foundToken->getDetails());
         $this->assertNotSame($identity, $foundToken->getDetails());
         $this->assertEquals($identity->getId(), $foundToken->getDetails()->getId());
         $this->assertEquals($identity->getClass(), $foundToken->getDetails()->getClass());
+    }
+
+    public function testShouldGetsGatewayNameFromUnderlyingPaymentModel()
+    {
+        /** @var Payum $payum */
+        $payum = $this->app['payum'];
+
+        $paymentStorage = $payum->getStorage(Payment::class);
+        /** @var Payment $payment */
+        $payment = $paymentStorage->create();
+
+        $payment->setId(uniqid());
+        $payment->setGatewayName('theGatewayName');
+
+        $paymentStorage->update($payment);
+
+        $tokenStorage = $payum->getTokenStorage();
+
+        /** @var SecurityToken $token */
+        $token = $tokenStorage->create();
+
+        //guard
+        $this->assertInstanceOf(SecurityToken::class, $token);
+
+        $token->setHash(uniqid());
+        $token->setGatewayName('theGatewayName');
+        $token->setDetails($identity = new Identity($payment->getId(), $payment));
+
+        $tokenStorage->update($token);
+
+        $this->assertNotEmpty($token->getHash());
+
+        /** @var SecurityToken $foundToken */
+        $foundToken = $tokenStorage->find($token->getHash());
+
+        $this->assertInstanceOf(SecurityToken::class, $foundToken);
+        $this->assertEquals('theGatewayName', $token->getGatewayName());
     }
 }
