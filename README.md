@@ -3,7 +3,7 @@
 [![Total Downloads](https://poser.pugx.org/payum/payum-server/d/total.png)](https://packagist.org/packages/payum/payum-server)
 [![Latest Stable Version](https://poser.pugx.org/payum/payum-server/version.png)](https://packagist.org/packages/payum/payum-server)
 
-PHP 5.5+ Payment processing server. Setup once and rule them all.
+PHP 5.5+ Payment processing server. Setup once and rule them all. [Here](https://medium.com/@maksim_ka2/your-personal-payment-processing-server-abcc8ed76804#.23mlps63n) you can find a good introduction to what it does and what problems it solves.
 
 ## Try it:
 
