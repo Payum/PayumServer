@@ -152,7 +152,7 @@ class ServiceProvider implements ServiceProviderInterface
 
                 /** @var Payment $payment */
                 $payment = $token->getPayment();
-                if ($payment && false == $payment->getGatewayConfig()->getGatewayName()) {
+                if ($payment && false == $payment->getGatewayName()) {
                     /** @var FormFactoryInterface $formFactory */
                     $formFactory = $app['form.factory'];
 
