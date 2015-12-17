@@ -87,42 +87,17 @@ class PaymentController
         /** @var Payment $payment */
         $payment = $form->getData();
         $payment->setId(Random::generateToken());
+        $payment->setNumber($payment->getNumber() ?: date('Ymd-'.mt_rand(10000, 99999)));
 
         $storage = $this->payum->getStorage($payment);
         $storage->update($payment);
 
-        $payment->setNumber($payment->getNumber() ?: date('Ymd-'.mt_rand(10000, 99999)));
-
-        $storage->update($payment);
-
-        // TODO
-        $payment->setValue('links', 'done', 'http://dev.payum-server.com/client/index.html');
-
-        $payment->setValue('links', 'self', $this->urlGenerator->generate('payment_get', ['id' => $payment->getId()], true));
-
-        $token = $this->payum->getTokenFactory()->createAuthorizeToken($payment->getGatewayName(), $payment, $payment->getValue('links', 'done'), [
-            'payum_token' => null,
-            'payment' => $payment->getId(),
-        ]);
-        $payment->setValue('links', 'authorize', $token->getTargetUrl());
-
-        $token = $this->payum->getTokenFactory()->createCaptureToken($payment->getGatewayName(), $payment, $payment->getValue('links', 'done'), [
-            'payum_token' => null,
-            'payment' => $payment->getId(),
-        ]);
-        $payment->setValue('links', 'capture', $token->getTargetUrl());
-
-        $token = $this->payum->getTokenFactory()->createNotifyToken($payment->getGatewayName(), $payment);
-        $payment->setValue('links', 'notify', $token->getTargetUrl());
-
-        $storage->update($payment);
+        $selfUrl = $this->urlGenerator->generate('payment_get', ['id' => $payment->getId()], UrlGeneratorInterface::ABSOLUTE_URL);
 
         return new JsonResponse(
-            array(
-                'payment' => $this->paymentToJsonConverter->convert($payment),
-            ),
+            ['payment' => $this->paymentToJsonConverter->convert($payment)],
             201,
-            array('Location' => $payment->getValue('links', 'self'))
+            ['Location' => $selfUrl]
         );
     }
 
