@@ -3,23 +3,23 @@ namespace Payum\Server;
 
 use Doctrine\MongoDB\Connection;
 use Doctrine\MongoDB\Database;
+use Payum\Core\Bridge\Spl\ArrayObject;
+use Payum\Core\Bridge\Symfony\Form\Type\CreditCardExpirationDateType;
 use Payum\Core\Bridge\Symfony\Reply\HttpResponse;
 use Payum\Core\Bridge\Twig\TwigFactory;
-use Payum\Core\Exception\LogicException;
 use Payum\Core\Model\GatewayConfigInterface;
 use Payum\Core\Payum;
 use Payum\Core\PayumBuilder;
 use Payum\Core\Reply\ReplyInterface;
-use Payum\Core\Security\TokenInterface;
 use Payum\Core\Storage\StorageInterface;
 use Payum\Server\Action\AuthorizePaymentAction;
 use Payum\Server\Action\CapturePaymentAction;
 use Payum\Server\Action\ExecuteSameRequestWithPaymentDetailsAction;
 use Payum\Server\Action\ObtainMissingDetailsAction;
 use Payum\Server\Action\ObtainMissingDetailsForBe2BillAction;
-use Payum\Server\Controller\AuthorizeController;
-use Payum\Server\Controller\CaptureController;
 use Payum\Server\Extension\UpdatePaymentStatusExtension;
+use Payum\Server\Form\Extension\CreditCardExpirationDatePlainTextExtension;
+use Payum\Server\Form\Extension\CreditCardExtension;
 use Payum\Server\Form\Type\ChooseGatewayType;
 use Payum\Server\Form\Type\CreatePaymentType;
 use Payum\Server\Form\Type\CreateTokenType;
@@ -35,7 +35,6 @@ use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Validator\Constraints\NotBlank;
 
 class ServiceProvider implements ServiceProviderInterface
 {
@@ -65,38 +64,46 @@ class ServiceProvider implements ServiceProviderInterface
                 ->addStorage(Payment::class, new MongoStorage(Payment::class, $db->selectCollection('payments')))
 
                 ->addCoreGatewayFactoryConfig([
+                    'payum.template.obtain_credit_card' => '@PayumServer/obtainCreditCardWithJessepollakCard.html.twig',
+                    'payum.template.obtain_missing_details' => '@PayumServer/obtainMissingDetails.html.twig',
                     'payum.extension.update_payment_status' => new UpdatePaymentStatusExtension(),
                     'payum.prepend_extensions' => ['payum.extension.update_payment_status'],
                     'payum.action.server.capture_payment' => new CapturePaymentAction(),
                     'payum.action.server.authorize_payment' => new AuthorizePaymentAction(),
                     'payum.action.server.execute_same_request_with_payment_details' => new ExecuteSameRequestWithPaymentDetailsAction(),
-                    'payum.action.server.obtain_missing_details' => function() use ($app) {
+                    'payum.action.server.obtain_missing_details' => function(ArrayObject $config) use ($app) {
                         return new ObtainMissingDetailsAction(
                             $app['form.factory'],
-                            '@PayumServer/obtainMissingDetails.html.twig'
+                            $config['payum.template.obtain_missing_details']
                         );
                     },
                 ])
 
                 ->addGatewayFactoryConfig('be2bill_offsite', [
-                    'payum.action.server.obtain_missing_details' => function() use ($app) {
+                    'payum.action.server.obtain_missing_details' => function(ArrayObject $config) use ($app) {
                         return new ObtainMissingDetailsForBe2BillAction(
                             $app['form.factory'],
-                            '@PayumServer/obtainMissingDetails.html.twig'
+                            $config['payum.template.obtain_missing_details']
                         );
                     },
                 ])
                 ->addGatewayFactoryConfig('be2bill_direct', [
-                    'payum.action.server.obtain_missing_details' => function() use ($app) {
+                    'payum.action.server.obtain_missing_details' => function(ArrayObject $config) use ($app) {
                         return new ObtainMissingDetailsForBe2BillAction(
                             $app['form.factory'],
-                            '@PayumServer/obtainMissingDetails.html.twig'
+                            $config['payum.template.obtain_missing_details']
                         );
                     },
                 ])
             ;
 
             return $builder;
+        }));
+
+        $app['form.type.extensions'] = $app->share($app->extend('form.type.extensions', function ($extensions) use ($app) {
+            $extensions[] = new CreditCardExtension();
+
+            return $extensions;
         }));
 
         $app['form.types'] = $app->share($app->extend('form.types', function ($types) use ($app) {
