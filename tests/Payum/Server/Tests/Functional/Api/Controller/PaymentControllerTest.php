@@ -118,37 +118,4 @@ class PaymentControllerTest extends ClientTestCase
 
         $this->assertStringStartsWith('http://localhost/payments/', $this->getClient()->getResponse()->headers->get('Location'));
     }
-
-//    /**
-//     * @test
-//     */
-//    public function shouldAllowGetPaymentLinks()
-//    {
-//        $this->getClient()->postJson('/payments', [
-//            'totalAmount' => 123,
-//            'currencyCode' => 'USD',
-//            'clientEmail' => 'foo@example.com',
-//            'clientId' => 'theClientId',
-//            'gatewayName' => 'stripe_js',
-//            'afterUrl' => 'http://example.com',
-//        ]);
-//
-//        $this->assertClientResponseStatus(201);
-//        $this->assertClientResponseContentJson();
-//
-//        //guard
-//        $this->assertTrue($this->getClient()->getResponse()->headers->has('Location'));
-//
-//        $this->getClient()->request('GET', $this->getClient()->getResponse()->headers->get('Location'));
-//
-//        $this->assertClientResponseStatus(200);
-//        $this->assertClientResponseContentJson();
-//
-//        $content = $this->getClientResponseJsonContent();
-//
-//        $this->assertObjectHasAttribute('payment', $content);
-//
-//        $this->assertObjectHasAttribute('_links', $content->payment);
-//        $this->assertObjectHasAttribute('self', $content->payment->_links);
-//    }
 }

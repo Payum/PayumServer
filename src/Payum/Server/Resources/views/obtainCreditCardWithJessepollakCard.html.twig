@@ -1,0 +1,45 @@
+{% extends layout ?: "@PayumCore/layout.html.twig" %}
+
+{% block payum_body %}
+    <div class="card-wrapper"></div>
+
+    <form id="credit-card" method="POST" action="{{ actionUrl }}">
+        {{ form_row(form.number) }}
+        {{ form_row(form.holder) }}
+        {{ form_row(form.expireAt) }}
+        {{ form_row(form.securityCode) }}
+
+        {{ form_rest(form) }}
+
+        <input type="submit" value="Submit" />
+    </form>
+{% endblock %}
+
+{% block payum_vendor_javascripts %}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/card/1.2.0/js/card.min.js"></script>
+{% endblock %}
+
+{% block payum_javascripts %}
+    {# https://github.com/jessepollak/card #}
+    <script>
+        function renderCardWhenReady() {
+            console.log(typeof Card);
+            if (typeof Card != 'undefined') {
+                var card = new Card({
+                    form: '#credit-card',
+                    container: '.card-wrapper',
+                    formSelectors: {
+                        numberInput: 'input#payum_credit_card_number',
+                        expiryInput: 'input#payum_credit_card_expireAt',
+                        cvcInput: 'input#payum_credit_card_securityCode',
+                        nameInput: 'input#payum_credit_card_holder'
+                    }
+                });
+            } else {
+                setTimeout(renderCardWhenReady, 100);
+            }
+        }
+
+        renderCardWhenReady();
+    </script>
+{% endblock %}
