@@ -106,6 +106,7 @@ class ObtainMissingDetailsAction extends GatewayAwareAction
             'data_class' => Payment::class,
             'csrf_protection' => false,
             'attr' => ['class' => 'payum-obtain-missing-details'],
+            'allow_extra_fields' => true,
         ]);
     }
 }
