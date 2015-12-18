@@ -198,10 +198,18 @@ class Payment
     /**
      * @return Payer
      */
+    public function setPayer(Payer $payer)
+    {
+        $this->setObject('self', 'payer', $payer);
+    }
+
+    /**
+     * @return Payer
+     */
     public function getPayer()
     {
         if (false == $this->getValue('self', 'payer')) {
-            $this->setObject('self', 'payer', new Payer());
+            $this->setPayer(new Payer());
         }
 
         return $this->getObject('self', 'payer', Payer::class);
