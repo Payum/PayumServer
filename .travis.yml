@@ -13,7 +13,6 @@ cache:
 services: mongodb
 
 before_install:
-    - yes '' | pecl -q install -f mongo
     - composer self-update
 
 install:
