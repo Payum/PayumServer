@@ -2,11 +2,14 @@
 namespace Payum\Server\Model;
 
 use Makasim\Values\ValuesTrait;
+use Makasim\Yadm\PersistableTrait;
+use MongoDB\BSON\Persistable;
 use Payum\Core\Model\GatewayConfigInterface;
 
-class GatewayConfig implements GatewayConfigInterface
+class GatewayConfig implements GatewayConfigInterface, Persistable
 {
     use ValuesTrait;
+    use PersistableTrait;
 
     /**
      * @return string

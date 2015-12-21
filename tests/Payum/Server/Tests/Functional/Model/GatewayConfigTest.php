@@ -1,12 +1,8 @@
 <?php
 namespace Payum\Server\Tests\Functional\Model;
 
-use Doctrine\ODM\MongoDB\DocumentManager;
-use Payum\Core\Payum;
 use Payum\Core\Storage\StorageInterface;
-use Payum\Server\Factory\Storage\FactoryInterface;
 use Payum\Server\Model\GatewayConfig;
-use Payum\Server\Storage\MongoStorage;
 use Payum\Server\Test\WebTestCase;
 
 class GatewayConfigTest extends WebTestCase

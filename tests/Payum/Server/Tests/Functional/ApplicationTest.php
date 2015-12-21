@@ -5,7 +5,8 @@ use Payum\Core\Payum;
 use Payum\Core\PayumBuilder;
 use Payum\Core\Security\GenericTokenFactory;
 use Payum\Core\Storage\StorageInterface;
-use Payum\Server\Storage\MongoStorage;
+use Payum\Server\Model\Payment;
+use Payum\Server\Storage\YadmStorage;
 use Payum\Server\Test\WebTestCase;
 
 class ApplicationTest extends WebTestCase
@@ -29,7 +30,7 @@ class ApplicationTest extends WebTestCase
         $storage = $this->app['payum.gateway_config_storage'];
 
         $this->assertInstanceOf(StorageInterface::class, $storage);
-        $this->assertInstanceOf(MongoStorage::class, $storage);
+        $this->assertInstanceOf(YadmStorage::class, $storage);
     }
 
     public function testShouldAllowGetTokenStorageFromPayumService()
@@ -37,7 +38,15 @@ class ApplicationTest extends WebTestCase
         /** @var Payum $payum */
         $payum = $this->app['payum'];
 
-        $this->assertInstanceOf(MongoStorage::class, $payum->getTokenStorage());
+        $this->assertInstanceOf(YadmStorage::class, $payum->getTokenStorage());
+    }
+
+    public function testShouldAllowGetPaymentStorageFromPayumService()
+    {
+        /** @var Payum $payum */
+        $payum = $this->app['payum'];
+
+        $this->assertInstanceOf(YadmStorage::class, $payum->getStorage(Payment::class));
     }
 
     public function testShouldAllowGetTokenFactoryFromPayumService()

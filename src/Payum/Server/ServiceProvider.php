@@ -1,10 +1,11 @@
 <?php
 namespace Payum\Server;
 
-use Doctrine\MongoDB\Connection;
-use Doctrine\MongoDB\Database;
+use Makasim\Yadm\Hydrator;
+use Makasim\Yadm\Storage;
+use MongoDB\Client;
+use MongoDB\Database;
 use Payum\Core\Bridge\Spl\ArrayObject;
-use Payum\Core\Bridge\Symfony\Form\Type\CreditCardExpirationDateType;
 use Payum\Core\Bridge\Symfony\Reply\HttpResponse;
 use Payum\Core\Bridge\Twig\TwigFactory;
 use Payum\Core\Model\GatewayConfigInterface;
@@ -18,7 +19,6 @@ use Payum\Server\Action\ExecuteSameRequestWithPaymentDetailsAction;
 use Payum\Server\Action\ObtainMissingDetailsAction;
 use Payum\Server\Action\ObtainMissingDetailsForBe2BillAction;
 use Payum\Server\Extension\UpdatePaymentStatusExtension;
-use Payum\Server\Form\Extension\CreditCardExpirationDatePlainTextExtension;
 use Payum\Server\Form\Extension\CreditCardExtension;
 use Payum\Server\Form\Type\ChooseGatewayType;
 use Payum\Server\Form\Type\CreatePaymentType;
@@ -27,7 +27,7 @@ use Payum\Server\Form\Type\UpdatePaymentType;
 use Payum\Server\Model\GatewayConfig;
 use Payum\Server\Model\Payment;
 use Payum\Server\Model\SecurityToken;
-use Payum\Server\Storage\MongoStorage;
+use Payum\Server\Storage\YadmStorage;
 use Silex\Application as SilexApplication;
 use Silex\ControllerCollection;
 use Silex\ServiceProviderInterface;
@@ -44,24 +44,26 @@ class ServiceProvider implements ServiceProviderInterface
     public function register(SilexApplication $app)
     {
         $app['debug'] = (boolean) getenv('PAYUM_SERVER_DEBUG');
-        $app['mongo.database'] = getenv('PAYUM_MONGO_DATABASE') ?: 'payum_server';
-        $app['mongo.server'] = getenv('PAYUM_MONGO_SERVER') ?: 'mongodb://localhost:27017';
+        $app['mongodb.uri'] = getenv('PAYUM_MONGO_SERVER') ?: 'mongodb://localhost:27017/payum_server';
 
         $app['payum.gateway_config_storage'] = $app->share(function ($app) {
             /** @var Database $db */
-            $db = $app['doctrine.mongo.database'];
+            $db = $app['mongodb.database'];
 
-            return new MongoStorage(GatewayConfig::class, $db->selectCollection('gateway_configs'));
+            return new YadmStorage(new Storage($db->selectCollection('gateway_configs'), new Hydrator(GatewayConfig::class)));
         });
 
         $app['payum.builder'] = $app->share($app->extend('payum.builder', function (PayumBuilder $builder) use ($app) {
             /** @var Database $db */
-            $db = $app['doctrine.mongo.database'];
+            $db = $app['mongodb.database'];
+
+            $tokenStorage = new Storage($db->selectCollection('security_tokens'), new Hydrator(SecurityToken::class));
+            $paymentStorage = new Storage($db->selectCollection('payments'), new Hydrator(Payment::class));
 
             $builder
-                ->setTokenStorage(new MongoStorage(SecurityToken::class, $db->selectCollection('security_tokens')))
+                ->setTokenStorage(new YadmStorage($tokenStorage))
                 ->setGatewayConfigStorage($app['payum.gateway_config_storage'])
-                ->addStorage(Payment::class, new MongoStorage(Payment::class, $db->selectCollection('payments')))
+                ->addStorage(Payment::class, new YadmStorage($paymentStorage))
 
                 ->addCoreGatewayFactoryConfig([
                     'payum.template.obtain_credit_card' => '@PayumServer/obtainCreditCardWithJessepollakCard.html.twig',
@@ -119,12 +121,19 @@ class ServiceProvider implements ServiceProviderInterface
             return new ReplyToJsonResponseConverter();
         });
 
-        $app['doctrine.mongo.connection'] = $app->share(function ($app) {
-            return new Connection($app['mongo.server']);
+        $app['mongodb.client'] = $app->share(function ($app) {
+            return new Client($app['mongodb.uri']);
         });
 
-        $app['doctrine.mongo.database'] = $app->share(function ($app) {
-            return $app['doctrine.mongo.connection']->selectDatabase($app['mongo.database']);
+        $app['mongodb.database'] = $app->share(function ($app) {
+            /** @var Client $client */
+            $client = $app['mongodb.client'];
+
+            if (false == $database = trim(parse_url($app['mongodb.uri'], PHP_URL_PATH), '/')) {
+                throw new \LogicException('The mongodb.uri must have database specified. For example http://localhost:27017/payum_server');
+            }
+
+            return $client->selectDatabase($database);
         });
 
 

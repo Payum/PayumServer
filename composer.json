@@ -20,7 +20,7 @@
     ],
     "require": {
         "php": ">=5.5.0",
-        "ext-mongo": "~1.6",
+        "ext-mongodb": "~1.0",
         "silex/silex": "~1.2",
         "payum/payum-silex-provider": "~1.0@dev",
         "payum/payum": "dev-payum-server-fixes as 1.1.0",
@@ -34,7 +34,8 @@
         "symfony/security-csrf": "2.7.*",
         "symfony/options-resolver": "2.7.*",
         "symfony/twig-bridge": "2.7.*",
-        "doctrine/mongodb": "~1.2",
+        "makasim/yadm": "0.1.*@dev",
+        "mongodb/mongodb": "~1.0@beta",
         "jdesrosiers/silex-cors-provider": "0.1.5",
         "omnipay/omnipay": "~2.3",
         "raven/raven": "~0.10.0",
