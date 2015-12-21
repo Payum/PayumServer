@@ -20,7 +20,7 @@
     ],
     "require": {
         "php": ">=5.5.0",
-        "ext-mongodb": "~1.0@beta",
+        "ext-mongodb": "*",
         "silex/silex": "~1.2",
         "payum/payum-silex-provider": "~1.0@dev",
         "payum/payum": "dev-payum-server-fixes as 1.1.0",
