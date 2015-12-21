@@ -13,6 +13,8 @@ cache:
 services: mongodb
 
 before_install:
+    - pecl install mongodb-beta
+    - echo "extension=mongodb.so" >> `php --ini | grep "Loaded Configuration" | sed -e "s|.*:\s*||"`
     - yes '' | pecl -q install -f mongo
     - composer self-update
 
