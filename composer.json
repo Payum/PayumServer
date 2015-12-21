@@ -35,7 +35,7 @@
         "symfony/options-resolver": "2.7.*",
         "symfony/twig-bridge": "2.7.*",
         "makasim/yadm": "0.1.*@dev",
-        "mongodb/mongodb": "~1.0@beta",
+        "mongodb/mongodb": "~1.0@dev",
         "jdesrosiers/silex-cors-provider": "0.1.5",
         "omnipay/omnipay": "~2.3",
         "raven/raven": "~0.10.0",
