@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "53265811dd2d5ebdc1e2a8f0a0c05daa",
-    "content-hash": "211b3c2c73c904050204ee0822386194",
+    "hash": "16776fea3c4af510244c064dd828094c",
+    "content-hash": "29cdbd3ca592700777bcf5ee8a039511",
     "packages": [
         {
             "name": "authorizenet/authorizenet",
@@ -980,16 +980,16 @@
         },
         {
             "name": "mongodb/mongodb",
-            "version": "1.0.0-beta1",
+            "version": "dev-master",
             "source": {
                 "type": "git",
                 "url": "https://github.com/mongodb/mongo-php-library.git",
-                "reference": "34b74f852af43fc70f49308bfbd3555f91db593c"
+                "reference": "c1cc2d6f92de0cd8626c0c1ffe87175587cf4ff5"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/mongodb/mongo-php-library/zipball/34b74f852af43fc70f49308bfbd3555f91db593c",
-                "reference": "34b74f852af43fc70f49308bfbd3555f91db593c",
+                "url": "https://api.github.com/repos/mongodb/mongo-php-library/zipball/c1cc2d6f92de0cd8626c0c1ffe87175587cf4ff5",
+                "reference": "c1cc2d6f92de0cd8626c0c1ffe87175587cf4ff5",
                 "shasum": ""
             },
             "require": {
@@ -999,7 +999,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "0.3.x-dev"
+                    "dev-master": "1.0.x-dev"
                 }
             },
             "autoload": {
@@ -1036,7 +1036,7 @@
                 "mongodb",
                 "persistence"
             ],
-            "time": "2015-11-02 21:31:19"
+            "time": "2015-12-17 19:55:09"
         },
         {
             "name": "omnipay/2checkout",
@@ -6222,14 +6222,14 @@
         "payum/payum": 20,
         "payum/omnipay-bridge": 20,
         "makasim/yadm": 20,
-        "mongodb/mongodb": 10,
+        "mongodb/mongodb": 20,
         "makasim/values": 20
     },
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {
         "php": ">=5.5.0",
-        "ext-mongodb": "~1.0"
+        "ext-mongodb": "*"
     },
     "platform-dev": []
 }
