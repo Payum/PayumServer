@@ -16,4 +16,6 @@ RUN set -x && \
 COPY . /app/
 COPY config/php.ini /usr/local/etc/php/
 
+#RUN chown -R www-data:www-data /app
+
 WORKDIR /app/
