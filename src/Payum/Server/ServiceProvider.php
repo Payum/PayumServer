@@ -44,7 +44,7 @@ class ServiceProvider implements ServiceProviderInterface
     public function register(SilexApplication $app)
     {
         $app['debug'] = (boolean) getenv('PAYUM_DEBUG');
-        $app['mongodb.uri'] = getenv('MONGODB_URI') ?: 'mongodb://localhost:27017/payum_server';
+        $app['mongodb.uri'] = getenv('PAYUM_MONGO_URI') ?: 'mongodb://localhost:27017/payum_server';
 
         $app['payum.gateway_config_storage'] = $app->share(function ($app) {
             /** @var Database $db */

@@ -1,21 +1,19 @@
-FROM php:5.6-apache
+FROM ubuntu:15.10
 
 MAINTAINER Maksim Kotlyar <kotlyar.maksim@gmail.com>
 
 RUN set -x && \
     apt-get update && \
-    apt-get install -y openssl libssl-dev libsasl2-dev libicu-dev php5-dev && \
-    docker-php-ext-install intl && \
+    apt-get install -y --no-install-recommends pkg-config openssl libxml2 libssl-dev libsasl2-dev libicu-dev php-soap php5-dev php5-fpm nginx && \
     pecl install mongodb && \
-    a2enmod rewrite && \
-    rm -rf /var/lib/apt/lists/* && \
-    mkdir -p /app/web && \
-    rm -rf /var/www/html && \
-    ln -s /app/web /var/www/html
+    rm -rf /etc/nginx/sites-enabled/*
 
 COPY . /app/
-COPY config/php.ini /usr/local/etc/php/
+COPY config/php.ini /etc/php5/cli/conf.d/05-payum-server.ini
+COPY config/php.ini /etc/php5/fpm/conf.d/05-payum-server.ini
+COPY config/php-fpm.conf /etc/php5/fpm/php-fpm.conf
+COPY config/payum-server-nginx /etc/nginx/sites-enabled/payum-server
 
-#RUN chown -R www-data:www-data /app
+CMD "php5-fpm"
 
-WORKDIR /app/
+EXPOSE 80

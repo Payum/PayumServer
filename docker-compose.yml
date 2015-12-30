@@ -1,11 +1,14 @@
 web:
   build: .
   environment:
-      - MONGODB_URI=mongodb://mongo:27017/payum_server
-      - PAYUM_DEBUG=1
+    - PAYUM_MONGO_URI=mongodb://mongo:27017/payum_server
+    - PAYUM_DEBUG=1
   links:
-   - mongo
+    - mongo
   ports:
-   - "80:80"
+    - "80:80"
+#  volumes:
+#    - .:/app
+
 mongo:
   image: mongo
