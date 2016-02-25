@@ -1,7 +1,7 @@
 <?php
 namespace Payum\Server\Model;
 
-use Makasim\Values\ValuesTrait;
+use Makasim\Yadm\ValuesTrait;
 use Payum\Core\Model\GatewayConfigInterface;
 
 class GatewayConfig implements GatewayConfigInterface

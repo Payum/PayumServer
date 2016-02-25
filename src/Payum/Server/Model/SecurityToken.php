@@ -1,7 +1,7 @@
 <?php
 namespace Payum\Server\Model;
 
-use Makasim\Values\ValuesTrait;
+use Makasim\Yadm\ValuesTrait;
 use Payum\Core\Exception\LogicException;
 use Payum\Core\Model\Identity;
 use Payum\Core\Registry\StorageRegistryInterface;

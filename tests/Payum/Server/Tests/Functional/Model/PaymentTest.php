@@ -1,9 +1,7 @@
 <?php
 namespace Payum\Server\Tests\Functional\Model;
 
-use Doctrine\ODM\MongoDB\DocumentManager;
 use Payum\Core\Payum;
-use Payum\Server\Factory\Storage\FactoryInterface;
 use Payum\Server\Model\Payment;
 use Payum\Server\Test\WebTestCase;
 

@@ -8,9 +8,9 @@ Payum = function(serverUrl) {
     payum.serverUrl = serverUrl;
 
     payum.payment = {
-        create: function(amount, currency, callback) {
+        create: function(payment, callback) {
             $.ajax(payum.serverUrl + '/payments', {
-                'data': JSON.stringify({'totalAmount': amount, 'currencyCode': currency}),
+                'data': JSON.stringify(payment),
                 'type': 'POST',
                 'processData': false,
                 'contentType': 'application/json',
@@ -30,9 +30,9 @@ Payum = function(serverUrl) {
     };
 
     payum.token = {
-        create: function(type, paymentId, afterUrl, callback) {
+        create: function(token, callback) {
             $.ajax(payum.serverUrl + '/tokens', {
-                'data': JSON.stringify({'type': type, 'paymentId': paymentId, 'afterUrl': afterUrl}),
+                'data': JSON.stringify(token),
                 'type': 'POST',
                 'processData': false,
                 'contentType': 'application/json',
@@ -40,9 +40,6 @@ Payum = function(serverUrl) {
                     callback(data.token);
                 }
             });
-        },
-        get: function(id, callback) {
-            $.get(payum.serverUrl + '/payments/'+id, {success: callback});
         }
     };
 

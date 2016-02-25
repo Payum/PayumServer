@@ -1,10 +1,14 @@
 <?php
 namespace Payum\Server\Form\Type;
 
+use Payum\Core\Bridge\Symfony\Form\Type\GatewayChoiceType;
 use Payum\Server\Model\Payment;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\NumberType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\Choice;
 use Symfony\Component\Validator\Constraints\Email;
 use Symfony\Component\Validator\Constraints\NotBlank;
@@ -19,28 +23,27 @@ class CreatePaymentType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('gatewayName', 'payum_gateways_choice', [
+            ->add('gatewayName', GatewayChoiceType::class, [
                 'required' => false,
-                'empty_value' => '',
             ])
-            ->add('totalAmount', 'number', array(
+            ->add('totalAmount', NumberType::class, array(
                 'label' => 'Amount',
                 'constraints' => array(new NotBlank(), new Type(['type' => 'numeric']))
             ))
-            ->add('currencyCode', 'choice', array(
-                'choices' => ['USD' => 'US Dollar', 'EUR' => 'Euro', 'SEK' => 'Swedish krona'],
+            ->add('currencyCode', ChoiceType::class, array(
+                'choices' => ['US Dollar' => 'USD', 'Euro' => 'EUR', 'Swedish krona' => 'SEK'],
                 'label' => 'Currency',
                 'data' => 'USD',
                 'constraints' => array(new NotBlank(), new Choice(['USD', 'EUR', 'SEK'])),
             ))
-            ->add('clientEmail', 'text', array(
+            ->add('clientEmail', TextType::class, array(
                 'required' => false,
                 'constraints' => array(new Email()))
             )
-            ->add('clientId', 'text', array(
+            ->add('clientId', TextType::class, array(
                 'required' => false,
             ))
-            ->add('description', 'text', array(
+            ->add('description', TextType::class, array(
                 'required' => false,
             ))
         ;
@@ -49,21 +52,13 @@ class CreatePaymentType extends AbstractType
     /**
      * {@inheritDoc}
      */
-    public function setDefaultOptions(OptionsResolverInterface $resolver)
+    public function configureOptions(OptionsResolver $resolver)
     {
-        $resolver->setDefaults(array(
+        $resolver->setDefaults([
             'data_class' => Payment::class,
             'csrf_protection' => false,
             'allow_extra_fields' => true,
-        ));
-        $resolver->setOptional(array('factory'));
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function getName()
-    {
-        return 'create_payment';
+            'factory' => null,
+        ]);
     }
 }

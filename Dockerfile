@@ -1,36 +1,36 @@
 FROM ubuntu:precise
 
 ENV HOME /root
+ENV PHP_ERROR_REPORTING E_ALL
+ENV PHP_DISPLAY_ERRORS off
 
 MAINTAINER Maksim Kotlyar <kotlyar.maksim@gmail.com>
 
 ## libs
-RUN apt-get update
-RUN apt-get install -y build-essential python-software-properties
-
-RUN apt-get update
-
-## php
-RUN add-apt-repository -y ppa:ondrej/php5
-RUN apt-get update
-RUN apt-get install -y php5
-
-## php config
-#RUN sed -i "s/;date.timezone =.*/date.timezone = UTC/" /etc/php5/apache2/php.ini
-#RUN sed -i "s/;date.timezone =.*/date.timezone = UTC/" /etc/php5/cli/php.ini
-
-## php libs
-RUN apt-get install -y php5-curl php5-intl
-RUN apt-get install -y php5-mongo
-RUN apt-get install -y php5-fpm
+RUN set -x && \
+    apt-get update && \
+    apt-get install -y --no-install-recommends build-essential python-software-properties openssl pkg-config libssl-dev libsslcommon2-dev && \
+    add-apt-repository -y ppa:ondrej/php5 && \
+    apt-get update && \
+    apt-get install -y --no-install-recommends php5 php5-dev php-pear php5-curl php5-intl && \
+    pecl install mongodb
 
 RUN a2enmod rewrite
 RUN service apache2 stop
 
-RUN echo '\n\
-;Added on container build\n\
-date.timezone = UTC\n'\
+RUN echo '\n \
+;Added on container build\n \
+date.timezone = UTC\n \
+extension = mongodb.so\n \
+' \
 >> /etc/php5/cli/php.ini
+
+RUN echo '\n \
+;Added on container build\n \
+date.timezone = UTC\n \
+extension = mongodb.so\n \
+' \
+>> /etc/php5/apache2/php.ini
 
 RUN rm -rf /etc/apache2/sites-enabled/*
 RUN echo '\n\
@@ -46,10 +46,10 @@ ServerName  0.0.0.0\n\
         Allow from All\n\
 	    DirectoryIndex index.php\n\
     </Directory>\n\
-</VirtualHost>\n'\
+</VirtualHost>\n\
+'\
 >> /etc/apache2/sites-enabled/payum-server.conf
 
 ADD . /app
 WORKDIR /app
-
-# docker run -it -p 80:80 payum apachectl -e info -DFOREGROUND
+CMD docker-entrypoint.sh

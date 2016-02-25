@@ -1,7 +1,7 @@
 <?php
 namespace Payum\Server\Test;
 
-use Doctrine\MongoDB\Database;
+use MongoDB\Database;
 use Payum\Server\Application;
 use Silex\WebTestCase as SilexWebTestCase;
 use Symfony\Component\HttpFoundation\Session\Storage\MockArraySessionStorage;
@@ -17,10 +17,10 @@ abstract class WebTestCase extends SilexWebTestCase
         $this->app['session.storage'] = new MockArraySessionStorage();
 
         /** @var Database $db */
-        $db = $this->app['doctrine.mongo.database'];
-        $db->selectCollection('gateway_configs')->remove([]);
-        $db->selectCollection('security_tokens')->remove([]);
-        $db->selectCollection('payments')->remove([]);
+        $db = $this->app['mongodb.database'];
+        $db->selectCollection('gateway_configs')->deleteMany([]);
+        $db->selectCollection('security_tokens')->deleteMany([]);
+        $db->selectCollection('payments')->deleteMany([]);
     }
 
     public function createApplication()

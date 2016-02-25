@@ -7,14 +7,15 @@ use Symfony\Component\Form\FormEvents;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Form\FormTypeExtensionInterface;
 use Symfony\Component\Form\FormView;
-use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
+use Payum\Core\Bridge\Symfony\Form\Type\CreditCardType as BaseCreditCardType;
 
 class CreditCardExtension implements FormTypeExtensionInterface
 {
     /**
      * {@inheritdoc}
      */
-    public function setDefaultOptions(OptionsResolverInterface $resolver)
+    public function configureOptions(OptionsResolver $resolver)
     {
     }
 
@@ -23,7 +24,7 @@ class CreditCardExtension implements FormTypeExtensionInterface
      */
     public function getExtendedType()
     {
-        return 'payum_credit_card';
+        return BaseCreditCardType::class;
     }
 
     /**
