@@ -1,10 +1,11 @@
 <?php
 namespace Payum\Server\Form\Type;
 
-use Payum\Server\Form\EventListener\PatchSubscriber;
+use Payum\Core\Bridge\Symfony\Form\Type\GatewayChoiceType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\NotBlank;
 
 class ChooseGatewayType extends AbstractType
@@ -15,15 +16,15 @@ class ChooseGatewayType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('gatewayName', 'payum_gateways_choice', ['constraints' => [new NotBlank()]])
-            ->add('choose', 'submit')
+            ->add('gatewayName', GatewayChoiceType::class, ['constraints' => [new NotBlank()]])
+            ->add('choose', SubmitType::class)
         ;
     }
 
     /**
      * {@inheritDoc}
      */
-    public function setDefaultOptions(OptionsResolverInterface $resolver)
+    public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
             'method' => 'POST',
@@ -32,13 +33,5 @@ class ChooseGatewayType extends AbstractType
         ]);
 
         $resolver->setRequired('action');
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function getName()
-    {
-        return 'choose_gateway';
     }
 }

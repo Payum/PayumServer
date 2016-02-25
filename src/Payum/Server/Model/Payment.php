@@ -1,21 +1,18 @@
 <?php
 namespace Payum\Server\Model;
 
-use Makasim\Values\ObjectsTrait;
-use Makasim\Values\ValuesTrait;
-use Makasim\Yadm\PersistableTrait;
-use MongoDB\BSON\Persistable;
+use Makasim\Yadm\ObjectsTrait;
+use Makasim\Yadm\ValuesTrait;
 use Payum\Core\Model\CreditCardInterface;
 use Payum\Core\Request\GetHumanStatus;
 
-class Payment implements Persistable
+class Payment
 {
     use ValuesTrait {
         setValue as public;
         getValue as public;
     }
     use ObjectsTrait;
-    use PersistableTrait;
 
     /**
      * @return string

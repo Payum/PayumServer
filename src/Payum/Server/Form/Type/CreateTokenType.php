@@ -1,10 +1,11 @@
 <?php
 namespace Payum\Server\Form\Type;
 
-use Payum\Server\Model\Payment;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\Choice;
 use Symfony\Component\Validator\Constraints\Email;
 use Symfony\Component\Validator\Constraints\NotBlank;
@@ -19,19 +20,19 @@ class CreateTokenType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('type', 'choice', [
+            ->add('type', ChoiceType::class, [
                 'required' => true,
-                'empty_value' => false,
+//                'empty_value' => false,
                 'choices' => [
-                    'capture' => 'Capture',
-                    'authorize' => 'Authorize',
+                    'Capture' => 'capture',
+                    'Authorize' => 'authorize',
                 ],
                 'constraints' => array(new NotBlank())
             ])
-            ->add('paymentId', 'text', array(
+            ->add('paymentId', TextType::class, array(
                 'constraints' => array(new NotBlank())
             ))
-            ->add('afterUrl', 'text', array(
+            ->add('afterUrl', TextType::class, array(
                 'constraints' => array(new NotBlank(), new Url()),
             ))
         ;
@@ -40,19 +41,11 @@ class CreateTokenType extends AbstractType
     /**
      * {@inheritDoc}
      */
-    public function setDefaultOptions(OptionsResolverInterface $resolver)
+    public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
             'csrf_protection' => false,
             'allow_extra_fields' => true,
         ));
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function getName()
-    {
-        return 'create_token';
     }
 }

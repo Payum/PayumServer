@@ -10,6 +10,7 @@ use Payum\Core\Storage\StorageInterface;
 use Payum\Server\Api\View\FormToJsonConverter;
 use Payum\Server\Api\View\PaymentToJsonConverter;
 use Payum\Server\Controller\ForwardExtensionTrait;
+use Payum\Server\Form\Type\CreatePaymentType;
 use Payum\Server\Model\Payment;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -78,7 +79,7 @@ class PaymentController
 
         $rawPayment = ArrayObject::ensureArrayObject($content);
 
-        $form = $this->formFactory->create('create_payment');
+        $form = $this->formFactory->create(CreatePaymentType::class);
         $form->submit((array) $rawPayment);
         if (false == $form->isValid()) {
             return new JsonResponse($this->formToJsonConverter->convertInvalid($form), 400);
@@ -184,13 +185,11 @@ class PaymentController
     }
 
     /**
-     * @param Request $request
-     *
      * @return JsonResponse
      */
-    public function metaAction(Request $request)
+    public function metaAction()
     {
-        $form = $this->formFactory->create('create_payment');
+        $form = $this->formFactory->create(CreatePaymentType::class);
 
         return new JsonResponse(array(
             'meta' => $this->formToJsonConverter->convertMeta($form),

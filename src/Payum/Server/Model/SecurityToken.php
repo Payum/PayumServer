@@ -1,19 +1,16 @@
 <?php
 namespace Payum\Server\Model;
 
-use Makasim\Values\ValuesTrait;
-use Makasim\Yadm\PersistableTrait;
-use MongoDB\BSON\Persistable;
+use Makasim\Yadm\ValuesTrait;
 use Payum\Core\Exception\LogicException;
 use Payum\Core\Model\Identity;
 use Payum\Core\Registry\StorageRegistryInterface;
 use Payum\Core\Security\TokenInterface;
 use Payum\Core\Storage\IdentityInterface;
 
-class SecurityToken implements TokenInterface, Persistable
+class SecurityToken implements TokenInterface
 {
     use ValuesTrait;
-    use PersistableTrait;
 
     /**
      * @var StorageRegistryInterface

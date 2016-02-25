@@ -1,6 +1,7 @@
 <?php
 namespace Payum\Server\Api\Controller;
 
+use Payum\Core\Bridge\Symfony\Form\Type\GatewayConfigType;
 use Payum\Core\Model\GatewayConfigInterface;
 use Payum\Core\Storage\StorageInterface;
 use Payum\Server\Api\View\FormToJsonConverter;
@@ -68,7 +69,7 @@ class GatewayController
     {
         $this->forward400Unless('json' == $request->getContentType());
 
-        $form = $this->formFactory->create('payum_gateway_config', null, [
+        $form = $this->formFactory->create(GatewayConfigType::class, null, [
             'data_class' => GatewayConfig::class,
             'csrf_protection' => false,
         ]);

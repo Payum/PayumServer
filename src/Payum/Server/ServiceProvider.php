@@ -79,6 +79,11 @@ class ServiceProvider implements ServiceProviderInterface
                             $config['payum.template.obtain_missing_details']
                         );
                     },
+
+                    'twig.env' => $app['twig'],
+                    'payum.paths' => [
+                        'PayumServer' => __DIR__.'/Resources/views',
+                    ],
                 ])
 
                 ->addGatewayFactoryConfig('be2bill_offsite', [
@@ -143,7 +148,7 @@ class ServiceProvider implements ServiceProviderInterface
             foreach ($gatewayConfigStorage->findBy([]) as $config) {
                 /** @var GatewayConfigInterface $config */
 
-                $choices[$config->getGatewayName()] = ucwords(str_replace(['_'], ' ', $config->getGatewayName()));
+                $choices[ucwords(str_replace(['_'], ' ', $config->getGatewayName()))] = $config->getGatewayName();
             }
 
             return $choices;
@@ -172,7 +177,7 @@ class ServiceProvider implements ServiceProviderInterface
                     /** @var FormFactoryInterface $formFactory */
                     $formFactory = $app['form.factory'];
 
-                    $form = $formFactory->createNamed('', 'choose_gateway', $payment, [
+                    $form = $formFactory->createNamed('', ChooseGatewayType::class, $payment, [
                         'action' => $token->getTargetUrl(),
                     ]);
 

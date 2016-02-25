@@ -7,6 +7,7 @@ use Payum\Core\Registry\RegistryInterface;
 use Payum\Server\Api\View\FormToJsonConverter;
 use Payum\Server\Api\View\TokenToJsonConverter;
 use Payum\Server\Controller\ForwardExtensionTrait;
+use Payum\Server\Form\Type\CreateTokenType;
 use Payum\Server\Model\Payment;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -65,7 +66,7 @@ class TokenController
 
         $rawToken = ArrayObject::ensureArrayObject($content);
 
-        $form = $this->formFactory->create('create_token');
+        $form = $this->formFactory->create(CreateTokenType::class);
         $form->submit((array) $rawToken);
         if (false == $form->isValid()) {
             return new JsonResponse($this->formToJsonConverter->convertInvalid($form), 400);

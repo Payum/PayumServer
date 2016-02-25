@@ -22,7 +22,6 @@ class FormToJsonConverter
                 'required' => $child->vars['required'],
             );
 
-
             if (in_array('checkbox', $child->vars['block_prefixes'])) {
                 $fields[$name]['type'] = 'checkbox';
             } else if (in_array('password', $child->vars['block_prefixes'])) {
@@ -51,7 +50,7 @@ class FormToJsonConverter
     public function convertInvalid(FormInterface $form)
     {
         return array(
-            'errors' => $form->getErrorsAsString(),
+            'errors' => (string) $form->getErrors(true, false),
         );
     }
 }

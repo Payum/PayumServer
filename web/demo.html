@@ -54,10 +54,15 @@
 
             // do new payment
             $('#pay-btn').click(function() {
-                payum.payment.create(100, 'USD', function(payment) {
-                    var afterUrl = "http://"+window.location.hostname +'/demo.html';
+                var payment = {totalAmount: 100, currencyCode: 'USD'};
+                payum.payment.create(payment, function(payment) {
+                    var token = {
+                        type: 'capture',
+                        paymentId: payment.id,
+                        afterUrl: "http://"+window.location.hostname +'/demo.html'
+                    };
 
-                    payum.token.create('capture', payment.id, afterUrl, function(token) {
+                    payum.token.create(token, function(token) {
                         payum.execute(token.targetUrl, '#payum-container');
                     });
                 });
@@ -65,10 +70,16 @@
 
             // do new payment
             $('#pay-krona-btn').click(function() {
-                payum.payment.create(100, 'SEK', function(payment) {
-                    var afterUrl = "http://"+window.location.hostname +'/demo.html';
+                var payment = {totalAmount: 100, currencyCode: 'SEK'};
 
-                    payum.token.create('authorize', payment.id, afterUrl, function(token) {
+                payum.payment.create(payment, function(payment) {
+                    var token = {
+                        type: 'authorize',
+                        paymentId: payment.id,
+                        afterUrl: "http://"+window.location.hostname +'/demo.html'
+                    };
+
+                    payum.token.create(token, function(token) {
                         payum.execute(token.targetUrl, '#payum-container');
                     });
                 });

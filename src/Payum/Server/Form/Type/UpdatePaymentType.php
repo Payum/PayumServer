@@ -4,7 +4,7 @@ namespace Payum\Server\Form\Type;
 use Payum\Server\Form\EventListener\PatchSubscriber;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class UpdatePaymentType extends AbstractType
 {
@@ -19,7 +19,7 @@ class UpdatePaymentType extends AbstractType
     /**
      * {@inheritDoc}
      */
-    public function setDefaultOptions(OptionsResolverInterface $resolver)
+    public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
             'method' => 'PATCH',
@@ -31,14 +31,6 @@ class UpdatePaymentType extends AbstractType
      */
     public function getParent()
     {
-        return 'create_payment';
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function getName()
-    {
-        return 'update_payment';
+        return CreatePaymentType::class;
     }
 }

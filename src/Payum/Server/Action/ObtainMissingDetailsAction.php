@@ -9,6 +9,7 @@ use Payum\Core\Request\RenderTemplate;
 use Payum\Core\Security\TokenInterface;
 use Payum\Server\Model\Payment;
 use Payum\Server\Request\ObtainMissingDetailsRequest;
+use Symfony\Component\Form\Extension\Core\Type\FormType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\Form\FormInterface;
@@ -100,7 +101,7 @@ class ObtainMissingDetailsAction extends GatewayAwareAction
      */
     protected function createPaymentFormBuilder(Payment $payment, TokenInterface $token = null)
     {
-        return $this->formFactory->createNamedBuilder('', 'form', $payment, [
+        return $this->formFactory->createNamedBuilder('', FormType::class, $payment, [
             'method' => 'POST',
             'action' => $token ? $token->getTargetUrl() : null,
             'data_class' => Payment::class,

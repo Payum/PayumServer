@@ -1,6 +1,7 @@
 <?php
 namespace Payum\Server\Api\Controller;
 
+use Payum\Core\Bridge\Symfony\Form\Type\GatewayConfigType;
 use Payum\Core\Registry\GatewayFactoryRegistryInterface;
 use Payum\Server\Api\View\FormToJsonConverter;
 use Payum\Server\Controller\ForwardExtensionTrait;
@@ -46,7 +47,7 @@ class GatewayMetaController
     /**
      * @return JsonResponse
      */
-    public function getAllAction(Request $request)
+    public function getAllAction()
     {
         $normalizedFactories = [];
 
@@ -54,14 +55,14 @@ class GatewayMetaController
             $gatewayConfig = new GatewayConfig();
             $gatewayConfig->setFactoryName($name);
 
-            $form = $this->formFactory->create('payum_gateway_config', $gatewayConfig, [
+            $form = $this->formFactory->create(GatewayConfigType::class, $gatewayConfig, [
                 'csrf_protection' => false,
                 'data_class' => GatewayConfig::class,
             ]);
             $normalizedFactories[$name]['config'] = $this->formToJsonConverter->convertMeta($form->get('config'));
         }
 
-        $form = $this->formFactory->create('payum_gateway_config', null, [
+        $form = $this->formFactory->create(GatewayConfigType::class, null, [
             'csrf_protection' => false,
             'data_class' => GatewayConfig::class,
         ]);

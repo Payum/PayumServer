@@ -29,7 +29,7 @@ class YadmStorage extends AbstractStorage
      */
     protected function doUpdateModel($model)
     {
-        $values = \Makasim\Values\get_values($model);
+        $values = \Makasim\Yadm\get_values($model);
         if (isset($values['_id'])) {
             $this->storage->update($model);
         } else {

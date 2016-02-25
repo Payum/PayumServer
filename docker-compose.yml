@@ -7,8 +7,6 @@ web:
     - mongo
   ports:
     - "80:80"
-#  volumes:
-#    - .:/app
 
 mongo:
   image: mongo

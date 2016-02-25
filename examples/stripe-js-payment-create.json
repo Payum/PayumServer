@@ -1,1 +1,0 @@
-{"name": "stripe_js", "factory": "stripe_js", "options": {"publishable_key": "foo", "secret_key": "bar"}}
