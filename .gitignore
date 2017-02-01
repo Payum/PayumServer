@@ -1,5 +1,6 @@
 vendor
 app
 bin
+docker-compose.yml
 
 

@@ -5,7 +5,3 @@ RUN apt-get update && \
     apt-get install -y --no-install-recommends --no-install-suggests php-mongodb php-curl php-intl && \
     rm -rf /var/lib/apt/lists/*
 
-RUN mkdir -p /payum/web
-RUN rm -rf /var/www/html && cd /var/www && ln -s /payum/web html
-
-WORKDIR /payum

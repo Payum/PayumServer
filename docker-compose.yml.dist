@@ -7,18 +7,13 @@ services:
       - PAYUM_MONGO_URI=mongodb://mongo:27017/payum_server
       - PAYUM_DEBUG=1
       - VIRTUAL_HOST=payum.dev
+      - CUSTOM_DIR=/payum
     volumes:
       - .:/payum
+    ports:
+      - "80:80"
     links:
       - mongo
 
   mongo:
     image: mongo
-
-  nginx-proxy:
-      image: jwilder/nginx-proxy
-      container_name: nginx-proxy
-      ports:
-        - "80:80"
-      volumes:
-        - /var/run/docker.sock:/tmp/docker.sock:ro
