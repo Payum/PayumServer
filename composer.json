@@ -19,7 +19,7 @@
         }
     ],
     "require": {
-        "php": ">=5.5.0",
+        "php": ">=5.6.0",
         "ext-mongodb": "^1.1.2",
         "silex/silex": "~1.2",
         "payum/payum-silex-provider": "^1@beta",
