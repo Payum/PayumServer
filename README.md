@@ -17,18 +17,25 @@ PHP 5.5+ Payment processing server. Setup once and rule them all. [Here](https:/
 Create docker-compose.yml file:
 
 ```yaml
-web:
-  image: payum/payum-server
-  command: apachectl -e info -DFOREGROUND
-  environment:
-      - PAYUM_MONGO_SERVER=mongodb://mongo:27017
+version: '2'
+services:
+  web:
+    build: .
+    container_name: payum
+    environment:
+      - PAYUM_MONGO_URI=mongodb://mongo:27017/payum_server
       - PAYUM_DEBUG=1
-  ports:
-   - "80:80"
-  links:
-   - mongo
-mongo:
-  image: mongo
+      - CUSTOM_DIR=/payum/web
+    volumes:
+      - .:/payum
+    ports:
+      - "80:80"
+    links:
+      - mongo
+
+  mongo:
+    image: mongo
+
 ```
 
 and run `docker-compose up`. You server will be at `localhost:8080` port.

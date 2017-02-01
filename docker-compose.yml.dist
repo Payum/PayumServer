@@ -6,8 +6,7 @@ services:
     environment:
       - PAYUM_MONGO_URI=mongodb://mongo:27017/payum_server
       - PAYUM_DEBUG=1
-      - VIRTUAL_HOST=payum.dev
-      - CUSTOM_DIR=/payum
+      - CUSTOM_DIR=/payum/web
     volumes:
       - .:/payum
     ports:
