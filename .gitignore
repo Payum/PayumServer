@@ -2,5 +2,6 @@ vendor
 app
 bin
 docker-compose.yml
+web/client
 
 

@@ -56,12 +56,16 @@ An example on javascript:
   // do new payment
   var payum = new Payum('http://localhost:8000');
   payum.payment.create(100, 'USD', function(payment) {
-      var afterUrl = 'http://afterPaymentIsDoneUrl';
+    var token = {
+        type: 'capture',
+        paymentId: payment.id,
+        afterUrl: 'http://afterPaymentIsDoneUrl'
+    };
 
-      payum.token.create('capture', payment.id, afterUrl, function(token) {
-          // do redirect to token.targetUrl or process at the same page like this:
-          payum.execute(token.targetUrl, '#payum-container');
-      });
+    payum.token.create(token, function(token) {
+      // do redirect to token.targetUrl or process at the same page like this:
+      payum.execute(token.targetUrl, '#payum-container');
+    });
   });
 ```
 
