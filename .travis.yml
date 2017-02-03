@@ -12,10 +12,13 @@ services:
   - docker
 
 before_install:
-    - pecl install mongodb
+    - echo "extension = mongodb.so" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
 
 install:
     - ./bin/composer install
+
+script:
+    - php vendor/bin/phpunit
 
 after_success:
   - rm -rf vendor
