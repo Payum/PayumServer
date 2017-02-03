@@ -23,9 +23,7 @@ script:
 after_success:
   - rm -rf vendor
   - composer install --optimize-autoloader --classmap-authoritative --no-dev --no-suggest --prefer-dist
-  - export BRANCH = "$TRAVIS_BRANCH"
-  - export COMMIT = ${TRAVIS_COMMIT::8}
-  - bin/build-docker-image
+  - BRANCH=$TRAVIS_BRANCH COMMIT=${TRAVIS_COMMIT::8} bin/build-docker-image
 
 notifications:
   email:
