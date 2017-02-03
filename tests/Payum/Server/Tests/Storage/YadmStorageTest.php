@@ -14,9 +14,9 @@ class YadmStorageTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue($rc->implementsInterface(StorageInterface::class));
     }
 
-    public function testCouldBeConstructedWithYadmStorageAsFristArgument()
+    public function testCouldBeConstructedWithYadmStorageAsFirstArgument()
     {
-        $storageMock = $this->getMock(Storage::class, [], [], '', false);
+        $storageMock = $this->createMock(Storage::class);
 
         new YadmStorage($storageMock);
     }

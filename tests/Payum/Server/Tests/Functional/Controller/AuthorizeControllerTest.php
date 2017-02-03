@@ -58,9 +58,9 @@ class AuthorizeControllerTest extends ClientTestCase
         $form = $crawler->filter('form')->form();
         $form['gatewayName'] = 'BarGateway';
 
-        $crawler = $this->getClient()->submit($form);
+        $this->getClient()->submit($form);
 
         $this->assertClientResponseStatus(302);
-        $this->assertClientResponseRedirectionStartsWith('http://localhost/?payum_token=');
+        $this->assertClientResponseRedirectionStartsWith('http://localhost?payum_token=');
     }
 }

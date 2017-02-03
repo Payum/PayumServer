@@ -61,7 +61,7 @@ class CaptureControllerTest extends ClientTestCase
         $crawler = $this->getClient()->submit($form);
 
         $this->assertClientResponseStatus(302);
-        $this->assertClientResponseRedirectionStartsWith('http://localhost/?payum_token=');
+        $this->assertClientResponseRedirectionStartsWith('http://localhost?payum_token=');
     }
 
     public function testShouldObtainMissingDetails()

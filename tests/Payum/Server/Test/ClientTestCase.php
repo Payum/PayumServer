@@ -15,6 +15,13 @@ abstract class ClientTestCase extends WebTestCase
         $this->client = $this->createClient();
     }
 
+    public function tearDown()
+    {
+        parent::tearDown();
+
+        $this->client = null;
+    }
+
     /**
      * @return Client
      */

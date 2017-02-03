@@ -1,23 +1,19 @@
 language: php
 
 php:
-  - 5.6
   - 7.0
-
-sudo: false
 
 cache:
   directories:
-    - $HOME/.composer/cache/files
+    - $HOME/.composer
 
 services: mongodb
 
 before_install:
     - pecl install mongodb
-    - composer self-update
 
 install:
-    - composer --prefer-source install
+    - ./bin/composer install
 
 notifications:
   email:

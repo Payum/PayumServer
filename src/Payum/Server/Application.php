@@ -13,6 +13,8 @@ use Silex\Provider\TranslationServiceProvider;
 use Silex\Provider\TwigServiceProvider;
 use Silex\Provider\UrlGeneratorServiceProvider;
 use Silex\Provider\ValidatorServiceProvider;
+use Symfony\Bridge\Twig\Form\TwigRenderer;
+use Symfony\Bridge\Twig\Form\TwigRendererEngine;
 
 class Application extends SilexApplication
 {
@@ -20,12 +22,11 @@ class Application extends SilexApplication
     {
         parent::__construct();
 
-
         $this['payum.root_dir'] = realpath(__DIR__.'/../..');
 
         $this->register(new CorsServiceProvider());
         $this->register(new RavenProvider());
-        $this->register(new TwigServiceProvider());
+
         $this->register(new SessionServiceProvider());
         $this->register(new UrlGeneratorServiceProvider());
         $this->register(new FormServiceProvider);
@@ -35,10 +36,21 @@ class Application extends SilexApplication
         $payumProvider = new PayumProvider();
         $this->register($payumProvider);
         $this->mount('/payment', $payumProvider);
+        $this->register(new TwigServiceProvider());
+
+        // Fix: Twig_Error_Runtime: Unable to load the "Symfony\Bridge\Twig\Form\TwigRenderer" runtime.
+        $twig = $this['twig'];
+        $rendererEngine = new TwigRendererEngine(['form_div_layout.html.twig'], $twig);
+        $twig->addRuntimeLoader(new \Twig_FactoryRuntimeLoader([
+            TwigRenderer::class => function () use ($rendererEngine) {
+                return new TwigRenderer($rendererEngine);
+            },
+        ]));
 
         $this->register(new ServiceProvider);
         $this->register(new ApiProvider());
         $this->register(new ApiControllerProvider());
+
 
         $app["cors.allowMethods"] = 'GET, OPTIONS, PUT, POST, DELETE';
     }

@@ -12,9 +12,10 @@ abstract class WebTestCase extends SilexWebTestCase
     {
         parent::setUp();
 
+        $this->app['session.storage'] = new MockArraySessionStorage();
+
         $this->app->boot();
 
-        $this->app['session.storage'] = new MockArraySessionStorage();
 
         /** @var Database $db */
         $db = $this->app['mongodb.database'];

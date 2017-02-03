@@ -7,7 +7,6 @@ use MongoDB\Client;
 use MongoDB\Database;
 use Payum\Core\Bridge\Spl\ArrayObject;
 use Payum\Core\Bridge\Symfony\Reply\HttpResponse;
-use Payum\Core\Bridge\Twig\TwigFactory;
 use Payum\Core\Model\GatewayConfigInterface;
 use Payum\Core\Payum;
 use Payum\Core\PayumBuilder;
@@ -35,6 +34,7 @@ use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\OptionsResolver\Options;
 
 class ServiceProvider implements ServiceProviderInterface
 {
@@ -142,26 +142,21 @@ class ServiceProvider implements ServiceProviderInterface
         });
 
 
-        $app['payum.gateway_choices'] = $app->extend('payum.gateway_choices', function (array $choices) use ($app) {
-            /** @var StorageInterface $gatewayConfigStorage */
-            $gatewayConfigStorage = $app['payum.gateway_config_storage'];
-            foreach ($gatewayConfigStorage->findBy([]) as $config) {
-                /** @var GatewayConfigInterface $config */
+        $app['payum.gateway_choices_callback'] = $app->extend('payum.gateway_choices_callback', function (callable $choicesCallback) use ($app) {
+            return function(Options $options) use ($app, $choicesCallback) {
+                $choices = call_user_func($choicesCallback, $options);
 
-                $choices[ucwords(str_replace(['_'], ' ', $config->getGatewayName()))] = $config->getGatewayName();
-            }
+                /** @var StorageInterface $gatewayConfigStorage */
+                $gatewayConfigStorage = $app['payum.gateway_config_storage'];
+                foreach ($gatewayConfigStorage->findBy([]) as $config) {
+                    /** @var GatewayConfigInterface $config */
 
-            return $choices;
+                    $choices[ucwords(str_replace(['_'], ' ', $config->getGatewayName()))] = $config->getGatewayName();
+                }
+
+                return $choices;
+            };
         });
-
-        $app['twig.loader.filesystem'] = $app->share($app->extend('twig.loader.filesystem', function(\Twig_Loader_Filesystem $loader, $app) {
-            $loader->addPath(__DIR__.'/Resources/views', 'PayumServer');
-            foreach (TwigFactory::createGenericPaths() as $path => $namespace) {
-                $loader->addPath($path, $namespace);
-            }
-
-            return $loader;
-        }));
 
         $app['payum.listener.choose_gateway'] = $app->share(function() use ($app) {
             return function(Request $request, Application $app) {
