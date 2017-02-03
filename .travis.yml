@@ -15,7 +15,7 @@ before_install:
     - echo "extension = mongodb.so" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
 
 install:
-    - ./bin/composer install
+    - composer install
 
 script:
     - php vendor/bin/phpunit
