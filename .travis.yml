@@ -3,10 +3,6 @@ language: php
 php:
   - 7.0
 
-env:
-  global:
-    - COMMIT=${TRAVIS_COMMIT::8}
-
 cache:
   directories:
     - $HOME/.composer
@@ -27,13 +23,9 @@ script:
 after_success:
   - rm -rf vendor
   - composer install --optimize-autoloader --classmap-authoritative --no-dev --no-suggest --prefer-dist
-  - docker login -u $DOCKER_USER -p $DOCKER_PASSWORD
-  - export REPO=payum/payum-server
-  - export TAG=`if [ "$TRAVIS_BRANCH" == "master" ]; then echo "latest"; else echo "" ; fi`
-  - if [ -n "$TAG" ]; then docker build -f Dockerfile -t $REPO:$COMMIT .; fi
-  - if [ -n "$TAG" ]; then docker tag $REPO:$COMMIT $REPO:$TAG; fi
-  - if [ -n "$TAG" ]; then docker tag $REPO:$COMMIT $REPO:travis-$TRAVIS_BUILD_NUMBER; fi
-  - if [ -n "$TAG" ]; then docker push $REPO; fi
+  - export BRANCH = "$TRAVIS_BRANCH"
+  - export COMMIT = ${TRAVIS_COMMIT::8}
+  - bin/build-docker-image
 
 notifications:
   email:

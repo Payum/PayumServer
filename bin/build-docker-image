@@ -1,0 +1,14 @@
+#!/usr/bin/env bash
+
+if [ "$BRANCH" == "master" ]; then
+    echo "Building latest";
+
+    export REPO=payum/payum-server
+    export TAG="latest";
+
+    docker login -u $DOCKER_USER -p $DOCKER_PASSWORD
+    docker build -f Dockerfile -t $REPO:$COMMIT .
+    docker tag $REPO:$COMMIT $REPO:$TAG;
+    docker tag $REPO:$COMMIT $REPO:travis-$TRAVIS_BUILD_NUMBER;
+    docker push $REPO;
+fi
