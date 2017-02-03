@@ -3,6 +3,10 @@ language: php
 php:
   - 7.0
 
+env:
+  global:
+    - COMMIT=${TRAVIS_COMMIT::8}
+
 cache:
   directories:
     - $HOME/.composer
