@@ -25,11 +25,11 @@ after_success:
   - ./bin/composer install --optimize-autoloader --classmap-authoritative --no-dev --no-suggest --prefer-dist
   - docker login -e $DOCKER_EMAIL -u $DOCKER_USER -p $DOCKER_PASSWORD
   - export REPO=payum/payum-server
-  - export if [ "$TRAVIS_BRANCH" == "master" ]; then TAG="latest"; else exit ; fi
-  - docker build -f Dockerfile -t $REPO:$COMMIT .
-  - docker tag $REPO:$COMMIT $REPO:$TAG
-  - docker tag $REPO:$COMMIT $REPO:travis-$TRAVIS_BUILD_NUMBER
-  - docker push $REPO
+  - export TAG=`if [ "$TRAVIS_BRANCH" == "master" ]; then echo "latest"; else echo "" ; fi`
+  - if [ -z "$String" ]; then docker build -f Dockerfile -t $REPO:$COMMIT .; fi
+  - if [ -z "$String" ]; then docker tag $REPO:$COMMIT $REPO:$TAG; fi
+  - if [ -z "$String" ]; then docker tag $REPO:$COMMIT $REPO:travis-$TRAVIS_BUILD_NUMBER; fi
+  - if [ -z "$String" ]; then docker push $REPO; fi
 
 notifications:
   email:
