@@ -22,7 +22,7 @@ script:
 
 after_success:
   - rm -rf vendor
-  - ./bin/composer install --optimize-autoloader --classmap-authoritative --no-dev --no-suggest --prefer-dist
+  - composer install --optimize-autoloader --classmap-authoritative --no-dev --no-suggest --prefer-dist
   - docker login -e $DOCKER_EMAIL -u $DOCKER_USER -p $DOCKER_PASSWORD
   - export REPO=payum/payum-server
   - export TAG=`if [ "$TRAVIS_BRANCH" == "master" ]; then echo "latest"; else echo "" ; fi`
