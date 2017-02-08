@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "1941cfb04318edb355580e595e32cbf6",
-    "content-hash": "bb269d547602dca27ede3b32c2e0aa5e",
+    "hash": "70bdc2101151bae11731cf2198c1b6c0",
+    "content-hash": "4bba3f8d3416b844de6cfdc1f07a1590",
     "packages": [
         {
             "name": "authorizenet/authorizenet",
@@ -1158,29 +1158,32 @@
         },
         {
             "name": "makasim/yadm",
-            "version": "0.1.0",
+            "version": "dev-master",
             "source": {
                 "type": "git",
                 "url": "https://github.com/makasim/yadm.git",
-                "reference": "70b726c6eb98218e542f6f270cf9d1c2d46dff91"
+                "reference": "9937d719b58b88e67c1e61c62ad76c2f1ea16e28"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/makasim/yadm/zipball/70b726c6eb98218e542f6f270cf9d1c2d46dff91",
-                "reference": "70b726c6eb98218e542f6f270cf9d1c2d46dff91",
+                "url": "https://api.github.com/repos/makasim/yadm/zipball/9937d719b58b88e67c1e61c62ad76c2f1ea16e28",
+                "reference": "9937d719b58b88e67c1e61c62ad76c2f1ea16e28",
                 "shasum": ""
             },
             "require": {
-                "mongodb/mongodb": "1.0.*@dev",
                 "php": "^5.5.0|^7.0"
             },
             "require-dev": {
+                "mongodb/mongodb": "^1",
                 "phpunit/phpunit": "~4.0"
+            },
+            "suggest": {
+                "mongodb/mongodb": "^1 If you'd like to use mongodb storage"
             },
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "0.1-dev"
+                    "dev-master": "0.2-dev"
                 }
             },
             "autoload": {
@@ -1201,12 +1204,14 @@
                     "email": "kotlyar.maksim@gmail.com"
                 }
             ],
-            "description": "Yadm is a MongoDB ODM. Schema less. Fast object hydration and persistence.",
+            "description": "The fastest object document mapper. Supports MongoDB",
             "keywords": [
                 "model",
-                "mongodb"
+                "mongodb",
+                "odm",
+                "storage"
             ],
-            "time": "2016-02-10 12:35:56"
+            "time": "2017-02-06 14:11:36"
         },
         {
             "name": "mongodb/mongodb",
@@ -3282,16 +3287,16 @@
         },
         {
             "name": "payum/payum-silex-provider",
-            "version": "1.0.0-BETA4",
+            "version": "dev-master",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Payum/PayumSilexProvider.git",
-                "reference": "c017547abccee3f2db6a748d88a96de9f60aea2f"
+                "reference": "8fbe6d5af762735e6d6511a4ba627d1d71d7465b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Payum/PayumSilexProvider/zipball/c017547abccee3f2db6a748d88a96de9f60aea2f",
-                "reference": "c017547abccee3f2db6a748d88a96de9f60aea2f",
+                "url": "https://api.github.com/repos/Payum/PayumSilexProvider/zipball/8fbe6d5af762735e6d6511a4ba627d1d71d7465b",
+                "reference": "8fbe6d5af762735e6d6511a4ba627d1d71d7465b",
                 "shasum": ""
             },
             "require": {
@@ -3338,7 +3343,7 @@
                 "payment",
                 "silex"
             ],
-            "time": "2017-02-03 12:59:56"
+            "time": "2017-02-03 20:05:04"
         },
         {
             "name": "php-http/guzzle6-adapter",
@@ -7142,7 +7147,7 @@
     "aliases": [],
     "minimum-stability": "stable",
     "stability-flags": {
-        "payum/payum-silex-provider": 10,
+        "payum/payum-silex-provider": 20,
         "makasim/yadm": 20
     },
     "prefer-stable": false,
