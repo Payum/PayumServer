@@ -35,7 +35,7 @@
         "symfony/options-resolver": "^3",
         "symfony/twig-bridge": "^3",
         "php-http/guzzle6-adapter": "^1",
-        "makasim/yadm": "0.1.*@dev",
+        "makasim/yadm": "dev-master",
         "mongodb/mongodb": "^1",
         "jdesrosiers/silex-cors-provider": "0.1.*",
         "omnipay/omnipay": "^2.3",

@@ -144,9 +144,9 @@ class GatewayController
             throw new NotFoundHttpException(sprintf('Config name is empty.', $name));
         }
 
-        /** @var GatewayConfigInterface $gatewayConfigs */
+        /** @var GatewayConfigInterface[] $gatewayConfigs */
         $gatewayConfigs = $this->gatewayConfigStorage->findBy([
-            'self.gatewayName' => $name
+            'gatewayName' => $name
         ]);
 
         if (empty($gatewayConfigs)) {

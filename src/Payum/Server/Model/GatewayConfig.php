@@ -1,19 +1,21 @@
 <?php
 namespace Payum\Server\Model;
 
+use Makasim\Yadm\CastTrait;
 use Makasim\Yadm\ValuesTrait;
 use Payum\Core\Model\GatewayConfigInterface;
 
 class GatewayConfig implements GatewayConfigInterface
 {
     use ValuesTrait;
+    use CastTrait;
 
     /**
      * @return string
      */
     public function getId()
     {
-        return $this->getSelfValue('id');
+        return $this->getValue('id');
     }
 
     /**
@@ -21,7 +23,7 @@ class GatewayConfig implements GatewayConfigInterface
      */
     public function getGatewayName()
     {
-        return $this->getSelfValue('gatewayName');
+        return $this->getValue('gatewayName');
     }
 
     /**
@@ -30,8 +32,8 @@ class GatewayConfig implements GatewayConfigInterface
     public function setGatewayName($gatewayName)
     {
         $this->values['gatewayName'] = $gatewayName;
-        $this->setSelfValue('gatewayName', $gatewayName);
-        $this->setSelfValue('id', $gatewayName);
+        $this->setValue('gatewayName', $gatewayName);
+        $this->setValue('id', $gatewayName);
     }
 
     /**
@@ -39,7 +41,7 @@ class GatewayConfig implements GatewayConfigInterface
      */
     public function getFactoryName()
     {
-        return $this->getSelfValue('factoryName');
+        return $this->getValue('factoryName');
     }
 
     /**
@@ -47,7 +49,7 @@ class GatewayConfig implements GatewayConfigInterface
      */
     public function setFactoryName($name)
     {
-        $this->setSelfValue('factoryName', $name);
+        $this->setValue('factoryName', $name);
     }
 
     /**
@@ -55,7 +57,7 @@ class GatewayConfig implements GatewayConfigInterface
      */
     public function setConfig(array $config)
     {
-        $this->setSelfValue('config', $config);
+        $this->setValue('config', $config);
     }
 
     /**
@@ -63,6 +65,6 @@ class GatewayConfig implements GatewayConfigInterface
      */
     public function getConfig()
     {
-        return $this->getSelfValue('config', [], 'array');
+        return $this->getValue('config', [], 'array');
     }
 }

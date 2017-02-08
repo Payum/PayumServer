@@ -24,8 +24,8 @@ class SecurityToken implements TokenInterface
      */
     public function getDetails()
     {
-        return $this->getValue('identity', 'id') ?
-            new Identity($this->getValue('identity', 'id'), $this->getValue('identity', 'class')) :
+        return $this->getValue('identity') ?
+            new Identity($this->getValue('identity.id'), $this->getValue('identity.class')) :
             null
         ;
     }
@@ -41,8 +41,8 @@ class SecurityToken implements TokenInterface
             throw new LogicException('Only instance of identity supported as token details');
         }
 
-        $this->setValue('identity', 'id', $details->getId());
-        $this->setValue('identity', 'class', $details->getClass());
+        $this->setValue('identity.id', $details->getId());
+        $this->setValue('identity.class', $details->getClass());
     }
 
     /**
@@ -60,7 +60,7 @@ class SecurityToken implements TokenInterface
      */
     public function getId()
     {
-        return $this->getSelfValue('id');
+        return $this->getValue('id');
     }
 
     /**
@@ -68,7 +68,7 @@ class SecurityToken implements TokenInterface
      */
     public function getHash()
     {
-        return $this->getSelfValue('hash');
+        return $this->getValue('hash');
     }
 
     /**
@@ -76,8 +76,8 @@ class SecurityToken implements TokenInterface
      */
     public function setHash($hash)
     {
-        $this->setSelfValue('hash', $hash);
-        $this->setSelfValue('id', $hash);
+        $this->setValue('hash', $hash);
+        $this->setValue('id', $hash);
     }
 
     /**
@@ -85,7 +85,7 @@ class SecurityToken implements TokenInterface
      */
     public function getTargetUrl()
     {
-        return $this->getSelfValue('targetUrl');
+        return $this->getValue('targetUrl');
     }
 
     /**
@@ -93,7 +93,7 @@ class SecurityToken implements TokenInterface
      */
     public function setTargetUrl($targetUrl)
     {
-        $this->setSelfValue('targetUrl', $targetUrl);
+        $this->setValue('targetUrl', $targetUrl);
     }
 
     /**
@@ -101,7 +101,7 @@ class SecurityToken implements TokenInterface
      */
     public function getAfterUrl()
     {
-        return $this->getSelfValue('afterUrl');
+        return $this->getValue('afterUrl');
     }
 
     /**
@@ -109,7 +109,7 @@ class SecurityToken implements TokenInterface
      */
     public function setAfterUrl($afterUrl)
     {
-        $this->setSelfValue('afterUrl', $afterUrl);
+        $this->setValue('afterUrl', $afterUrl);
     }
 
     /**

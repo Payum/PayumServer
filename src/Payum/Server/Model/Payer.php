@@ -15,7 +15,7 @@ class Payer
      */
     public function getId()
     {
-        return $this->getSelfValue('id');
+        return $this->getValue('id');
     }
 
     /**
@@ -23,7 +23,7 @@ class Payer
      */
     public function setId($id)
     {
-        $this->setSelfValue('id', $id);
+        $this->setValue('id', $id);
     }
 
     /**
@@ -31,7 +31,7 @@ class Payer
      */
     public function getEmail()
     {
-        return $this->getSelfValue('email');
+        return $this->getValue('email');
     }
 
     /**
@@ -39,7 +39,7 @@ class Payer
      */
     public function setEmail($email)
     {
-        $this->setSelfValue('email', $email);
+        $this->setValue('email', $email);
     }
 
     /**
@@ -47,7 +47,7 @@ class Payer
      */
     public function setFirstName($firstName)
     {
-        $this->setSelfValue('firstName', $firstName);
+        $this->setValue('firstName', $firstName);
     }
 
     /**
@@ -55,6 +55,6 @@ class Payer
      */
     public function getFirstName()
     {
-        return $this->getSelfValue('firstName');
+        return $this->getValue('firstName');
     }
 }

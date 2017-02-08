@@ -1,6 +1,7 @@
 <?php
 namespace Payum\Server\Model;
 
+use Makasim\Yadm\CastTrait;
 use Makasim\Yadm\ObjectsTrait;
 use Makasim\Yadm\ValuesTrait;
 use Payum\Core\Model\CreditCardInterface;
@@ -13,13 +14,14 @@ class Payment
         getValue as public;
     }
     use ObjectsTrait;
+    use CastTrait;
 
     /**
      * @return string
      */
     public function getId()
     {
-        return $this->getSelfValue('id');
+        return $this->getValue('id');
     }
 
     /**
@@ -27,7 +29,7 @@ class Payment
      */
     public function setId($id)
     {
-        $this->setSelfValue('id', $id);
+        $this->setValue('id', $id);
     }
 
     /**
@@ -35,7 +37,7 @@ class Payment
      */
     public function getStatus()
     {
-        return $this->getSelfValue('status', GetHumanStatus::STATUS_NEW);
+        return $this->getValue('status', GetHumanStatus::STATUS_NEW);
     }
 
     /**
@@ -43,7 +45,7 @@ class Payment
      */
     public function setStatus($status)
     {
-        $this->setSelfValue('status', $status);
+        $this->setValue('status', $status);
     }
 
     /**
@@ -56,7 +58,7 @@ class Payment
      */
     public function getDetails()
     {
-        return $this->getSelfValue('details', [], 'array');
+        return $this->getValue('details', [], 'array');
     }
 
     /**
@@ -64,7 +66,7 @@ class Payment
      */
     public function setDetails($details)
     {
-        $this->setSelfValue('details', (array) $details);
+        $this->setValue('details', (array) $details);
     }
 
     /**
@@ -72,7 +74,7 @@ class Payment
      */
     public function getNumber()
     {
-        return $this->getSelfValue('number');
+        return $this->getValue('number');
     }
 
     /**
@@ -80,7 +82,7 @@ class Payment
      */
     public function setNumber($number)
     {
-        $this->setSelfValue('number', $number);
+        $this->setValue('number', $number);
     }
 
     /**
@@ -88,7 +90,7 @@ class Payment
      */
     public function getDescription()
     {
-        return $this->getSelfValue('description');
+        return $this->getValue('description');
     }
 
     /**
@@ -96,7 +98,7 @@ class Payment
      */
     public function setDescription($description)
     {
-        $this->setSelfValue('description', $description);
+        $this->setValue('description', $description);
     }
 
     /**
@@ -104,7 +106,7 @@ class Payment
      */
     public function getClientEmail()
     {
-        return $this->getSelfValue('clientEmail');
+        return $this->getValue('clientEmail');
     }
 
     /**
@@ -112,7 +114,7 @@ class Payment
      */
     public function setClientEmail($clientEmail)
     {
-        $this->setSelfValue('clientEmail', $clientEmail);
+        $this->setValue('clientEmail', $clientEmail);
     }
 
     /**
@@ -120,7 +122,7 @@ class Payment
      */
     public function getClientId()
     {
-        return $this->getSelfValue('clientId');
+        return $this->getValue('clientId');
     }
 
     /**
@@ -128,7 +130,7 @@ class Payment
      */
     public function setClientId($clientId)
     {
-        $this->setSelfValue('clientId', $clientId);
+        $this->setValue('clientId', $clientId);
     }
 
     /**
@@ -136,7 +138,7 @@ class Payment
      */
     public function getTotalAmount()
     {
-        return $this->getSelfValue('totalAmount', null, 'int');
+        return $this->getValue('totalAmount', null, 'int');
     }
 
     /**
@@ -144,7 +146,7 @@ class Payment
      */
     public function setTotalAmount($totalAmount)
     {
-        $this->setSelfValue('totalAmount', $totalAmount);
+        $this->setValue('totalAmount', $totalAmount);
     }
 
     /**
@@ -152,7 +154,7 @@ class Payment
      */
     public function getCurrencyCode()
     {
-        return $this->getSelfValue('currencyCode');
+        return $this->getValue('currencyCode');
     }
 
     /**
@@ -160,7 +162,7 @@ class Payment
      */
     public function setCurrencyCode($currencyCode)
     {
-        $this->setSelfValue('currencyCode', $currencyCode);
+        $this->setValue('currencyCode', $currencyCode);
     }
 
     /**
@@ -184,7 +186,7 @@ class Payment
      */
     public function getGatewayName()
     {
-        return $this->getSelfValue('gatewayName');
+        return $this->getValue('gatewayName');
     }
 
     /**
@@ -192,15 +194,15 @@ class Payment
      */
     public function setGatewayName($gatewayName)
     {
-        $this->setSelfValue('gatewayName', $gatewayName);
+        $this->setValue('gatewayName', $gatewayName);
     }
 
     /**
-     * @return Payer
+     * @param Payer $payer
      */
     public function setPayer(Payer $payer)
     {
-        $this->setObject('self', 'payer', $payer);
+        $this->setObject('payer', $payer);
     }
 
     /**
@@ -208,10 +210,10 @@ class Payment
      */
     public function getPayer()
     {
-        if (false == $this->getValue('self', 'payer')) {
+        if (false == $this->getValue('payer')) {
             $this->setPayer(new Payer());
         }
 
-        return $this->getObject('self', 'payer', Payer::class);
+        return $this->getObject('payer', Payer::class);
     }
 }

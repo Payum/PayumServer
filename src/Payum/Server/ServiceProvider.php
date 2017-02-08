@@ -2,7 +2,7 @@
 namespace Payum\Server;
 
 use Makasim\Yadm\Hydrator;
-use Makasim\Yadm\Storage;
+use Makasim\Yadm\MongodbStorage;
 use MongoDB\Client;
 use MongoDB\Database;
 use Payum\Core\Bridge\Spl\ArrayObject;
@@ -50,15 +50,17 @@ class ServiceProvider implements ServiceProviderInterface
             /** @var Database $db */
             $db = $app['mongodb.database'];
 
-            return new YadmStorage(new Storage($db->selectCollection('gateway_configs'), new Hydrator(GatewayConfig::class)));
+            return new YadmStorage(
+                new MongodbStorage($db->selectCollection('gateway_configs'), new Hydrator(GatewayConfig::class))
+            );
         });
 
         $app['payum.builder'] = $app->share($app->extend('payum.builder', function (PayumBuilder $builder) use ($app) {
             /** @var Database $db */
             $db = $app['mongodb.database'];
 
-            $tokenStorage = new Storage($db->selectCollection('security_tokens'), new Hydrator(SecurityToken::class));
-            $paymentStorage = new Storage($db->selectCollection('payments'), new Hydrator(Payment::class));
+            $tokenStorage = new MongodbStorage($db->selectCollection('security_tokens'), new Hydrator(SecurityToken::class));
+            $paymentStorage = new MongodbStorage($db->selectCollection('payments'), new Hydrator(Payment::class));
 
             $builder
                 ->setTokenStorage(new YadmStorage($tokenStorage))
