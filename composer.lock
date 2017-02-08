@@ -3291,12 +3291,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/Payum/PayumSilexProvider.git",
-                "reference": "8fbe6d5af762735e6d6511a4ba627d1d71d7465b"
+                "reference": "7947c9ce884b6cfe153ff54d5af064980380de3f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Payum/PayumSilexProvider/zipball/8fbe6d5af762735e6d6511a4ba627d1d71d7465b",
-                "reference": "8fbe6d5af762735e6d6511a4ba627d1d71d7465b",
+                "url": "https://api.github.com/repos/Payum/PayumSilexProvider/zipball/7947c9ce884b6cfe153ff54d5af064980380de3f",
+                "reference": "7947c9ce884b6cfe153ff54d5af064980380de3f",
                 "shasum": ""
             },
             "require": {
@@ -3343,7 +3343,7 @@
                 "payment",
                 "silex"
             ],
-            "time": "2017-02-03 20:05:04"
+            "time": "2017-02-08 15:02:06"
         },
         {
             "name": "php-http/guzzle6-adapter",
