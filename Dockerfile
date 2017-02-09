@@ -1,4 +1,4 @@
-FROM makasim/nginx-php-fpm
+FROM formapro/nginx-php-fpm:latest
 
 MAINTAINER Maksym Kotliar <kotlyar.maksim@gmail.com>
 
@@ -8,7 +8,7 @@ RUN apt-get update && \
     rm -rf /var/lib/apt/lists/*
 
 ENV PAYUM_DEBUG 0
-ENV CUSTOM_DIR=/payum/web
+ENV NGINX_WEB_ROOT=/payum/web
 
 EXPOSE 80
 

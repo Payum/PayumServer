@@ -7,7 +7,7 @@ if [ "$BRANCH" == "master" ]; then
     export TAG="latest";
 
     docker login -u $DOCKER_USER -p $DOCKER_PASSWORD
-    docker build -f Dockerfile -t $REPO:$COMMIT .
+    docker build -f Dockerfile -t $REPO:$COMMIT --pull .
     docker tag $REPO:$COMMIT $REPO:$TAG;
     docker tag $REPO:$COMMIT $REPO:travis-$TRAVIS_BUILD_NUMBER;
     docker push $REPO;
