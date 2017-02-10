@@ -1,4 +1,6 @@
 <?php
+use Symfony\Component\HttpFoundation\Request;
+
 require_once __DIR__.'/../vendor/autoload.php';
 
 // workaround for silex controller collection, force / for route collections.
@@ -13,7 +15,9 @@ if ('/tokens' == $_SERVER['REQUEST_URI']) {
 }
 
 if ($trustedProxy = getenv('TRUSTED_PROXY')) {
-    \Symfony\Component\HttpFoundation\Request::setTrustedProxies([$trustedProxy]);
+    Request::setTrustedProxies([$trustedProxy]);
 }
 
-(new \Payum\Server\Application)->run();
+$request = Request::createFromGlobals();
+
+(new \Payum\Server\Application)->run($request);
