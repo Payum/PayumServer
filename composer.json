@@ -2,7 +2,7 @@
     "name": "payum/payum-server",
     "type": "project",
     "description": "PHP 5.5+ Payment processing server. Setup once and rule them all",
-    "homepage": "http://payum.org",
+    "homepage": "https://github.com/Payum",
     "license": "MIT",
     "authors": [
         {
@@ -11,7 +11,7 @@
         },
         {
             "name":     "Payum project",
-            "homepage": "http://payum.org"
+            "homepage": "https://github.com/Payum"
         },
         {
             "name":     "Community contributions",
