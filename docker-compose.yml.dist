@@ -10,3 +10,4 @@ services:
 
   mongo:
     image: mongo
+    container_name: payum-mongo
