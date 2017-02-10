@@ -49,17 +49,18 @@
 
 
         <script>
-            var payumServerUrl = "http://"+window.location.hostname;
+            var payumServerUrl = location.protocol+"//"+window.location.hostname;
             var payum = new Payum(payumServerUrl);
 
             // do new payment
             $('#pay-btn').click(function() {
                 var payment = {totalAmount: 100, currencyCode: 'USD'};
+
                 payum.payment.create(payment, function(payment) {
                     var token = {
                         type: 'capture',
                         paymentId: payment.id,
-                        afterUrl: "http://"+window.location.hostname +'/demo.html'
+                        afterUrl: window.location.href
                     };
 
                     payum.token.create(token, function(token) {
@@ -76,7 +77,7 @@
                     var token = {
                         type: 'authorize',
                         paymentId: payment.id,
-                        afterUrl: "http://"+window.location.hostname +'/demo.html'
+                        afterUrl: window.location.href
                     };
 
                     payum.token.create(token, function(token) {
