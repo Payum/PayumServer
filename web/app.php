@@ -12,4 +12,8 @@ if ('/tokens' == $_SERVER['REQUEST_URI']) {
     $_SERVER['REQUEST_URI'] .= '/';
 }
 
+if ($trustedProxy = getenv('TRUSTED_PROXY')) {
+    \Symfony\Component\HttpFoundation\Request::setTrustedProxies([$trustedProxy]);
+}
+
 (new \Payum\Server\Application)->run();
