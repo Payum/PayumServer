@@ -6,10 +6,10 @@ use Makasim\Yadm\MongodbStorage;
 use MongoDB\Client;
 use MongoDB\Database;
 use Payum\Core\Bridge\Spl\ArrayObject;
-use Payum\Core\Bridge\Symfony\Reply\HttpResponse;
 use Payum\Core\Model\GatewayConfigInterface;
 use Payum\Core\Payum;
 use Payum\Core\PayumBuilder;
+use Payum\Core\Reply\HttpResponse;
 use Payum\Core\Reply\ReplyInterface;
 use Payum\Core\Storage\StorageInterface;
 use Payum\Server\Action\AuthorizePaymentAction;
@@ -185,7 +185,7 @@ class ServiceProvider implements ServiceProviderInterface
                         /** @var \Twig_Environment $twig */
                         $twig = $app['twig'];
 
-                        return new Response($twig->render('@PayumServer/chooseGateway.html.twig', [
+                        throw new HttpResponse($twig->render('@PayumServer/chooseGateway.html.twig', [
                             'form' => $form->createView(),
                             'payment' => $payment,
                             'layout' => '@PayumCore/layout.html.twig',
