@@ -15,7 +15,7 @@ trait ResponseHelper
     {
         /** @var $response Response */
 
-        $this->assertInstanceOf('Symfony\Component\HttpFoundation\Response', $response);
+        $this->assertInstanceOf(Response::class, $response);
         $this->assertGreaterThanOrEqual(200, $response->getStatusCode(), $this->getMessage($response));
         $this->assertLessThan(300, $response->getStatusCode(), $this->getMessage($response));
     }
@@ -29,7 +29,7 @@ trait ResponseHelper
     {
         /** @var $response Response */
 
-        $this->assertInstanceOf('Symfony\Component\HttpFoundation\Response', $response);
+        $this->assertInstanceOf(Response::class, $response);
         $this->assertGreaterThanOrEqual(300, $response->getStatusCode(), $this->getMessage($response));
         $this->assertLessThan(400, $response->getStatusCode(), $this->getMessage($response));
     }
@@ -43,7 +43,7 @@ trait ResponseHelper
     {
         /** @var $response Response */
 
-        $this->assertInstanceOf('Symfony\Component\HttpFoundation\Response', $response);
+        $this->assertInstanceOf(Response::class, $response);
         $this->assertGreaterThanOrEqual(400, $response->getStatusCode(), $this->getMessage($response));
         $this->assertLessThan(500, $response->getStatusCode(), $this->getMessage($response));
     }
@@ -57,7 +57,7 @@ trait ResponseHelper
     {
         /** @var $response Response */
 
-        $this->assertInstanceOf('Symfony\Component\HttpFoundation\Response', $response);
+        $this->assertInstanceOf(Response::class, $response);
         $this->assertResponseStatusRedirection($response);
         $this->assertEquals($expectedUrl, $response->headers->get('Location'));
     }
@@ -66,7 +66,7 @@ trait ResponseHelper
     {
         /** @var $response Response */
 
-        $this->assertInstanceOf('Symfony\Component\HttpFoundation\Response', $response);
+        $this->assertInstanceOf(Response::class, $response);
         $this->assertResponseStatusRedirection($response);
         $this->assertStringStartsWith($expectedUrl, urldecode($response->headers->get('Location')));
     }
@@ -111,7 +111,7 @@ trait ResponseHelper
     {
         /** @var $response Response */
 
-        $this->assertInstanceOf('Symfony\Component\HttpFoundation\Response', $response);
+        $this->assertInstanceOf(Response::class, $response);
         $this->assertEquals('text/html; charset=UTF-8', $response->headers->get('Content-Type'), $this->getMessage($response));
     }
 
@@ -124,7 +124,7 @@ trait ResponseHelper
     {
         /** @var $response Response */
 
-        $this->assertInstanceOf('Symfony\Component\HttpFoundation\Response', $response);
+        $this->assertInstanceOf(Response::class, $response);
         $this->assertEquals($expectedStatus, $response->getStatusCode(), $this->getMessage($response));
     }
 
@@ -137,8 +137,25 @@ trait ResponseHelper
     {
         /** @var $response Response */
 
-        $this->assertInstanceOf('Symfony\Component\HttpFoundation\Response', $response);
+        $this->assertInstanceOf(Response::class, $response);
         $this->assertEquals('application/json', $response->headers->get('Content-Type'));
+        $this->assertNotNull(
+            $this->getResponseJsonContent($response),
+            "Failed to decode content. The content is not valid json: \n\n".$response->getContent()
+        );
+    }
+
+    public function assertClientResponseContentJsonSchema()
+    {
+        $this->assertResponseContentJsonSchema($this->getClient()->getResponse());
+    }
+
+    public function assertResponseContentJsonSchema($response)
+    {
+        /** @var $response Response */
+
+        $this->assertInstanceOf(Response::class, $response);
+        $this->assertEquals('application/schema+json', $response->headers->get('Content-Type'));
         $this->assertNotNull(
             $this->getResponseJsonContent($response),
             "Failed to decode content. The content is not valid json: \n\n".$response->getContent()
@@ -149,7 +166,7 @@ trait ResponseHelper
     {
         /** @var $response Response */
 
-        $this->assertInstanceOf('Symfony\Component\HttpFoundation\Response', $response);
+        $this->assertInstanceOf(Response::class, $response);
 
         return json_decode($response->getContent(), $assoc);
     }

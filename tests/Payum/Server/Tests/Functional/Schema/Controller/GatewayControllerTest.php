@@ -16,7 +16,7 @@ class GatewayControllerTest extends ClientTestCase
         $this->getClient()->request('GET', '/schema/gateways/default.json');
 
         $this->assertClientResponseStatus(200);
-        $this->assertClientResponseContentJson();
+        $this->assertClientResponseContentJsonSchema();
 
         $content = $this->getClientResponseJsonContent();
 
@@ -31,7 +31,7 @@ class GatewayControllerTest extends ClientTestCase
         $this->getClient()->request('GET', '/schema/gateways/paypal_express_checkout.json');
 
         $this->assertClientResponseStatus(200);
-        $this->assertClientResponseContentJson();
+        $this->assertClientResponseContentJsonSchema();
 
         $content = $this->getClientResponseJsonContent();
 
