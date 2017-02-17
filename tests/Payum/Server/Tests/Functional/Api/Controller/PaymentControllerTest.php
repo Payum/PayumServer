@@ -62,45 +62,10 @@ class PaymentControllerTest extends ClientTestCase
     /**
      * @test
      */
-    public function shouldAllowUpdatePayment()
-    {
-        $payment = new Payment();
-        $payment->setId(uniqid());
-        $payment->setTotalAmount(123);
-        $payment->setClientEmail('theClientEmail@example.com');
-
-        $storage = $this->app['payum']->getStorage($payment);
-        $storage->update($payment);
-
-        //guard
-        $this->getClient()->putJson('/payments/'.$payment->getId(), [
-            'totalAmount' => 123,
-            'currencyCode' => 'USD',
-            'clientEmail' => 'theOtherClientEmail@example.com',
-            'clientId' => 'theClientId',
-        ]);
-
-        $this->assertClientResponseStatus(200);
-        $this->assertClientResponseContentJson();
-
-        $content = $this->getClientResponseJsonContent();
-
-        $this->assertObjectHasAttribute('payment', $content);
-
-        $this->assertObjectHasAttribute('clientEmail', $content->payment);
-        $this->assertEquals('theOtherClientEmail@example.com', $content->payment->clientEmail);
-
-        $this->assertObjectHasAttribute('totalAmount', $content->payment);
-        $this->assertEquals(123, $content->payment->totalAmount);
-    }
-
-    /**
-     * @test
-     */
     public function shouldAllowCreatePayment()
     {
         $this->getClient()->postJson('/payments/', [
-            'totalAmount' => 123,
+            'totalAmountInput' => 1.23,
             'currencyCode' => 'USD',
             'clientEmail' => 'foo@example.com',
             'clientId' => 'theClientId',

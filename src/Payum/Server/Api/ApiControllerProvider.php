@@ -1,20 +1,13 @@
 <?php
 namespace Payum\Server\Api;
 
-use Payum\Core\Bridge\Symfony\Reply\HttpResponse;
-use Payum\Core\Reply\ReplyInterface;
 use Payum\Server\Api\Controller\GatewayController;
-use Payum\Server\Api\Controller\GatewayMetaController;
 use Payum\Server\Api\Controller\PaymentController;
 use Payum\Server\Api\Controller\RootController;
 use Payum\Server\Api\Controller\TokenController;
-use Payum\Server\ReplyToJsonResponseConverter;
 use Silex\Application as SilexApplication;
 use Silex\ControllerCollection;
 use Silex\ServiceProviderInterface;
-use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
 
 class ApiControllerProvider implements ServiceProviderInterface
 {
@@ -31,18 +24,18 @@ class ApiControllerProvider implements ServiceProviderInterface
             return new PaymentController(
                 $app['payum'],
                 $app['api.view.payment_to_json_converter'],
-                $app['form.factory'],
-                $app['api.view.form_to_json_converter'],
-                $app['url_generator']
+                $app['url_generator'],
+                $app['payum.payment_schema_builder'],
+                $app['json_decode']
             );
         });
 
         $app['payum.api.controller.token'] = $app->share(function() use ($app) {
             return new TokenController(
                 $app['payum'],
-                $app['form.factory'],
                 $app['api.view.token_to_json_converter'],
-                $app['api.view.form_to_json_converter']
+                $app['payum.token_schema_builder'],
+                $app['json_decode']
             );
         });
 
@@ -51,16 +44,8 @@ class ApiControllerProvider implements ServiceProviderInterface
                 $app['url_generator'],
                 $app['payum.gateway_config_storage'],
                 $app['api.view.gateway_config_to_json_converter'],
-                $app['payum.schema_builder'],
+                $app['payum.gateway_schema_builder'],
                 $app['json_decode']
-            );
-        });
-
-        $app['payum.api.controller.gateway_meta'] = $app->share(function() use ($app) {
-            return new GatewayMetaController(
-                $app['form.factory'],
-                $app['api.view.form_to_json_converter'],
-                $app['payum']
             );
         });
 
@@ -68,9 +53,7 @@ class ApiControllerProvider implements ServiceProviderInterface
 
         /** @var ControllerCollection $payments */
         $payments = $app['controllers_factory'];
-        $payments->get('/meta', 'payum.api.controller.payment:metaAction')->bind('payment_meta');
         $payments->get('/{id}', 'payum.api.controller.payment:getAction')->bind('payment_get');
-        $payments->put('/{id}', 'payum.api.controller.payment:updateAction')->bind('payment_update');
         $payments->delete('/{id}', 'payum.api.controller.payment:deleteAction')->bind('payment_delete');
         $payments->post('/', 'payum.api.controller.payment:createAction')->bind('payment_create');
         $payments->get('/', 'payum.api.controller.payment:allAction')->bind('payment_all');
@@ -78,7 +61,6 @@ class ApiControllerProvider implements ServiceProviderInterface
 
         /** @var ControllerCollection $gateways */
         $gateways = $app['controllers_factory'];
-        $gateways->get('/meta', 'payum.api.controller.gateway_meta:getAllAction')->bind('payment_factory_get_all');
         $gateways->get('/', 'payum.api.controller.gateway:allAction')->bind('gateway_all');
         $gateways->get('/{name}', 'payum.api.controller.gateway:getAction')->bind('gateway_get');
         $gateways->delete('/{name}', 'payum.api.controller.gateway:deleteAction')->bind('gateway_delete');

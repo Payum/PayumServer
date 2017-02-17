@@ -4,7 +4,7 @@ namespace Payum\Server\Schema;
 use Payum\Core\Payum;
 use Payum\Server\Util\StringUtil;
 
-class FormDefinitionBuilder
+class GatewayFormDefinitionBuilder
 {
     /**
      * @var Payum

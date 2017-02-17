@@ -2,8 +2,8 @@
 namespace Payum\Server\Schema\Controller;
 
 use Payum\Server\Controller\ForwardExtensionTrait;
-use Payum\Server\Schema\FormDefinitionBuilder;
-use Payum\Server\Schema\SchemaBuilder;
+use Payum\Server\Schema\GatewayFormDefinitionBuilder;
+use Payum\Server\Schema\GatewaySchemaBuilder;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
 class GatewaySchemaController
@@ -11,20 +11,20 @@ class GatewaySchemaController
     use ForwardExtensionTrait;
 
     /**
-     * @var SchemaBuilder
+     * @var GatewaySchemaBuilder
      */
     private $schemaBuilder;
 
     /**
-     * @var FormDefinitionBuilder
+     * @var GatewayFormDefinitionBuilder
      */
     private $formDefinitionBuilder;
 
     /**
-     * @param SchemaBuilder $schemaBuilder
-     * @param FormDefinitionBuilder $formDefinitionBuilder
+     * @param GatewaySchemaBuilder $schemaBuilder
+     * @param GatewayFormDefinitionBuilder $formDefinitionBuilder
      */
-    public function __construct(SchemaBuilder $schemaBuilder, FormDefinitionBuilder $formDefinitionBuilder)
+    public function __construct(GatewaySchemaBuilder $schemaBuilder, GatewayFormDefinitionBuilder $formDefinitionBuilder)
     {
         $this->schemaBuilder = $schemaBuilder;
         $this->formDefinitionBuilder = $formDefinitionBuilder;

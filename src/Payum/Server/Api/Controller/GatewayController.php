@@ -4,13 +4,12 @@ namespace Payum\Server\Api\Controller;
 use function Makasim\Yadm\set_object_values;
 use Payum\Core\Model\GatewayConfigInterface;
 use Payum\Core\Storage\StorageInterface;
-use Payum\Server\Api\View\FormToJsonConverter;
 use Payum\Server\Api\View\GatewayConfigToJsonConverter;
 use Payum\Server\Controller\ForwardExtensionTrait;
 use Payum\Server\InvalidJsonException;
 use Payum\Server\JsonDecode;
 use Payum\Server\Model\GatewayConfig;
-use Payum\Server\Schema\SchemaBuilder;
+use Payum\Server\Schema\GatewaySchemaBuilder;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -36,7 +35,7 @@ class GatewayController
      */
     private $gatewayConfigToJsonConverter;
     /**
-     * @var SchemaBuilder
+     * @var GatewaySchemaBuilder
      */
     private $schemaBuilder;
     /**
@@ -48,14 +47,14 @@ class GatewayController
      * @param UrlGeneratorInterface $urlGenerator
      * @param StorageInterface $gatewayConfigStorage
      * @param GatewayConfigToJsonConverter $gatewayConfigToJsonConverter
-     * @param SchemaBuilder $schemaBuilder
+     * @param GatewaySchemaBuilder $schemaBuilder
      * @param JsonDecode $jsonDecode
      */
     public function __construct(
         UrlGeneratorInterface $urlGenerator,
         StorageInterface $gatewayConfigStorage,
         GatewayConfigToJsonConverter $gatewayConfigToJsonConverter,
-        SchemaBuilder $schemaBuilder,
+        GatewaySchemaBuilder $schemaBuilder,
         JsonDecode $jsonDecode
     ) {
         $this->urlGenerator = $urlGenerator;

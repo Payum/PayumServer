@@ -4,7 +4,7 @@ namespace Payum\Server\Schema;
 use Payum\Core\Payum;
 use Payum\Server\Util\StringUtil;
 
-class SchemaBuilder
+class GatewaySchemaBuilder
 {
     /**
      * @var Payum
@@ -24,18 +24,6 @@ class SchemaBuilder
      */
     public function buildDefault()
     {
-        $enum = [];
-        $titleMap = [];
-
-        foreach ($this->payum->getGatewayFactories() as $name => $factory) {
-            $config = $factory->createConfig();
-
-            $title = isset($config['payum.factory_title']) ? $config['payum.factory_title'] : StringUtil::nameToTitle($name);
-
-            $titleMap[] = ['name' => $title, 'value' => $name];
-            $enum[] = $name;
-        }
-
         return (object) [
             '$schema' => 'http://json-schema.org/schema#',
             'type' => 'object',
@@ -46,8 +34,7 @@ class SchemaBuilder
                 ],
                 'factoryName' => (object)  [
                     'type' => 'string',
-                    'titleMap' => $titleMap,
-                    'enum' => $enum,
+                    'enum' => array_keys($this->payum->getGatewayFactories()),
                     'title' => StringUtil::nameToTitle('factoryName'),
                 ]
             ],

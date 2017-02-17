@@ -116,9 +116,9 @@ class ServiceProvider implements ServiceProviderInterface
         }));
 
         $app['form.types'] = $app->share($app->extend('form.types', function ($types) use ($app) {
-            $types[] = new CreatePaymentType();
-            $types[] = new UpdatePaymentType();
-            $types[] = new CreateTokenType();
+//            $types[] = new CreatePaymentType();
+//            $types[] = new UpdatePaymentType();
+//            $types[] = new CreateTokenType();
             $types[] = new ChooseGatewayType();
 
             return $types;
@@ -169,8 +169,9 @@ class ServiceProvider implements ServiceProviderInterface
                 $token = $payum->getHttpRequestVerifier()->verify($request);
 
                 /** @var Payment $payment */
-                $payment = $token->getPayment();
-                if ($payment && false == $payment->getGatewayName()) {
+                $payment = $payum->getStorage(Payment::class)->find($token->getDetails()->getId());
+
+                if (false == $payment->getGatewayName()) {
                     /** @var FormFactoryInterface $formFactory */
                     $formFactory = $app['form.factory'];
 
@@ -192,6 +193,8 @@ class ServiceProvider implements ServiceProviderInterface
                         ]));
                     }
                 }
+
+                $token->setGatewayName($payment->getGatewayName());
 
                 // do not verify it second time.
                 $request->attributes->set('payum_token', $token);
@@ -277,6 +280,5 @@ class ServiceProvider implements ServiceProviderInterface
      */
     public function boot(SilexApplication $app)
     {
-        SecurityToken::injectStorageRegistry($app['payum']);
     }
 }

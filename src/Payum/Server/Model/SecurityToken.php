@@ -4,7 +4,6 @@ namespace Payum\Server\Model;
 use Makasim\Yadm\ValuesTrait;
 use Payum\Core\Exception\LogicException;
 use Payum\Core\Model\Identity;
-use Payum\Core\Registry\StorageRegistryInterface;
 use Payum\Core\Security\TokenInterface;
 use Payum\Core\Storage\IdentityInterface;
 
@@ -13,21 +12,16 @@ class SecurityToken implements TokenInterface
     use ValuesTrait;
 
     /**
-     * @var StorageRegistryInterface
-     */
-    protected static $storageRegistry;
-
-    /**
      * {@inheritdoc}
      *
      * @return IdentityInterface|null
      */
     public function getDetails()
     {
-        return $this->getValue('identity') ?
-            new Identity($this->getValue('identity.id'), $this->getValue('identity.class')) :
-            null
-        ;
+        return new Identity(
+            $this->getValue('paymentId'),
+            $this->getValue('paymentClass', Payment::class)
+        );
     }
 
     /**
@@ -41,18 +35,8 @@ class SecurityToken implements TokenInterface
             throw new LogicException('Only instance of identity supported as token details');
         }
 
-        $this->setValue('identity.id', $details->getId());
-        $this->setValue('identity.class', $details->getClass());
-    }
-
-    /**
-     * @return Payment
-     */
-    public function getPayment()
-    {
-        if ($identity = $this->getDetails()) {
-            return static::$storageRegistry->getStorage($identity->getClass())->find($identity);
-        }
+        $this->setValue('paymentId', $details->getId());
+        $this->setValue('paymentClass', $details->getClass());
     }
 
     /**
@@ -117,9 +101,7 @@ class SecurityToken implements TokenInterface
      */
     public function getGatewayName()
     {
-        $payment = $this->getPayment();
-
-        return $payment ? $payment->getGatewayName() : null;
+        return $this->getValue('gatewayName');
     }
 
     /**
@@ -127,14 +109,6 @@ class SecurityToken implements TokenInterface
      */
     public function setGatewayName($gatewayName)
     {
-        // the gateway name is taken from the underlying payment model.
-    }
-
-    /**
-     * @param StorageRegistryInterface $storageRegistry
-     */
-    public static function injectStorageRegistry(StorageRegistryInterface $storageRegistry)
-    {
-        static::$storageRegistry = $storageRegistry;
+        $this->setValue('gatewayName', $gatewayName);
     }
 }
