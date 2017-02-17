@@ -198,6 +198,10 @@ class ServiceProvider implements ServiceProviderInterface
             };
         });
 
+        $app['json_decode'] = $app->share(function ($app) {
+            return new JsonDecode();
+        });
+
         $app->before(function(Request $request, Application $app) {
             if (0 === strpos($request->getPathInfo(), '/payment/capture') || 0 === strpos($request->getPathInfo(), '/payment/authorize')) {
                 return call_user_func($app['payum.listener.choose_gateway'], $request, $app);

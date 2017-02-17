@@ -48,11 +48,11 @@ class ApiControllerProvider implements ServiceProviderInterface
 
         $app['payum.api.controller.gateway'] = $app->share(function() use ($app) {
             return new GatewayController(
-                $app['form.factory'],
                 $app['url_generator'],
-                $app['api.view.form_to_json_converter'],
                 $app['payum.gateway_config_storage'],
-                $app['api.view.gateway_config_to_json_converter']
+                $app['api.view.gateway_config_to_json_converter'],
+                $app['payum.schema_builder'],
+                $app['json_decode']
             );
         });
 

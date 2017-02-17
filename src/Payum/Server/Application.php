@@ -4,6 +4,7 @@ namespace Payum\Server;
 use JDesrosiers\Silex\Provider\CorsServiceProvider;
 use Payum\Server\Api\ApiControllerProvider;
 use Payum\Server\Api\ApiProvider;
+use Payum\Server\Schema\SchemaProvider;
 use Payum\Silex\PayumProvider;
 use Silex\Application as SilexApplication;
 use Silex\Provider\FormServiceProvider;
@@ -50,6 +51,8 @@ class Application extends SilexApplication
         $this->register(new ServiceProvider);
         $this->register(new ApiProvider());
         $this->register(new ApiControllerProvider());
+
+        $this->register(new SchemaProvider());
 
 
         $app["cors.allowMethods"] = 'GET, OPTIONS, PUT, POST, DELETE';

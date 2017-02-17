@@ -1,14 +1,16 @@
 <?php
 namespace Payum\Server\Api\Controller;
 
-use Payum\Core\Bridge\Symfony\Form\Type\GatewayConfigType;
+use function Makasim\Yadm\set_object_values;
 use Payum\Core\Model\GatewayConfigInterface;
 use Payum\Core\Storage\StorageInterface;
 use Payum\Server\Api\View\FormToJsonConverter;
 use Payum\Server\Api\View\GatewayConfigToJsonConverter;
 use Payum\Server\Controller\ForwardExtensionTrait;
+use Payum\Server\InvalidJsonException;
+use Payum\Server\JsonDecode;
 use Payum\Server\Model\GatewayConfig;
-use Symfony\Component\Form\FormFactoryInterface;
+use Payum\Server\Schema\SchemaBuilder;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -20,19 +22,9 @@ class GatewayController
     use ForwardExtensionTrait;
 
     /**
-     * @var FormFactoryInterface
-     */
-    private $formFactory;
-
-    /**
      * @var UrlGeneratorInterface
      */
     private $urlGenerator;
-
-    /**
-     * @var FormToJsonConverter
-     */
-    private $formToJsonConverter;
 
     /**
      * @var StorageInterface
@@ -43,64 +35,70 @@ class GatewayController
      * @var GatewayConfigToJsonConverter
      */
     private $gatewayConfigToJsonConverter;
+    /**
+     * @var SchemaBuilder
+     */
+    private $schemaBuilder;
+    /**
+     * @var JsonDecode
+     */
+    private $jsonDecode;
 
     /**
-     * @param FormFactoryInterface $formFactory
      * @param UrlGeneratorInterface $urlGenerator
-     * @param FormToJsonConverter $formToJsonConverter
      * @param StorageInterface $gatewayConfigStorage
      * @param GatewayConfigToJsonConverter $gatewayConfigToJsonConverter
+     * @param SchemaBuilder $schemaBuilder
+     * @param JsonDecode $jsonDecode
      */
     public function __construct(
-        FormFactoryInterface $formFactory,
         UrlGeneratorInterface $urlGenerator,
-        FormToJsonConverter $formToJsonConverter,
         StorageInterface $gatewayConfigStorage,
-        GatewayConfigToJsonConverter $gatewayConfigToJsonConverter
+        GatewayConfigToJsonConverter $gatewayConfigToJsonConverter,
+        SchemaBuilder $schemaBuilder,
+        JsonDecode $jsonDecode
     ) {
-        $this->formFactory = $formFactory;
         $this->urlGenerator = $urlGenerator;
-        $this->formToJsonConverter = $formToJsonConverter;
         $this->gatewayConfigStorage = $gatewayConfigStorage;
         $this->gatewayConfigToJsonConverter = $gatewayConfigToJsonConverter;
+        $this->schemaBuilder = $schemaBuilder;
+        $this->jsonDecode = $jsonDecode;
     }
 
-    public function createAction($content, Request $request)
+    public function createAction(Request $request)
     {
         $this->forward400Unless('json' == $request->getContentType());
 
-        $form = $this->formFactory->create(GatewayConfigType::class, null, [
-            'data_class' => GatewayConfig::class,
-            'csrf_protection' => false,
-        ]);
-
-        $form->submit($content);
-        if ($form->isValid()) {
-            /** @var GatewayConfigInterface $gatewayConfig */
-            $gatewayConfig = $form->getData();
-
-            $this->gatewayConfigStorage->update($gatewayConfig);
-
-            $getUrl = $this->urlGenerator->generate('gateway_get',
-                array('name' => $gatewayConfig->getGatewayName()),
-                $absolute = true
-            );
-
-            return new JsonResponse(
-                array(
-                    'gateway' => $this->gatewayConfigToJsonConverter->convert($gatewayConfig),
-                ),
-                201,
-                array(
-                    'Location' => $getUrl
-                )
-            );
+        try {
+            $content = $request->getContent();
+            $data = $this->jsonDecode->decode($content, $this->schemaBuilder->buildDefault());
+            $data = $this->jsonDecode->decode($content, $this->schemaBuilder->build($data['factoryName']));
+        } catch (InvalidJsonException $e) {
+            return new JsonResponse(['errors' => $e->getErrors(),], 400);
         }
 
-        return new JsonResponse($this->formToJsonConverter->convertInvalid($form), 400);
+        $gatewayConfig = new GatewayConfig();
+        set_object_values($gatewayConfig, $data);
+
+        $this->gatewayConfigStorage->update($gatewayConfig);
+
+        $getUrl = $this->urlGenerator->generate('gateway_get',
+            array('name' => $gatewayConfig->getGatewayName()),
+            $absolute = true
+        );
+
+        return new JsonResponse(
+            array(
+                'gateway' => $this->gatewayConfigToJsonConverter->convert($gatewayConfig),
+            ),
+            201,
+            array(
+                'Location' => $getUrl
+            )
+        );
     }
 
-    public function allAction(Request $request)
+    public function allAction()
     {
         $convertedGatewayConfigs = array();
         foreach ($this->gatewayConfigStorage->findBy([]) as $gatewayConfig) {
@@ -112,11 +110,13 @@ class GatewayController
         return new JsonResponse(array('gateways' => $convertedGatewayConfigs));
     }
 
-    public function getAction($name, Request $request)
+    public function getAction($name)
     {
         $gatewayConfig = $this->findGatewayConfigByName($name);
 
-        return new JsonResponse(array('gateway' => $this->gatewayConfigToJsonConverter->convert($gatewayConfig)));
+        return new JsonResponse([
+            'gateway' => $this->gatewayConfigToJsonConverter->convert($gatewayConfig)
+        ]);
     }
 
     /**
@@ -124,7 +124,7 @@ class GatewayController
      *
      * @return Response
      */
-    public function deleteAction($name, Request $request)
+    public function deleteAction($name)
     {
         $gatewayConfig = $this->findGatewayConfigByName($name);
 
