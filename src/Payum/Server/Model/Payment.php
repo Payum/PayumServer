@@ -86,6 +86,22 @@ class Payment
     }
 
     /**
+     * @return \DateTime
+     */
+    public function getCreatedAt()
+    {
+        return $this->getValue('createdAt', null, \DateTime::class);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setCreatedAt(\DateTime $createdAt)
+    {
+        $this->setValue('createdAt', $createdAt);
+    }
+
+    /**
      * {@inheritdoc}
      */
     public function getDescription()

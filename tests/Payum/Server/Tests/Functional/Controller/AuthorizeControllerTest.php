@@ -16,7 +16,7 @@ class AuthorizeControllerTest extends ClientTestCase
     public function testShouldAllowChooseGateway()
     {
         /** @var StorageInterface $gatewayConfigStorage */
-        $gatewayConfigStorage = $this->app['payum.gateway_config_storage'];
+        $gatewayConfigStorage = $this->app['payum.yadm_gateway_config_storage'];
 
         /** @var GatewayConfig $gatewayConfig */
         $gatewayConfig = $gatewayConfigStorage->create();

@@ -16,7 +16,7 @@ class GatewayControllerTest extends ClientTestCase
         parent::setUp();
 
         /** @var StorageInterface $gatewayConfigStorage */
-        $gatewayConfigStorage = $this->app['payum.gateway_config_storage'];
+        $gatewayConfigStorage = $this->app['payum.yadm_gateway_config_storage'];
 
         /** @var GatewayConfigInterface $gatewayConfig */
         $gatewayConfig = $gatewayConfigStorage->create();
@@ -35,6 +35,52 @@ class GatewayControllerTest extends ClientTestCase
         $gatewayConfig->setGatewayName('stripe_checkout');
         $gatewayConfig->setFactoryName('stripe_checkout');
         $gatewayConfigStorage->update($gatewayConfig);
+    }
+
+    /**
+     * @test
+     */
+    public function shouldAllowCreateGateway()
+    {
+        $this->getClient()->postJson('/gateways/', [
+            'gatewayName' => 'aGateway',
+            'factoryName' => 'offline',
+        ]);
+
+        $this->assertClientResponseStatus(201);
+        $this->assertClientResponseContentJson();
+
+        $content = $this->getClientResponseJsonContent();
+
+        $this->assertObjectHasAttribute('gateway', $content);
+
+        $this->assertObjectHasAttribute('gatewayName', $content->gateway);
+        $this->assertEquals('aGateway', $content->gateway->gatewayName);
+
+        $this->assertObjectHasAttribute('factoryName', $content->gateway);
+        $this->assertEquals('offline', $content->gateway->factoryName);
+
+        $this->assertStringStartsWith('http://localhost/gateways/', $this->getClient()->getResponse()->headers->get('Location'));
+    }
+
+    /**
+     * @test
+     */
+    public function shouldNotAllowCreateGatewayIfOneWithSameNameAlreadyExists()
+    {
+        $this->getClient()->postJson('/gateways/', [
+            'gatewayName' => 'aUniqueGateway',
+            'factoryName' => 'offline',
+        ]);
+
+        $this->assertClientResponseStatus(201);
+
+        $this->getClient()->postJson('/gateways/', [
+            'gatewayName' => 'aUniqueGateway',
+            'factoryName' => 'offline',
+        ]);
+
+        $this->assertClientResponseStatus(400);
     }
 
     /**

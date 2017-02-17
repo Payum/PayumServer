@@ -10,7 +10,7 @@ class GatewayConfigTest extends WebTestCase
     public function testShouldAllowPersistGatewayConfigToMongo()
     {
         /** @var StorageInterface $storage */
-        $storage = $this->app['payum.gateway_config_storage'];
+        $storage = $this->app['payum.yadm_gateway_config_storage'];
 
         /** @var GatewayConfig $gatewayConfig */
         $gatewayConfig = $storage->create();

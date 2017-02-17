@@ -31,7 +31,7 @@ class TokenControllerTest extends ClientTestCase
     public function testShouldAllowCreateCaptureToken()
     {
         /** @var StorageInterface $gatewayConfigStorage */
-        $gatewayConfigStorage = $this->app['payum.gateway_config_storage'];
+        $gatewayConfigStorage = $this->app['payum.yadm_gateway_config_storage'];
 
         /** @var GatewayConfig $gatewayConfig */
         $gatewayConfig = $gatewayConfigStorage->create();
@@ -80,7 +80,7 @@ class TokenControllerTest extends ClientTestCase
     public function testShouldAllowCreateAuthorizeToken()
     {
         /** @var StorageInterface $gatewayConfigStorage */
-        $gatewayConfigStorage = $this->app['payum.gateway_config_storage'];
+        $gatewayConfigStorage = $this->app['payum.yadm_gateway_config_storage'];
 
         /** @var GatewayConfig $gatewayConfig */
         $gatewayConfig = $gatewayConfigStorage->create();

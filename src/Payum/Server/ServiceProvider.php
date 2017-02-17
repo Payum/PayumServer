@@ -11,7 +11,6 @@ use Payum\Core\Payum;
 use Payum\Core\PayumBuilder;
 use Payum\Core\Reply\HttpResponse;
 use Payum\Core\Reply\ReplyInterface;
-use Payum\Core\Storage\StorageInterface;
 use Payum\Server\Action\AuthorizePaymentAction;
 use Payum\Server\Action\CapturePaymentAction;
 use Payum\Server\Action\ExecuteSameRequestWithPaymentDetailsAction;
@@ -26,7 +25,9 @@ use Payum\Server\Form\Type\UpdatePaymentType;
 use Payum\Server\Model\GatewayConfig;
 use Payum\Server\Model\Payment;
 use Payum\Server\Model\SecurityToken;
+use Payum\Server\Storage\PaymentStorage;
 use Payum\Server\Storage\YadmStorage;
+use Payum\Server\Util\StringUtil;
 use Silex\Application as SilexApplication;
 use Silex\ControllerCollection;
 use Silex\ServiceProviderInterface;
@@ -46,26 +47,37 @@ class ServiceProvider implements ServiceProviderInterface
         $app['debug'] = (boolean) getenv('PAYUM_DEBUG');
         $app['mongodb.uri'] = getenv('PAYUM_MONGO_URI') ?: 'mongodb://localhost:27017/payum_server';
 
+        // @deprecated
+        $app['payum.yadm_gateway_config_storage'] = $app->share(function ($app) {
+            return new YadmStorage($app['payum.gateway_config_storage']);
+        });
+
         $app['payum.gateway_config_storage'] = $app->share(function ($app) {
             /** @var Database $db */
             $db = $app['mongodb.database'];
 
-            return new YadmStorage(
-                new MongodbStorage($db->selectCollection('gateway_configs'), new Hydrator(GatewayConfig::class))
-            );
+            return new MongodbStorage($db->selectCollection('gateway_configs'), new Hydrator(GatewayConfig::class));
         });
 
-        $app['payum.builder'] = $app->share($app->extend('payum.builder', function (PayumBuilder $builder) use ($app) {
+        $app['payum.payment_storage'] = $app->share(function ($app) {
             /** @var Database $db */
             $db = $app['mongodb.database'];
 
-            $tokenStorage = new MongodbStorage($db->selectCollection('security_tokens'), new Hydrator(SecurityToken::class));
-            $paymentStorage = new MongodbStorage($db->selectCollection('payments'), new Hydrator(Payment::class));
+            return new PaymentStorage($db->selectCollection('payments'), new Hydrator(Payment::class));
+        });
 
+        $app['payum.token_storage'] = $app->share(function ($app) {
+            /** @var Database $db */
+            $db = $app['mongodb.database'];
+
+            return new MongodbStorage($db->selectCollection('security_tokens'), new Hydrator(SecurityToken::class));
+        });
+
+        $app['payum.builder'] = $app->share($app->extend('payum.builder', function (PayumBuilder $builder) use ($app) {
             $builder
-                ->setTokenStorage(new YadmStorage($tokenStorage))
-                ->setGatewayConfigStorage($app['payum.gateway_config_storage'])
-                ->addStorage(Payment::class, new YadmStorage($paymentStorage))
+                ->setTokenStorage(new YadmStorage($app['payum.token_storage']))
+                ->setGatewayConfigStorage(new YadmStorage($app['payum.gateway_config_storage']))
+                ->addStorage(Payment::class, new YadmStorage($app['payum.payment_storage']))
 
                 ->addCoreGatewayFactoryConfig([
                     'payum.template.obtain_credit_card' => '@PayumServer/obtainCreditCardWithJessepollakCard.html.twig',
@@ -148,12 +160,12 @@ class ServiceProvider implements ServiceProviderInterface
             return function(Options $options) use ($app, $choicesCallback) {
                 $choices = call_user_func($choicesCallback, $options);
 
-                /** @var StorageInterface $gatewayConfigStorage */
+                /** @var MongodbStorage $gatewayConfigStorage */
                 $gatewayConfigStorage = $app['payum.gateway_config_storage'];
-                foreach ($gatewayConfigStorage->findBy([]) as $config) {
+                foreach ($gatewayConfigStorage->find([]) as $config) {
                     /** @var GatewayConfigInterface $config */
 
-                    $choices[ucwords(str_replace(['_'], ' ', $config->getGatewayName()))] = $config->getGatewayName();
+                    $choices[StringUtil::nameToTitle($config->getGatewayName())] = $config->getGatewayName();
                 }
 
                 return $choices;

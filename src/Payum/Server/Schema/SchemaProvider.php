@@ -36,11 +36,11 @@ class SchemaProvider implements ServiceProviderInterface
         });
 
         $app['payum.payment_schema_builder'] = $app->share(function() use ($app) {
-            return new PaymentSchemaBuilder($app['payum.gateway_config_storage']);
+            return new PaymentSchemaBuilder($app['payum.yadm_gateway_config_storage']);
         });
 
         $app['payum.payment_form_definition_builder'] = $app->share(function() use ($app) {
-            return new PaymentFormDefinitionBuilder($app['payum.gateway_config_storage']);
+            return new PaymentFormDefinitionBuilder($app['payum.yadm_gateway_config_storage']);
         });
 
         $app['payum.token_schema_builder'] = $app->share(function() use ($app) {

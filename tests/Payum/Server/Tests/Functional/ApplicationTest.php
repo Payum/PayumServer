@@ -27,7 +27,7 @@ class ApplicationTest extends WebTestCase
 
     public function testShouldAllowGetGatewayConfigStorageAsService()
     {
-        $storage = $this->app['payum.gateway_config_storage'];
+        $storage = $this->app['payum.yadm_gateway_config_storage'];
 
         $this->assertInstanceOf(StorageInterface::class, $storage);
         $this->assertInstanceOf(YadmStorage::class, $storage);

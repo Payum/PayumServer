@@ -34,10 +34,12 @@ class GatewayController
      * @var GatewayConfigToJsonConverter
      */
     private $gatewayConfigToJsonConverter;
+
     /**
      * @var GatewaySchemaBuilder
      */
     private $schemaBuilder;
+
     /**
      * @var JsonDecode
      */
@@ -76,7 +78,18 @@ class GatewayController
             return new JsonResponse(['errors' => $e->getErrors(),], 400);
         }
 
-        $gatewayConfig = new GatewayConfig();
+        if ($this->gatewayConfigStorage->findBy(['gatewayName' => $data['gatewayName']])) {
+            return new JsonResponse([
+                'errors' => [
+                    'gatewayName' => [
+                        sprintf('Gateway with such name "%s" already exists', $data['gatewayName']),
+                    ],
+                ]
+            ], 400);
+        }
+
+        /** @var GatewayConfig $gatewayConfig */
+        $gatewayConfig = $this->gatewayConfigStorage->create();
         set_object_values($gatewayConfig, $data);
 
         $this->gatewayConfigStorage->update($gatewayConfig);
@@ -87,13 +100,13 @@ class GatewayController
         );
 
         return new JsonResponse(
-            array(
+            [
                 'gateway' => $this->gatewayConfigToJsonConverter->convert($gatewayConfig),
-            ),
+            ],
             201,
-            array(
+            [
                 'Location' => $getUrl
-            )
+            ]
         );
     }
 
