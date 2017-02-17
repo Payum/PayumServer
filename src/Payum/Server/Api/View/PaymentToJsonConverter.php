@@ -33,6 +33,7 @@ class PaymentToJsonConverter
             'gatewayName' => $payment->getGatewayName(),
             'number' => $payment->getNumber(),
             'totalAmount' => $payment->getTotalAmount(),
+            'totalAmountInput' => $payment->getValue('totalAmountInput'),
             'currencyCode' => $payment->getCurrencyCode(),
             'clientEmail' => $payment->getClientEmail(),
             'clientId' => $payment->getClientId(),

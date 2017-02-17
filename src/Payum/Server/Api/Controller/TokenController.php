@@ -1,15 +1,14 @@
 <?php
 namespace Payum\Server\Api\Controller;
 
-use Payum\Core\Bridge\Spl\ArrayObject;
 use Payum\Core\Payum;
 use Payum\Core\Registry\RegistryInterface;
-use Payum\Server\Api\View\FormToJsonConverter;
 use Payum\Server\Api\View\TokenToJsonConverter;
 use Payum\Server\Controller\ForwardExtensionTrait;
-use Payum\Server\Form\Type\CreateTokenType;
+use Payum\Server\InvalidJsonException;
+use Payum\Server\JsonDecode;
 use Payum\Server\Model\Payment;
-use Symfony\Component\Form\FormFactoryInterface;
+use Payum\Server\Schema\TokenSchemaBuilder;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -23,36 +22,36 @@ class TokenController
     protected $payum;
 
     /**
-     * @var FormFactoryInterface
-     */
-    private $formFactory;
-
-    /**
      * @var TokenToJsonConverter
      */
     private $tokenToJsonConverter;
 
     /**
-     * @var FormToJsonConverter
+     * @var TokenSchemaBuilder
      */
-    private $formToJsonConverter;
+    private $schemaBuilder;
+
+    /**
+     * @var JsonDecode
+     */
+    private $jsonDecode;
 
     /**
      * @param Payum $payum
-     * @param FormFactoryInterface $formFactory
      * @param TokenToJsonConverter $tokenToJsonConverter
-     * @param FormToJsonConverter $formToJsonConverter
+     * @param TokenSchemaBuilder $tokenSchemaBuilder
+     * @param JsonDecode $jsonDecode
      */
     public function __construct(
         Payum $payum,
-        FormFactoryInterface $formFactory,
         TokenToJsonConverter $tokenToJsonConverter,
-        FormToJsonConverter $formToJsonConverter
+        TokenSchemaBuilder $tokenSchemaBuilder,
+        JsonDecode $jsonDecode
     ) {
         $this->payum = $payum;
-        $this->formFactory = $formFactory;
         $this->tokenToJsonConverter = $tokenToJsonConverter;
-        $this->formToJsonConverter = $formToJsonConverter;
+        $this->schemaBuilder = $tokenSchemaBuilder;
+        $this->jsonDecode = $jsonDecode;
     }
 
     /**
@@ -60,37 +59,42 @@ class TokenController
      *
      * @return JsonResponse
      */
-    public function createAction($content, Request $request)
+    public function createAction(Request $request)
     {
         $this->forward400Unless('json' == $request->getContentType() || 'form' == $request->getContentType());
 
-        $rawToken = ArrayObject::ensureArrayObject($content);
-
-        $form = $this->formFactory->create(CreateTokenType::class);
-        $form->submit((array) $rawToken);
-        if (false == $form->isValid()) {
-            return new JsonResponse($this->formToJsonConverter->convertInvalid($form), 400);
+        try {
+            $content = $request->getContent();
+            $data = $this->jsonDecode->decode($content, $this->schemaBuilder->buildNew());
+        } catch (InvalidJsonException $e) {
+            return new JsonResponse(['errors' => $e->getErrors(),], 400);
         }
 
-        $data = $form->getData();
-
         /** @var Payment $payment */
-        $this->forward400Unless($payment = $this->payum->getStorage(Payment::class)->find($data['paymentId']));
+        if (false == $payment = $this->payum->getStorage(Payment::class)->find($data['paymentId'])) {
+            return new JsonResponse(['errors' => [
+                'paymentId' => [
+                    sprintf('Payment with id %s could not be found', $data['paymentId'])
+                ]
+            ]], 400);
+        }
 
         if ($data['type'] == 'capture') {
             $token = $this->payum->getTokenFactory()->createCaptureToken('', $payment, $data['afterUrl'], [
                 'payum_token' => null,
                 'paymentId' => $payment->getId(),
             ]);
+
+            return new JsonResponse(['token' => $this->tokenToJsonConverter->convert($token)], 201);
         } else if ($data['type'] == 'authorize') {
             $token = $this->payum->getTokenFactory()->createAuthorizeToken('', $payment, $data['afterUrl'], [
                 'payum_token' => null,
                 'paymentId' => $payment->getId(),
             ]);
-        } else {
-            $this->forward400(sprintf('The token type %s is not supported', $data['type']));
+
+            return new JsonResponse(['token' => $this->tokenToJsonConverter->convert($token)], 201);
         }
 
-        return new JsonResponse(['token' => $this->tokenToJsonConverter->convert($token)], 201);
+        $this->forward400(sprintf('The token type %s is not supported', $data['type']));
     }
 }

@@ -1,19 +1,18 @@
 <?php
 namespace Payum\Server\Api\Controller;
 
-use Payum\Core\Bridge\Spl\ArrayObject;
+use function Makasim\Yadm\set_object_values;
 use Payum\Core\Payum;
 use Payum\Core\Registry\RegistryInterface;
-use Payum\Core\Request\Convert;
 use Payum\Core\Security\Util\Random;
 use Payum\Core\Storage\StorageInterface;
-use Payum\Server\Api\View\FormToJsonConverter;
+use Payum\ISO4217\ISO4217;
 use Payum\Server\Api\View\PaymentToJsonConverter;
 use Payum\Server\Controller\ForwardExtensionTrait;
-use Payum\Server\Form\Type\CreatePaymentType;
-use Payum\Server\Form\Type\UpdatePaymentType;
+use Payum\Server\InvalidJsonException;
+use Payum\Server\JsonDecode;
 use Payum\Server\Model\Payment;
-use Symfony\Component\Form\FormFactoryInterface;
+use Payum\Server\Schema\PaymentSchemaBuilder;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -34,39 +33,39 @@ class PaymentController
     private $paymentToJsonConverter;
 
     /**
-     * @var FormFactoryInterface
-     */
-    private $formFactory;
-
-    /**
-     * @var FormToJsonConverter
-     */
-    private $formToJsonConverter;
-
-    /**
      * @var UrlGeneratorInterface
      */
     private $urlGenerator;
 
     /**
+     * @var PaymentSchemaBuilder
+     */
+    private $schemaBuilder;
+
+    /**
+     * @var JsonDecode
+     */
+    private $jsonDecode;
+
+    /**
      * @param Payum $payum
      * @param PaymentToJsonConverter $paymentToJsonConverter
-     * @param FormFactoryInterface $formFactory
-     * @param FormToJsonConverter $formToJsonConverter
      * @param UrlGeneratorInterface $urlGenerator
+     * @param PaymentSchemaBuilder $paymentSchemaBuilder
+     * @param JsonDecode $jsonDecode
      */
     public function __construct(
         Payum $payum,
         PaymentToJsonConverter $paymentToJsonConverter,
-        FormFactoryInterface $formFactory,
-        FormToJsonConverter $formToJsonConverter,
-        UrlGeneratorInterface $urlGenerator
+        UrlGeneratorInterface $urlGenerator,
+        PaymentSchemaBuilder $paymentSchemaBuilder,
+        JsonDecode $jsonDecode
     ) {
         $this->payum = $payum;
-        $this->formFactory = $formFactory;
-        $this->formToJsonConverter = $formToJsonConverter;
         $this->paymentToJsonConverter = $paymentToJsonConverter;
         $this->urlGenerator = $urlGenerator;
+        $this->schemaBuilder = $paymentSchemaBuilder;
+        $this->jsonDecode = $jsonDecode;
     }
 
     /**
@@ -74,20 +73,23 @@ class PaymentController
      *
      * @return JsonResponse
      */
-    public function createAction($content, Request $request)
+    public function createAction(Request $request)
     {
         $this->forward400Unless('json' == $request->getContentType() || 'form' == $request->getContentType());
 
-        $rawPayment = ArrayObject::ensureArrayObject($content);
-
-        $form = $this->formFactory->create(CreatePaymentType::class);
-        $form->submit((array) $rawPayment);
-        if (false == $form->isValid()) {
-            return new JsonResponse($this->formToJsonConverter->convertInvalid($form), 400);
+        try {
+            $content = $request->getContent();
+            $data = $this->jsonDecode->decode($content, $this->schemaBuilder->buildNew());
+        } catch (InvalidJsonException $e) {
+            return new JsonResponse(['errors' => $e->getErrors(),], 400);
         }
 
-        /** @var Payment $payment */
-        $payment = $form->getData();
+        $currency = (new ISO4217)->findByAlpha3($data['currencyCode']);
+        $data['totalAmount'] = (int) ($data['totalAmountInput'] * pow(10, $currency->getExp()));
+
+        $payment = new Payment();
+        set_object_values($payment, $data);
+
         $payment->setId(Random::generateToken());
         $payment->setNumber($payment->getNumber() ?: date('Ymd-'.mt_rand(10000, 99999)));
 
@@ -101,36 +103,6 @@ class PaymentController
             201,
             ['Location' => $selfUrl]
         );
-    }
-
-    /**
-     * @param Request $request
-     *
-     * @return JsonResponse
-     */
-    public function updateAction($content, Request $request)
-    {
-        $this->forward400Unless('json' == $request->getContentType());
-        $this->forward404Unless($payment = $this->findRequestedPayment($request));
-
-        $rawPayment = ArrayObject::ensureArrayObject($content);
-
-        $form = $this->formFactory->create(UpdatePaymentType::class, $payment);
-        $form->submit((array) $rawPayment);
-
-        if (false == $form->isValid()) {
-            return new JsonResponse($this->formToJsonConverter->convertInvalid($form), 400);
-        }
-
-        /** @var Payment $payment */
-        $payment = $form->getData();
-
-        $storage = $this->payum->getStorage($payment);
-        $storage->update($payment);
-
-        return new JsonResponse(array(
-            'payment' => $this->paymentToJsonConverter->convert($payment),
-        ));
     }
 
     /**
@@ -182,18 +154,6 @@ class PaymentController
 
         return new JsonResponse(array(
             'payments' => $jsonPayments,
-        ));
-    }
-
-    /**
-     * @return JsonResponse
-     */
-    public function metaAction()
-    {
-        $form = $this->formFactory->create(CreatePaymentType::class);
-
-        return new JsonResponse(array(
-            'meta' => $this->formToJsonConverter->convertMeta($form),
         ));
     }
 
