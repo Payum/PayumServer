@@ -1,9 +1,9 @@
 <?php
 namespace Payum\Server\Model;
 
-use Makasim\Yadm\CastTrait;
-use Makasim\Yadm\ObjectsTrait;
-use Makasim\Yadm\ValuesTrait;
+use Makasim\Values\CastTrait;
+use Makasim\Values\ObjectsTrait;
+use Makasim\Values\ValuesTrait;
 use Payum\Core\Model\CreditCardInterface;
 use Payum\Core\Request\GetHumanStatus;
 
@@ -83,6 +83,22 @@ class Payment
     public function setNumber($number)
     {
         $this->setValue('number', $number);
+    }
+
+    /**
+     * @return \DateTime
+     */
+    public function getCreatedAt()
+    {
+        return $this->getValue('createdAt', null, \DateTime::class);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setCreatedAt(\DateTime $createdAt)
+    {
+        $this->setValue('createdAt', $createdAt);
     }
 
     /**

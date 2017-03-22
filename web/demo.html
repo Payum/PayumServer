@@ -54,7 +54,7 @@
 
             // do new payment
             $('#pay-btn').click(function() {
-                var payment = {totalAmount: 100, currencyCode: 'USD'};
+                var payment = {totalAmountInput: 1, currencyCode: 'USD'};
 
                 payum.payment.create(payment, function(payment) {
                     var token = {
@@ -71,7 +71,7 @@
 
             // do new payment
             $('#pay-krona-btn').click(function() {
-                var payment = {totalAmount: 100, currencyCode: 'SEK'};
+                var payment = {totalAmountInput: 1, currencyCode: 'SEK'};
 
                 payum.payment.create(payment, function(payment) {
                     var token = {

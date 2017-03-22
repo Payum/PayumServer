@@ -1,7 +1,7 @@
 <?php
 namespace Payum\Server\Tests\Functional\Model;
 
-use Payum\Core\Storage\StorageInterface;
+use Makasim\Yadm\Storage;
 use Payum\Server\Model\GatewayConfig;
 use Payum\Server\Test\WebTestCase;
 
@@ -9,7 +9,7 @@ class GatewayConfigTest extends WebTestCase
 {
     public function testShouldAllowPersistGatewayConfigToMongo()
     {
-        /** @var StorageInterface $storage */
+        /** @var Storage $storage */
         $storage = $this->app['payum.gateway_config_storage'];
 
         /** @var GatewayConfig $gatewayConfig */
@@ -22,13 +22,12 @@ class GatewayConfigTest extends WebTestCase
         $gatewayConfig->setGatewayName('theGatewayName');
         $gatewayConfig->setFactoryName('theFactoryName');
         $gatewayConfig->setConfig(['foo' => 'fooVal', 'bar' => 'barVal']);
-
-        $storage->update($gatewayConfig);
+        $storage->insert($gatewayConfig);
 
         $this->assertNotNull($gatewayConfig->getId());
 
         /** @var GatewayConfig $foundGatewayConfig */
-        $foundGatewayConfig = $storage->find($gatewayConfig->getId());
+        $foundGatewayConfig = $storage->findOne(['id' => $gatewayConfig->getId()]);
 
         $this->assertInstanceOf(GatewayConfig::class, $foundGatewayConfig);
         $this->assertNotSame($gatewayConfig, $foundGatewayConfig);

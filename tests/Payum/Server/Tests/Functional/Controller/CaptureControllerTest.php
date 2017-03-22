@@ -1,13 +1,12 @@
 <?php
 namespace Payum\Server\Tests\Functional\Controller;
 
+use Makasim\Yadm\Storage;
 use Payum\Core\Payum;
-use Payum\Core\Storage\StorageInterface;
 use Payum\Server\Model\GatewayConfig;
 use Payum\Server\Model\Payment;
 use Payum\Server\Test\ClientTestCase;
 use Payum\Server\Test\ResponseHelper;
-use Silex\Application;
 
 class CaptureControllerTest extends ClientTestCase
 {
@@ -15,34 +14,36 @@ class CaptureControllerTest extends ClientTestCase
 
     public function testShouldAllowChooseGateway()
     {
-        /** @var StorageInterface $gatewayConfigStorage */
+
+        /** @var Storage $gatewayConfigStorage */
         $gatewayConfigStorage = $this->app['payum.gateway_config_storage'];
 
         /** @var GatewayConfig $gatewayConfig */
         $gatewayConfig = $gatewayConfigStorage->create();
         $gatewayConfig->setFactoryName('offline');
         $gatewayConfig->setGatewayName('FooGateway');
-        $gatewayConfig->setConfig([]);
-        $gatewayConfigStorage->update($gatewayConfig);
+        $gatewayConfig->setConfig(['factory' => 'offline']);
+        $gatewayConfigStorage->insert($gatewayConfig);
 
         /** @var GatewayConfig $gatewayConfig */
         $gatewayConfig = $gatewayConfigStorage->create();
         $gatewayConfig->setFactoryName('offline');
         $gatewayConfig->setGatewayName('BarGateway');
-        $gatewayConfig->setConfig([]);
-        $gatewayConfigStorage->update($gatewayConfig);
+        $gatewayConfig->setConfig(['factory' => 'offline']);
+        $gatewayConfigStorage->insert($gatewayConfig);
 
-        /** @var Payum $payum */
-        $payum = $this->app['payum'];
-
-        $store = $payum->getStorage(Payment::class);
+        /** @var Storage $storage */
+        $storage = $this->app['payum.payment_storage'];
 
         /** @var Payment $payment */
-        $payment = $store->create();
+        $payment = $storage->create();
         $payment->setGatewayName(null);
         $payment->setId(uniqid());
 
-        $store->update($payment);
+        $storage->insert($payment);
+
+        /** @var Payum $payum */
+        $payum = $this->app['payum'];
 
         $token = $payum->getTokenFactory()->createCaptureToken('', $payment, 'http://localhost');
 
@@ -66,7 +67,7 @@ class CaptureControllerTest extends ClientTestCase
 
     public function testShouldObtainMissingDetails()
     {
-        /** @var StorageInterface $gatewayConfigStorage */
+        /** @var Storage $gatewayConfigStorage */
         $gatewayConfigStorage = $this->app['payum.gateway_config_storage'];
 
         /** @var GatewayConfig $gatewayConfig */
@@ -74,23 +75,25 @@ class CaptureControllerTest extends ClientTestCase
         $gatewayConfig->setFactoryName('be2bill_offsite');
         $gatewayConfig->setGatewayName('be2bill');
         $gatewayConfig->setConfig([
+            'factory' => 'be2bill_offsite',
             'identifier' => 'foo',
             'password' => 'bar',
             'sandbox' => true
         ]);
-        $gatewayConfigStorage->update($gatewayConfig);
+        $gatewayConfigStorage->insert($gatewayConfig);
 
         /** @var Payum $payum */
         $payum = $this->app['payum'];
 
-        $store = $payum->getStorage(Payment::class);
+        /** @var Storage $storage */
+        $storage = $this->app['payum.payment_storage'];
 
         /** @var Payment $payment */
-        $payment = $store->create();
+        $payment = $storage->create();
         $payment->setGatewayName('be2bill');
         $payment->setId(uniqid());
 
-        $store->update($payment);
+        $storage->insert($payment);
 
         $token = $payum->getTokenFactory()->createCaptureToken('be2bill', $payment, 'http://localhost');
 

@@ -44,7 +44,7 @@ Payum = function(serverUrl) {
     };
 
     payum.execute = function(url, container) {
-        jQuery.ajax(url, {
+        $.ajax(url, {
             type: "GET",
             async: true,
             headers: {
@@ -74,10 +74,14 @@ Payum = function(serverUrl) {
                         complete: function(data) {
                             payum.updateContainer(data, container);
                         },
-                        error: function() {
+                        error: function(data) {
+                            payum.updateContainer(data, container);
                         }
                     });
                 });
+            },
+            error: function(data) {
+                payum.updateContainer(data, container);
             }
         });
     };
@@ -88,6 +92,12 @@ Payum = function(serverUrl) {
         }
         if (data.status >= 200 && data.status < 300) {
             $(container).html(data.responseJSON.content);
+        }
+        if (data.status >= 400 && data.status < 500) {
+            $(container).html('<div class="alert alert-warning">Bad request error</div>');
+        }
+        if (data.status >= 500 && data.status < 600) {
+            $(container).html('<div class="alert alert-warning">Internal server error</div>');
         }
     };
 };

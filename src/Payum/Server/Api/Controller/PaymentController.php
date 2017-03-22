@@ -1,18 +1,14 @@
 <?php
 namespace Payum\Server\Api\Controller;
 
-use function Makasim\Yadm\set_object_values;
-use Payum\Core\Payum;
-use Payum\Core\Registry\RegistryInterface;
 use Payum\Core\Security\Util\Random;
-use Payum\Core\Storage\StorageInterface;
 use Payum\ISO4217\ISO4217;
 use Payum\Server\Api\View\PaymentToJsonConverter;
 use Payum\Server\Controller\ForwardExtensionTrait;
 use Payum\Server\InvalidJsonException;
 use Payum\Server\JsonDecode;
-use Payum\Server\Model\Payment;
 use Payum\Server\Schema\PaymentSchemaBuilder;
+use Payum\Server\Storage\PaymentStorage;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -21,11 +17,6 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 class PaymentController
 {
     use ForwardExtensionTrait;
-
-    /**
-     * @var RegistryInterface
-     */
-    protected $payum;
 
     /**
      * @var PaymentToJsonConverter
@@ -48,24 +39,29 @@ class PaymentController
     private $jsonDecode;
 
     /**
-     * @param Payum $payum
+     * @var PaymentStorage
+     */
+    private $paymentStorage;
+
+    /**
      * @param PaymentToJsonConverter $paymentToJsonConverter
      * @param UrlGeneratorInterface $urlGenerator
+     * @param PaymentStorage $paymentStorage
      * @param PaymentSchemaBuilder $paymentSchemaBuilder
      * @param JsonDecode $jsonDecode
      */
     public function __construct(
-        Payum $payum,
         PaymentToJsonConverter $paymentToJsonConverter,
         UrlGeneratorInterface $urlGenerator,
+        PaymentStorage $paymentStorage,
         PaymentSchemaBuilder $paymentSchemaBuilder,
         JsonDecode $jsonDecode
     ) {
-        $this->payum = $payum;
         $this->paymentToJsonConverter = $paymentToJsonConverter;
         $this->urlGenerator = $urlGenerator;
         $this->schemaBuilder = $paymentSchemaBuilder;
         $this->jsonDecode = $jsonDecode;
+        $this->paymentStorage = $paymentStorage;
     }
 
     /**
@@ -87,14 +83,12 @@ class PaymentController
         $currency = (new ISO4217)->findByAlpha3($data['currencyCode']);
         $data['totalAmount'] = (int) ($data['totalAmountInput'] * pow(10, $currency->getExp()));
 
-        $payment = new Payment();
-        set_object_values($payment, $data);
-
+        $payment = $this->paymentStorage->hydrate($data);
         $payment->setId(Random::generateToken());
         $payment->setNumber($payment->getNumber() ?: date('Ymd-'.mt_rand(10000, 99999)));
+        $payment->setCreatedAt(new \DateTime('now'));
 
-        $storage = $this->payum->getStorage($payment);
-        $storage->update($payment);
+        $this->paymentStorage->insert($payment);
 
         $selfUrl = $this->urlGenerator->generate('payment_get', ['id' => $payment->getId()], UrlGeneratorInterface::ABSOLUTE_URL);
 
@@ -106,16 +100,13 @@ class PaymentController
     }
 
     /**
-     * @param Request $request
-     *
      * @return Response
      */
-    public function deleteAction(Request $request)
+    public function deleteAction($id)
     {
-        $this->forward404Unless($payment = $this->findRequestedPayment($request));
+        $this->forward404Unless($payment = $this->paymentStorage->findOne(['id' => $id]));
 
-        $storage = $this->payum->getStorage($payment);
-        $storage->delete($payment);
+        $this->paymentStorage->delete($payment);
 
         //TODO remove related tokens.
 
@@ -123,50 +114,28 @@ class PaymentController
     }
 
     /**
-     * @param Request $request
-     *
      * @return JsonResponse
      */
-    public function getAction(Request $request)
+    public function getAction($id)
     {
-        $this->forward404Unless($payment = $this->findRequestedPayment($request));
+        $this->forward404Unless($payment = $this->paymentStorage->findById($id));
 
-        return new JsonResponse(array(
+        return new JsonResponse([
             'payment' => $this->paymentToJsonConverter->convert($payment),
-        ));
+        ]);
     }
 
     /**
-     * @param Request $request
-     *
      * @return JsonResponse
      */
-    public function allAction(Request $request)
+    public function allAction()
     {
-        /** @var StorageInterface $storage */
-        $storage = $this->payum->getStorage(Payment::class);
-
         $jsonPayments = [];
-        foreach ($storage->findBy([]) as $payment) {
+        foreach ($this->paymentStorage->findAll() as $payment) {
             $jsonPayments[] = $this->paymentToJsonConverter->convert($payment);
 
         }
 
-        return new JsonResponse(array(
-            'payments' => $jsonPayments,
-        ));
-    }
-
-    /**
-     * @param Request $request
-     *
-     * @return Payment
-     */
-    protected function findRequestedPayment(Request $request)
-    {
-        // TODO: add validation that id is not empty and model actually exists.
-        $storage = $this->payum->getStorage(Payment::class);
-
-        return $storage->find($request->attributes->get('id'));
+        return new JsonResponse(['payments' => $jsonPayments]);
     }
 }

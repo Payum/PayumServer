@@ -22,9 +22,9 @@ class ApiControllerProvider implements ServiceProviderInterface
 
         $app['payum.api.controller.payment'] = $app->share(function() use ($app) {
             return new PaymentController(
-                $app['payum'],
                 $app['api.view.payment_to_json_converter'],
                 $app['url_generator'],
+                $app['payum.payment_storage'],
                 $app['payum.payment_schema_builder'],
                 $app['json_decode']
             );
@@ -42,7 +42,7 @@ class ApiControllerProvider implements ServiceProviderInterface
         $app['payum.api.controller.gateway'] = $app->share(function() use ($app) {
             return new GatewayController(
                 $app['url_generator'],
-                $app['payum.gateway_config_storage'],
+                $app['payum.yadm_gateway_config_storage'],
                 $app['api.view.gateway_config_to_json_converter'],
                 $app['payum.gateway_schema_builder'],
                 $app['json_decode']

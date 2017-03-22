@@ -1,23 +1,24 @@
 <?php
 namespace Payum\Server\Storage;
 
+use function Makasim\Yadm\get_object_id;
+use Makasim\Yadm\Storage;
 use Payum\Core\Model\Identity;
 use Payum\Core\Storage\AbstractStorage;
-use Makasim\Yadm\MongodbStorage;
 
 class YadmStorage extends AbstractStorage
 {
     /**
-     * @var MongodbStorage
+     * @var Storage
      */
     private $storage;
 
     /**
      * {@inheritdoc}
      *
-     * @param MongodbStorage $storage
+     * @param Storage $storage
      */
-    public function __construct(MongodbStorage $storage)
+    public function __construct(Storage $storage)
     {
         parent::__construct(get_class($storage->create()));
 
@@ -29,8 +30,7 @@ class YadmStorage extends AbstractStorage
      */
     protected function doUpdateModel($model)
     {
-        $values = \Makasim\Yadm\get_object_values($model);
-        if (isset($values['_id'])) {
+        if (get_object_id($model)) {
             $this->storage->update($model);
         } else {
             $this->storage->insert($model);

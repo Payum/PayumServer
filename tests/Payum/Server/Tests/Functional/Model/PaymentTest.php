@@ -1,7 +1,7 @@
 <?php
 namespace Payum\Server\Tests\Functional\Model;
 
-use Payum\Core\Payum;
+use Makasim\Yadm\Storage;
 use Payum\Server\Model\Payment;
 use Payum\Server\Test\WebTestCase;
 
@@ -9,10 +9,8 @@ class PaymentTest extends WebTestCase
 {
     public function testShouldAllowPersistPaymentToMongo()
     {
-        /** @var Payum $payum */
-        $payum = $this->app['payum'];
-
-        $storage = $payum->getStorage(Payment::class);
+        /** @var Storage $storage */
+        $storage = $this->app['payum.payment_storage'];
 
         /** @var Payment $payment */
         $payment = $storage->create();
@@ -30,12 +28,12 @@ class PaymentTest extends WebTestCase
         $payment->setNumber('theNumber');
         $payment->setGatewayName('theGatewayName');
 
-        $storage->update($payment);
+        $storage->insert($payment);
 
         $this->assertNotNull($payment->getId());
 
         /** @var Payment $foundPayment */
-        $foundPayment = $storage->find($payment->getId());
+        $foundPayment = $storage->findOne(['id' => $payment->getId()]);
 
         $this->assertInstanceOf(Payment::class, $foundPayment);
         $this->assertNotSame($payment, $foundPayment);
@@ -47,10 +45,8 @@ class PaymentTest extends WebTestCase
 
     public function testShouldAllowStorePaymentsDetails()
     {
-        /** @var Payum $payum */
-        $payum = $this->app['payum'];
-
-        $storage = $payum->getStorage(Payment::class);
+        /** @var Storage $storage */
+        $storage = $this->app['payum.payment_storage'];
 
         /** @var Payment $payment */
         $payment = $storage->create();
@@ -63,12 +59,12 @@ class PaymentTest extends WebTestCase
         $payment->setDetails(array('foo' => 'bar'));
         $payment->setDetails(array('bar' => array('foo' => 'baz')));
 
-        $storage->update($payment);
+        $storage->insert($payment);
 
         $this->assertNotNull($payment->getId());
 
         /** @var Payment $foundPayment */
-        $foundPayment = $storage->find($payment->getId());
+        $foundPayment = $storage->findOne(['id' => $payment->getId()]);
 
         $this->assertInstanceOf(Payment::class, $foundPayment);
         $this->assertNotSame($payment, $foundPayment);

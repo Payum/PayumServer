@@ -1,7 +1,7 @@
 <?php
 namespace Payum\Server\Api\Controller;
 
-use function Makasim\Yadm\set_object_values;
+use function Makasim\Values\set_values;
 use Payum\Core\Model\GatewayConfigInterface;
 use Payum\Core\Storage\StorageInterface;
 use Payum\Server\Api\View\GatewayConfigToJsonConverter;
@@ -14,6 +14,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Component\Routing\Generator\UrlGenerator;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 class GatewayController
@@ -34,10 +35,12 @@ class GatewayController
      * @var GatewayConfigToJsonConverter
      */
     private $gatewayConfigToJsonConverter;
+
     /**
      * @var GatewaySchemaBuilder
      */
     private $schemaBuilder;
+
     /**
      * @var JsonDecode
      */
@@ -76,24 +79,35 @@ class GatewayController
             return new JsonResponse(['errors' => $e->getErrors(),], 400);
         }
 
-        $gatewayConfig = new GatewayConfig();
-        set_object_values($gatewayConfig, $data);
+        if ($this->gatewayConfigStorage->findBy(['gatewayName' => $data['gatewayName']])) {
+            return new JsonResponse([
+                'errors' => [
+                    'gatewayName' => [
+                        sprintf('Gateway with such name "%s" already exists', $data['gatewayName']),
+                    ],
+                ]
+            ], 400);
+        }
+
+        /** @var GatewayConfig $gatewayConfig */
+        $gatewayConfig = $this->gatewayConfigStorage->create();
+        set_values($gatewayConfig, $data);
 
         $this->gatewayConfigStorage->update($gatewayConfig);
 
         $getUrl = $this->urlGenerator->generate('gateway_get',
             array('name' => $gatewayConfig->getGatewayName()),
-            $absolute = true
+            UrlGenerator::ABSOLUTE_URL
         );
 
         return new JsonResponse(
-            array(
+            [
                 'gateway' => $this->gatewayConfigToJsonConverter->convert($gatewayConfig),
-            ),
+            ],
             201,
-            array(
+            [
                 'Location' => $getUrl
-            )
+            ]
         );
     }
 

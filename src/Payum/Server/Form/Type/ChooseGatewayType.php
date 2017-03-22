@@ -3,6 +3,7 @@ namespace Payum\Server\Form\Type;
 
 use Payum\Core\Bridge\Symfony\Form\Type\GatewayChoiceType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\ChoiceList\Loader\CallbackChoiceLoader;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -11,12 +12,28 @@ use Symfony\Component\Validator\Constraints\NotBlank;
 class ChooseGatewayType extends AbstractType
 {
     /**
+     * @var callable
+     */
+    private $gatewayChoices;
+
+    /**
+     * @param callable $gatewayChoices
+     */
+    public function __construct(callable $gatewayChoices)
+    {
+        $this->gatewayChoices = $gatewayChoices;
+    }
+
+    /**
      * {@inheritdoc}
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('gatewayName', GatewayChoiceType::class, ['constraints' => [new NotBlank()]])
+            ->add('gatewayName', GatewayChoiceType::class, [
+                'constraints' => [new NotBlank()],
+                'choice_loader' => new CallbackChoiceLoader($this->gatewayChoices),
+            ])
             ->add('choose', SubmitType::class)
         ;
     }

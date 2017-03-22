@@ -1,6 +1,7 @@
 <?php
 namespace Payum\Server\Tests\Functional\Api\Controller;
 
+use Makasim\Yadm\Storage;
 use Payum\Core\Model\GatewayConfigInterface;
 use Payum\Core\Payum;
 use Payum\Core\Storage\StorageInterface;
@@ -30,7 +31,7 @@ class TokenControllerTest extends ClientTestCase
 
     public function testShouldAllowCreateCaptureToken()
     {
-        /** @var StorageInterface $gatewayConfigStorage */
+        /** @var Storage $gatewayConfigStorage */
         $gatewayConfigStorage = $this->app['payum.gateway_config_storage'];
 
         /** @var GatewayConfig $gatewayConfig */
@@ -38,19 +39,17 @@ class TokenControllerTest extends ClientTestCase
         $gatewayConfig->setFactoryName('offline');
         $gatewayConfig->setGatewayName('offline');
         $gatewayConfig->setConfig([]);
-        $gatewayConfigStorage->update($gatewayConfig);
+        $gatewayConfigStorage->insert($gatewayConfig);
 
-        /** @var Payum $payum */
-        $payum = $this->app['payum'];
-
-        $store = $payum->getStorage(Payment::class);
+        /** @var Storage $storage */
+        $storage = $this->app['payum.payment_storage'];
 
         /** @var Payment $payment */
-        $payment = $store->create();
+        $payment = $storage->create();
         $payment->setGatewayName('offline');
         $payment->setId(uniqid());
 
-        $store->update($payment);
+        $storage->insert($payment);
 
         $this->getClient()->postJson('/tokens/', [
             'type' => 'capture',
@@ -79,7 +78,7 @@ class TokenControllerTest extends ClientTestCase
 
     public function testShouldAllowCreateAuthorizeToken()
     {
-        /** @var StorageInterface $gatewayConfigStorage */
+        /** @var Storage $gatewayConfigStorage */
         $gatewayConfigStorage = $this->app['payum.gateway_config_storage'];
 
         /** @var GatewayConfig $gatewayConfig */
@@ -87,19 +86,17 @@ class TokenControllerTest extends ClientTestCase
         $gatewayConfig->setFactoryName('offline');
         $gatewayConfig->setGatewayName('offline');
         $gatewayConfig->setConfig([]);
-        $gatewayConfigStorage->update($gatewayConfig);
+        $gatewayConfigStorage->insert($gatewayConfig);
 
-        /** @var Payum $payum */
-        $payum = $this->app['payum'];
-
-        $store = $payum->getStorage(Payment::class);
+        /** @var Storage $storage */
+        $storage = $this->app['payum.payment_storage'];
 
         /** @var Payment $payment */
-        $payment = $store->create();
+        $payment = $storage->create();
         $payment->setGatewayName('offline');
         $payment->setId(uniqid());
 
-        $store->update($payment);
+        $storage->insert($payment);
 
         $this->getClient()->postJson('/tokens/', [
             'type' => 'authorize',

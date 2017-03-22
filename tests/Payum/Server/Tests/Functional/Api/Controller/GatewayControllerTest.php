@@ -1,6 +1,7 @@
 <?php
 namespace Payum\Server\Tests\Functional\Api\Controller;
 
+use Makasim\Yadm\Storage;
 use Payum\Core\Model\GatewayConfigInterface;
 use Payum\Core\Storage\StorageInterface;
 use Payum\Server\Test\ClientTestCase;
@@ -15,26 +16,72 @@ class GatewayControllerTest extends ClientTestCase
     {
         parent::setUp();
 
-        /** @var StorageInterface $gatewayConfigStorage */
+        /** @var Storage $gatewayConfigStorage */
         $gatewayConfigStorage = $this->app['payum.gateway_config_storage'];
 
         /** @var GatewayConfigInterface $gatewayConfig */
         $gatewayConfig = $gatewayConfigStorage->create();
         $gatewayConfig->setGatewayName('paypal_express_checkout');
         $gatewayConfig->setFactoryName('paypal_express_checkout');
-        $gatewayConfigStorage->update($gatewayConfig);
+        $gatewayConfigStorage->insert($gatewayConfig);
 
         /** @var GatewayConfigInterface $gatewayConfig */
         $gatewayConfig = $gatewayConfigStorage->create();
         $gatewayConfig->setGatewayName('stripe_js');
         $gatewayConfig->setFactoryName('stripe_js');
-        $gatewayConfigStorage->update($gatewayConfig);
+        $gatewayConfigStorage->insert($gatewayConfig);
 
         /** @var GatewayConfigInterface $gatewayConfig */
         $gatewayConfig = $gatewayConfigStorage->create();
         $gatewayConfig->setGatewayName('stripe_checkout');
         $gatewayConfig->setFactoryName('stripe_checkout');
-        $gatewayConfigStorage->update($gatewayConfig);
+        $gatewayConfigStorage->insert($gatewayConfig);
+    }
+
+    /**
+     * @test
+     */
+    public function shouldAllowCreateGateway()
+    {
+        $this->getClient()->postJson('/gateways/', [
+            'gatewayName' => 'aGateway',
+            'factoryName' => 'offline',
+        ]);
+
+        $this->assertClientResponseStatus(201);
+        $this->assertClientResponseContentJson();
+
+        $content = $this->getClientResponseJsonContent();
+
+        $this->assertObjectHasAttribute('gateway', $content);
+
+        $this->assertObjectHasAttribute('gatewayName', $content->gateway);
+        $this->assertEquals('aGateway', $content->gateway->gatewayName);
+
+        $this->assertObjectHasAttribute('factoryName', $content->gateway);
+        $this->assertEquals('offline', $content->gateway->factoryName);
+
+        $this->assertStringStartsWith('http://localhost/gateways/', $this->getClient()->getResponse()->headers->get('Location'));
+    }
+
+    /**
+     * @test
+     */
+    public function shouldNotAllowCreateGatewayIfOneWithSameNameAlreadyExists()
+    {
+        $this->getClient()->postJson('/gateways/', [
+            'gatewayName' => 'aUniqueGateway',
+            'factoryName' => 'offline',
+        ]);
+
+        $this->assertClientResponseStatus(201);
+
+        $this->getClient()->postJson('/gateways/', [
+            'gatewayName' => 'aUniqueGateway',
+            'factoryName' => 'offline',
+        ]);
+
+        $this->assertClientResponseStatus(400);
     }
 
     /**
