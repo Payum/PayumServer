@@ -2,7 +2,7 @@
 namespace Payum\Server;
 
 use Makasim\Yadm\Hydrator;
-use Makasim\Yadm\MongodbStorage;
+use Makasim\Yadm\Storage;
 use MongoDB\Client;
 use MongoDB\Database;
 use Payum\Core\Bridge\Spl\ArrayObject;
@@ -19,9 +19,6 @@ use Payum\Server\Action\ObtainMissingDetailsForBe2BillAction;
 use Payum\Server\Extension\UpdatePaymentStatusExtension;
 use Payum\Server\Form\Extension\CreditCardExtension;
 use Payum\Server\Form\Type\ChooseGatewayType;
-use Payum\Server\Form\Type\CreatePaymentType;
-use Payum\Server\Form\Type\CreateTokenType;
-use Payum\Server\Form\Type\UpdatePaymentType;
 use Payum\Server\Model\GatewayConfig;
 use Payum\Server\Model\Payment;
 use Payum\Server\Model\SecurityToken;
@@ -56,7 +53,7 @@ class ServiceProvider implements ServiceProviderInterface
             /** @var Database $db */
             $db = $app['mongodb.database'];
 
-            return new MongodbStorage($db->selectCollection('gateway_configs'), new Hydrator(GatewayConfig::class));
+            return new Storage($db->selectCollection('gateway_configs'), new Hydrator(GatewayConfig::class));
         });
 
         $app['payum.payment_storage'] = $app->share(function ($app) {
@@ -70,7 +67,7 @@ class ServiceProvider implements ServiceProviderInterface
             /** @var Database $db */
             $db = $app['mongodb.database'];
 
-            return new MongodbStorage($db->selectCollection('security_tokens'), new Hydrator(SecurityToken::class));
+            return new Storage($db->selectCollection('security_tokens'), new Hydrator(SecurityToken::class));
         });
 
         $app['payum.builder'] = $app->share($app->extend('payum.builder', function (PayumBuilder $builder) use ($app) {
@@ -95,6 +92,7 @@ class ServiceProvider implements ServiceProviderInterface
                     },
 
                     'twig.env' => $app['twig'],
+
                     'payum.paths' => [
                         'PayumServer' => __DIR__.'/Resources/views',
                     ],
@@ -128,10 +126,17 @@ class ServiceProvider implements ServiceProviderInterface
         }));
 
         $app['form.types'] = $app->share($app->extend('form.types', function ($types) use ($app) {
-//            $types[] = new CreatePaymentType();
-//            $types[] = new UpdatePaymentType();
-//            $types[] = new CreateTokenType();
-            $types[] = new ChooseGatewayType();
+            $types[] = new ChooseGatewayType(function() use ($app) {
+                /** @var Payum $payum */
+                $payum = $app['payum'];
+
+                $choices = [];
+                foreach ($payum->getGateways() as $name => $gateway) {
+                    $choices[ucwords(str_replace(['_'], ' ', $name))] = $name;
+                }
+
+                return $choices;
+            });
 
             return $types;
         }));
@@ -160,7 +165,7 @@ class ServiceProvider implements ServiceProviderInterface
             return function(Options $options) use ($app, $choicesCallback) {
                 $choices = call_user_func($choicesCallback, $options);
 
-                /** @var MongodbStorage $gatewayConfigStorage */
+                /** @var Storage $gatewayConfigStorage */
                 $gatewayConfigStorage = $app['payum.gateway_config_storage'];
                 foreach ($gatewayConfigStorage->find([]) as $config) {
                     /** @var GatewayConfigInterface $config */
@@ -195,7 +200,9 @@ class ServiceProvider implements ServiceProviderInterface
                     if ($form->isSubmitted() && $form->isValid()) {
                         $payum->getStorage($payment)->update($payment);
                     } else {
-                        /** @var \Twig_Environment $twig */
+                        // the twig paths have to be initialized.
+                        $payum->getGatewayFactory('core')->create();
+
                         $twig = $app['twig'];
 
                         throw new HttpResponse($twig->render('@PayumServer/chooseGateway.html.twig', [
@@ -227,6 +234,23 @@ class ServiceProvider implements ServiceProviderInterface
 
         /** @var ControllerCollection $payment */
         $payment = $app['payum.payments_controller_collection'];
+        $payment->after(function (Request $request, Response $response) use ($app) {
+            if ('OPTIONS' == $request->getMethod()) {
+                return;
+            }
+
+            if ('application/vnd.payum+json' == $response->headers->get('Content-Type')) {
+                return;
+            }
+            if ('application/json' == $response->headers->get('Content-Type')) {
+                return;
+            }
+
+            if ('application/vnd.payum+json' == $request->headers->get('Accept')) {
+                throw new HttpResponse($response);
+            }
+        });
+
         $payment->after(function (Request $request, Response $response) use ($app) {
             if ('OPTIONS' == $request->getMethod()) {
                 return;

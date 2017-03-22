@@ -1,7 +1,8 @@
 <?php
 namespace Payum\Server\Test;
 
-use MongoDB\Database;
+use Makasim\Values\HookStorage;
+use Makasim\Yadm\Storage;
 use Payum\Server\Application;
 use Silex\WebTestCase as SilexWebTestCase;
 use Symfony\Component\HttpFoundation\Session\Storage\MockArraySessionStorage;
@@ -10,18 +11,22 @@ abstract class WebTestCase extends SilexWebTestCase
 {
     public function setUp()
     {
-        parent::setUp();
+        HookStorage::clearAll();
 
-        $this->app['session.storage'] = new MockArraySessionStorage();
+        parent::setUp();
 
         $this->app->boot();
 
+        /** @var Storage $storage */
 
-        /** @var Database $db */
-        $db = $this->app['mongodb.database'];
-        $db->selectCollection('gateway_configs')->deleteMany([]);
-        $db->selectCollection('security_tokens')->deleteMany([]);
-        $db->selectCollection('payments')->deleteMany([]);
+        $storage = $this->app['payum.gateway_config_storage'];
+        $storage->getCollection()->drop();
+
+        $storage = $this->app['payum.payment_storage'];
+        $storage->getCollection()->drop();
+
+        $storage = $this->app['payum.token_storage'];
+        $storage->getCollection()->drop();
     }
 
     public function createApplication()
@@ -30,6 +35,7 @@ abstract class WebTestCase extends SilexWebTestCase
         $app['payum.root_dir'] = __DIR__;
         $app['exception_handler']->disable();
         $app['mongo.database'] = 'payum_server_test';
+        $app['session.storage'] = new MockArraySessionStorage();
 
         return $app;
     }

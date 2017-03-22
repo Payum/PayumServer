@@ -2,6 +2,7 @@
 namespace Payum\Server;
 
 use JDesrosiers\Silex\Provider\CorsServiceProvider;
+use function Makasim\Values\register_cast_hooks;
 use Payum\Server\Api\ApiControllerProvider;
 use Payum\Server\Api\ApiProvider;
 use Payum\Server\Schema\SchemaProvider;
@@ -37,7 +38,9 @@ class Application extends SilexApplication
         $payumProvider = new PayumProvider();
         $this->register($payumProvider);
         $this->mount('/payment', $payumProvider);
-        $this->register(new TwigServiceProvider());
+        $this->register(new TwigServiceProvider(), [
+                'twig.path' => __DIR__.'/Resources/views',
+        ]);
 
         // Fix: Twig_Error_Runtime: Unable to load the "Symfony\Bridge\Twig\Form\TwigRenderer" runtime.
         $twig = $this['twig'];
@@ -54,7 +57,8 @@ class Application extends SilexApplication
 
         $this->register(new SchemaProvider());
 
-
         $app["cors.allowMethods"] = 'GET, OPTIONS, PUT, POST, DELETE';
+
+        register_cast_hooks();
     }
 }

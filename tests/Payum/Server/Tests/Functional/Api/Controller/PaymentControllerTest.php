@@ -1,7 +1,7 @@
 <?php
 namespace Payum\Server\Tests\Functional\Api\Controller;
 
-use Payum\Core\Payum;
+use Makasim\Yadm\Storage;
 use Payum\Server\Model\Payment;
 use Payum\Server\Test\ClientTestCase;
 use Payum\Server\Test\ResponseHelper;
@@ -16,12 +16,13 @@ class PaymentControllerTest extends ClientTestCase
      */
     public function shouldAllowGetPayment()
     {
+        /** @var Storage $storage */
+        $storage = $this->app['payum.payment_storage'];
+
         $payment = new Payment();
         $payment->setId(uniqid());
         $payment->setClientEmail('theExpectedPayment');
-
-        $storage = $this->app['payum']->getStorage($payment);
-        $storage->update($payment);
+        $storage->insert($payment);
 
         $this->getClient()->request('GET', '/payments/'.$payment->getId());
 
@@ -45,8 +46,9 @@ class PaymentControllerTest extends ClientTestCase
         $payment->setId(uniqid());
         $payment->setClientEmail('theExpectedPayment');
 
-        $storage = $this->app['payum']->getStorage($payment);
-        $storage->update($payment);
+        /** @var Storage $storage */
+        $storage = $this->app['payum.payment_storage'];
+        $storage->insert($payment);
 
         //guard
         $this->getClient()->request('GET', '/payments/'.$payment->getId());

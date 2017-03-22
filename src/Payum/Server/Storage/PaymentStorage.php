@@ -2,14 +2,14 @@
 namespace Payum\Server\Storage;
 
 use Makasim\Yadm\Hydrator;
-use Makasim\Yadm\MongodbStorage;
+use Makasim\Yadm\Storage;
 use MongoDB\Collection;
 use Payum\Server\Model\Payment;
 
 /**
  * @method Payment create
  */
-class PaymentStorage extends MongodbStorage
+class PaymentStorage extends Storage
 {
     /**
      * @var Hydrator

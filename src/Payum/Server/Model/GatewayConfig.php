@@ -1,8 +1,8 @@
 <?php
 namespace Payum\Server\Model;
 
-use Makasim\Yadm\CastTrait;
-use Makasim\Yadm\ValuesTrait;
+use Makasim\Values\CastTrait;
+use Makasim\Values\ValuesTrait;
 use Payum\Core\Model\GatewayConfigInterface;
 
 class GatewayConfig implements GatewayConfigInterface
@@ -50,6 +50,7 @@ class GatewayConfig implements GatewayConfigInterface
     public function setFactoryName($name)
     {
         $this->setValue('factoryName', $name);
+        $this->setValue('config.factory', $name);
     }
 
     /**

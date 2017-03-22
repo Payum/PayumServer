@@ -1,7 +1,7 @@
 <?php
 namespace Payum\Server\Model;
 
-use Makasim\Yadm\ValuesTrait;
+use Makasim\Values\ValuesTrait;
 
 class Payer
 {

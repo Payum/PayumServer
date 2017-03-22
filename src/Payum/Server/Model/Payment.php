@@ -1,9 +1,9 @@
 <?php
 namespace Payum\Server\Model;
 
-use Makasim\Yadm\CastTrait;
-use Makasim\Yadm\ObjectsTrait;
-use Makasim\Yadm\ValuesTrait;
+use Makasim\Values\CastTrait;
+use Makasim\Values\ObjectsTrait;
+use Makasim\Values\ValuesTrait;
 use Payum\Core\Model\CreditCardInterface;
 use Payum\Core\Request\GetHumanStatus;
 
