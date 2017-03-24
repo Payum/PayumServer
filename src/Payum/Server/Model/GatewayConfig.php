@@ -4,11 +4,15 @@ namespace Payum\Server\Model;
 use Makasim\Values\CastTrait;
 use Makasim\Values\ValuesTrait;
 use Payum\Core\Model\GatewayConfigInterface;
+use Payum\Core\Security\CryptedInterface;
+use Payum\Core\Security\CypherInterface;
 
-class GatewayConfig implements GatewayConfigInterface
+class GatewayConfig implements GatewayConfigInterface, CryptedInterface
 {
     use ValuesTrait;
     use CastTrait;
+
+    private $decryptedConfig = [];
 
     /**
      * @return string
@@ -31,7 +35,6 @@ class GatewayConfig implements GatewayConfigInterface
      */
     public function setGatewayName($gatewayName)
     {
-        $this->values['gatewayName'] = $gatewayName;
         $this->setValue('gatewayName', $gatewayName);
         $this->setValue('id', $gatewayName);
     }
@@ -59,6 +62,7 @@ class GatewayConfig implements GatewayConfigInterface
     public function setConfig(array $config)
     {
         $this->setValue('config', $config);
+        $this->decryptedConfig = $config;
     }
 
     /**
@@ -66,6 +70,57 @@ class GatewayConfig implements GatewayConfigInterface
      */
     public function getConfig()
     {
+        if ($this->getValue('config.encrypted', false)) {
+            return $this->decryptedConfig;
+        }
+
         return $this->getValue('config', [], 'array');
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function decrypt(CypherInterface $cypher)
+    {
+        if (false == $this->getValue('config.encrypted', false)) {
+            return;
+        }
+
+        foreach ($this->getValue('config', []) as $name => $value) {
+            if ('encrypted' == $name || is_bool($value)) {
+                $this->decryptedConfig[$name] = $value;
+
+                continue;
+            }
+
+            $this->decryptedConfig[$name] = $cypher->decrypt($value);
+        }
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function encrypt(CypherInterface $cypher)
+    {
+        if (false == $this->getValue('config.encrypted', false)) {
+            $decryptedConfig = $this->getValue('config', []);
+        } else {
+            $decryptedConfig = $this->decryptedConfig;
+        }
+
+        $decryptedConfig['encrypted'] = true;
+
+        $config = [];
+        foreach ($decryptedConfig as $name => $value) {
+            if ('encrypted' == $name || is_bool($value)) {
+                $config[$name] = $value;
+
+                continue;
+            }
+
+            $config[$name] = $cypher->encrypt($value);
+        }
+
+        $this->setValue('config', $config);
     }
 }

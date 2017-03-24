@@ -47,7 +47,8 @@
         "authorizenet/authorizenet": "^1",
         "stripe/stripe-php": "^3",
         "sofort/sofortlib-php": "^3",
-        "webmozart/json": "^1.2"
+        "webmozart/json": "^1.2",
+        "defuse/php-encryption": "^2"
     },
     "require-dev": {
         "phpunit/phpunit": "^5.0",

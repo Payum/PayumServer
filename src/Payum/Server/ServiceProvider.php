@@ -1,16 +1,19 @@
 <?php
 namespace Payum\Server;
 
+use Defuse\Crypto\Key;
 use Makasim\Yadm\Hydrator;
 use Makasim\Yadm\Storage;
 use MongoDB\Client;
 use MongoDB\Database;
+use Payum\Core\Bridge\Defuse\Security\DefuseCypher;
 use Payum\Core\Bridge\Spl\ArrayObject;
 use Payum\Core\Model\GatewayConfigInterface;
 use Payum\Core\Payum;
 use Payum\Core\PayumBuilder;
 use Payum\Core\Reply\HttpResponse;
 use Payum\Core\Reply\ReplyInterface;
+use Payum\Core\Storage\CryptoStorageDecorator;
 use Payum\Server\Action\AuthorizePaymentAction;
 use Payum\Server\Action\CapturePaymentAction;
 use Payum\Server\Action\ExecuteSameRequestWithPaymentDetailsAction;
@@ -43,10 +46,22 @@ class ServiceProvider implements ServiceProviderInterface
     {
         $app['debug'] = (boolean) getenv('PAYUM_DEBUG');
         $app['mongodb.uri'] = getenv('PAYUM_MONGO_URI') ?: 'mongodb://localhost:27017/payum_server';
+        $app['defuse.secret'] = getenv('DEFUSE_SECRET') ?: null;
 
-        // @deprecated
+        if ($app['defuse.secret']) {
+            $app['payum.cypher'] = $app->share(function ($app) {
+                return new DefuseCypher($app['defuse.secret']);
+            });
+        }
+
         $app['payum.yadm_gateway_config_storage'] = $app->share(function ($app) {
-            return new YadmStorage($app['payum.gateway_config_storage']);
+            $gatewayConfigStorage = new YadmStorage($app['payum.gateway_config_storage']);
+
+            if ($app['payum.cypher']) {
+                $gatewayConfigStorage = new CryptoStorageDecorator($gatewayConfigStorage, $app['payum.cypher']);
+            }
+
+            return $gatewayConfigStorage;
         });
 
         $app['payum.gateway_config_storage'] = $app->share(function ($app) {
@@ -71,9 +86,12 @@ class ServiceProvider implements ServiceProviderInterface
         });
 
         $app['payum.builder'] = $app->share($app->extend('payum.builder', function (PayumBuilder $builder) use ($app) {
+
+
+
             $builder
                 ->setTokenStorage(new YadmStorage($app['payum.token_storage']))
-                ->setGatewayConfigStorage(new YadmStorage($app['payum.gateway_config_storage']))
+                ->setGatewayConfigStorage($app['payum.yadm_gateway_config_storage'])
                 ->addStorage(Payment::class, new YadmStorage($app['payum.payment_storage']))
 
                 ->addCoreGatewayFactoryConfig([
