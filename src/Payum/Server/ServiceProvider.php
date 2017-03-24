@@ -57,7 +57,7 @@ class ServiceProvider implements ServiceProviderInterface
         $app['payum.yadm_gateway_config_storage'] = $app->share(function ($app) {
             $gatewayConfigStorage = new YadmStorage($app['payum.gateway_config_storage']);
 
-            if ($app['payum.cypher']) {
+            if (isset($app['payum.cypher'])) {
                 $gatewayConfigStorage = new CryptoStorageDecorator($gatewayConfigStorage, $app['payum.cypher']);
             }
 
