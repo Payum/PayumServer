@@ -23,7 +23,7 @@
         "ext-mongodb": "^1.1.2",
         "silex/silex": "^1",
         "payum/payum-silex-provider": "dev-master",
-        "payum/payum": "^1.3.11",
+        "payum/payum": "^1.4",
         "payum/omnipay-bridge": "^1",
         "symfony/yaml": "^3",
         "symfony/form": "^3",
