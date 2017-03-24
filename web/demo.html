@@ -71,7 +71,7 @@
 
             // do new payment
             $('#pay-krona-btn').click(function() {
-                var payment = {totalAmountInput: 1, currencyCode: 'SEK'};
+                var payment = {totalAmountInput: 1, currencyCode: 'SEK', gatewayName: 'Klarna Checkout' };
 
                 payum.payment.create(payment, function(payment) {
                     var token = {
