@@ -31,6 +31,7 @@ class GatewaySchemaBuilder
                 'gatewayName' => (object)  [
                     'type' => 'string',
                     'title' => StringUtil::nameToTitle('gatewayName'),
+                    'pattern' => '^[a-zA-Z0-9_.-]*$'
                 ],
                 'factoryName' => (object)  [
                     'type' => 'string',
