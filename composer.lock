@@ -4,7 +4,6 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "b59af79d812354f2d7285240d2539bf4",
     "content-hash": "89ef40c09f46dda21c38f8acb8aafab4",
     "packages": [
         {
@@ -51,7 +50,7 @@
                 "ecommerce",
                 "payment"
             ],
-            "time": "2016-12-03 15:45:27"
+            "time": "2016-12-03T15:45:27+00:00"
         },
         {
             "name": "clue/stream-filter",
@@ -100,7 +99,7 @@
                 "stream_filter_append",
                 "stream_filter_register"
             ],
-            "time": "2015-11-08 23:41:30"
+            "time": "2015-11-08T23:41:30+00:00"
         },
         {
             "name": "defuse/php-encryption",
@@ -159,7 +158,7 @@
                 "security",
                 "symmetric key cryptography"
             ],
-            "time": "2016-10-10 15:20:26"
+            "time": "2016-10-10T15:20:26+00:00"
         },
         {
             "name": "doctrine/annotations",
@@ -227,7 +226,7 @@
                 "docblock",
                 "parser"
             ],
-            "time": "2017-02-24 16:22:25"
+            "time": "2017-02-24T16:22:25+00:00"
         },
         {
             "name": "doctrine/instantiator",
@@ -281,7 +280,7 @@
                 "constructor",
                 "instantiate"
             ],
-            "time": "2015-06-14 21:17:01"
+            "time": "2015-06-14T21:17:01+00:00"
         },
         {
             "name": "doctrine/lexer",
@@ -335,7 +334,7 @@
                 "lexer",
                 "parser"
             ],
-            "time": "2014-09-09 13:34:57"
+            "time": "2014-09-09T13:34:57+00:00"
         },
         {
             "name": "fp/klarna-invoice",
@@ -367,7 +366,7 @@
             ],
             "description": "It unofficial repo of Klarna Invoice service with Composer added. We use it with https://github.com/Payum/KlarnaInvoice",
             "homepage": "http://developers.klarna.com",
-            "time": "2015-09-03 08:23:32"
+            "time": "2015-09-03T08:23:32+00:00"
         },
         {
             "name": "goetas-webservices/xsd2php-runtime",
@@ -420,7 +419,7 @@
                 "xml",
                 "xsd"
             ],
-            "time": "2017-03-10 14:00:59"
+            "time": "2017-03-10T14:00:59+00:00"
         },
         {
             "name": "guzzle/common",
@@ -465,7 +464,7 @@
                 "exception"
             ],
             "abandoned": "guzzle/guzzle",
-            "time": "2014-08-11 04:32:36"
+            "time": "2014-08-11T04:32:36+00:00"
         },
         {
             "name": "guzzle/http",
@@ -523,7 +522,7 @@
                 "http client"
             ],
             "abandoned": "guzzle/guzzle",
-            "time": "2014-08-11 04:32:36"
+            "time": "2014-08-11T04:32:36+00:00"
         },
         {
             "name": "guzzle/parser",
@@ -568,7 +567,7 @@
                 "url"
             ],
             "abandoned": "guzzle/guzzle",
-            "time": "2014-02-05 18:29:46"
+            "time": "2014-02-05T18:29:46+00:00"
         },
         {
             "name": "guzzle/stream",
@@ -622,7 +621,7 @@
                 "stream"
             ],
             "abandoned": "guzzle/guzzle",
-            "time": "2014-05-01 21:36:02"
+            "time": "2014-05-01T21:36:02+00:00"
         },
         {
             "name": "guzzlehttp/guzzle",
@@ -684,7 +683,7 @@
                 "rest",
                 "web service"
             ],
-            "time": "2017-02-28 22:50:30"
+            "time": "2017-02-28T22:50:30+00:00"
         },
         {
             "name": "guzzlehttp/promises",
@@ -735,7 +734,7 @@
             "keywords": [
                 "promise"
             ],
-            "time": "2016-12-20 10:07:11"
+            "time": "2016-12-20T10:07:11+00:00"
         },
         {
             "name": "guzzlehttp/psr7",
@@ -800,7 +799,7 @@
                 "uri",
                 "url"
             ],
-            "time": "2017-03-20 17:10:46"
+            "time": "2017-03-20T17:10:46+00:00"
         },
         {
             "name": "ircmaxell/password-compat",
@@ -842,7 +841,7 @@
                 "hashing",
                 "password"
             ],
-            "time": "2014-11-20 16:49:30"
+            "time": "2014-11-20T16:49:30+00:00"
         },
         {
             "name": "jdesrosiers/silex-cors-provider",
@@ -892,7 +891,7 @@
                 "sharing",
                 "silex"
             ],
-            "time": "2015-09-12 22:16:14"
+            "time": "2015-09-12T22:16:14+00:00"
         },
         {
             "name": "jeremykendall/php-domain-parser",
@@ -954,7 +953,7 @@
                 "domain parsing",
                 "url parsing"
             ],
-            "time": "2015-03-30 12:49:45"
+            "time": "2015-03-30T12:49:45+00:00"
         },
         {
             "name": "jms/metadata",
@@ -1005,7 +1004,7 @@
                 "xml",
                 "yaml"
             ],
-            "time": "2016-12-05 10:18:33"
+            "time": "2016-12-05T10:18:33+00:00"
         },
         {
             "name": "jms/parser-lib",
@@ -1040,7 +1039,7 @@
                 "Apache2"
             ],
             "description": "A library for easily creating recursive-descent parsers.",
-            "time": "2012-11-18 18:08:43"
+            "time": "2012-11-18T18:08:43+00:00"
         },
         {
             "name": "jms/serializer",
@@ -1116,7 +1115,7 @@
                 "serialization",
                 "xml"
             ],
-            "time": "2017-02-14 14:35:22"
+            "time": "2017-02-14T14:35:22+00:00"
         },
         {
             "name": "justinrainbow/json-schema",
@@ -1182,7 +1181,7 @@
                 "json",
                 "schema"
             ],
-            "time": "2016-01-25 15:43:01"
+            "time": "2016-01-25T15:43:01+00:00"
         },
         {
             "name": "klarna/checkout",
@@ -1219,7 +1218,7 @@
             ],
             "description": "Wrapper for the Klarna Checkout API",
             "homepage": "http://developers.klarna.com",
-            "time": "2015-03-18 16:04:58"
+            "time": "2015-03-18T16:04:58+00:00"
         },
         {
             "name": "league/uri",
@@ -1287,20 +1286,20 @@
                 "url",
                 "ws"
             ],
-            "time": "2016-12-12 11:36:42"
+            "time": "2016-12-12T11:36:42+00:00"
         },
         {
             "name": "makasim/values",
-            "version": "0.2.4",
+            "version": "0.2.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/makasim/values.git",
-                "reference": "2227b9fbb0316e10e6f04914f26e8f31efa70f14"
+                "reference": "7cf59817ae825d424e09b03b300d6cc31684c26a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/makasim/values/zipball/2227b9fbb0316e10e6f04914f26e8f31efa70f14",
-                "reference": "2227b9fbb0316e10e6f04914f26e8f31efa70f14",
+                "url": "https://api.github.com/repos/makasim/values/zipball/7cf59817ae825d424e09b03b300d6cc31684c26a",
+                "reference": "7cf59817ae825d424e09b03b300d6cc31684c26a",
                 "shasum": ""
             },
             "require": {
@@ -1337,7 +1336,7 @@
             "keywords": [
                 "model"
             ],
-            "time": "2017-03-20 15:01:03"
+            "time": "2017-05-30T10:48:01+00:00"
         },
         {
             "name": "makasim/yadm",
@@ -1393,7 +1392,7 @@
                 "odm",
                 "storage"
             ],
-            "time": "2017-03-22 12:43:54"
+            "time": "2017-03-22T12:43:54+00:00"
         },
         {
             "name": "mikemccabe/json-patch-php",
@@ -1420,7 +1419,7 @@
                 "LGPL-3.0"
             ],
             "description": "Produce and apply json-patch objects",
-            "time": "2015-01-05 21:19:54"
+            "time": "2015-01-05T21:19:54+00:00"
         },
         {
             "name": "mongodb/mongodb",
@@ -1478,7 +1477,7 @@
                 "mongodb",
                 "persistence"
             ],
-            "time": "2017-02-16 18:40:32"
+            "time": "2017-02-16T18:40:32+00:00"
         },
         {
             "name": "omnipay/2checkout",
@@ -1537,7 +1536,7 @@
                 "payment",
                 "twocheckout"
             ],
-            "time": "2014-09-17 00:35:37"
+            "time": "2014-09-17T00:35:37+00:00"
         },
         {
             "name": "omnipay/authorizenet",
@@ -1596,7 +1595,7 @@
                 "pay",
                 "payment"
             ],
-            "time": "2017-03-07 14:00:14"
+            "time": "2017-03-07T14:00:14+00:00"
         },
         {
             "name": "omnipay/buckaroo",
@@ -1653,7 +1652,7 @@
                 "pay",
                 "payment"
             ],
-            "time": "2016-08-10 04:41:17"
+            "time": "2016-08-10T04:41:17+00:00"
         },
         {
             "name": "omnipay/cardsave",
@@ -1711,7 +1710,7 @@
                 "pay",
                 "payment"
             ],
-            "time": "2014-09-21 02:27:16"
+            "time": "2014-09-21T02:27:16+00:00"
         },
         {
             "name": "omnipay/coinbase",
@@ -1768,7 +1767,7 @@
                 "pay",
                 "payment"
             ],
-            "time": "2015-03-06 05:35:39"
+            "time": "2015-03-06T05:35:39+00:00"
         },
         {
             "name": "omnipay/common",
@@ -1884,7 +1883,7 @@
                 "payment",
                 "purchase"
             ],
-            "time": "2015-01-11 04:54:29"
+            "time": "2015-01-11T04:54:29+00:00"
         },
         {
             "name": "omnipay/dummy",
@@ -1941,7 +1940,7 @@
                 "pay",
                 "payment"
             ],
-            "time": "2016-07-30 04:18:49"
+            "time": "2016-07-30T04:18:49+00:00"
         },
         {
             "name": "omnipay/eway",
@@ -1998,7 +1997,7 @@
                 "pay",
                 "payment"
             ],
-            "time": "2016-03-22 01:11:02"
+            "time": "2016-03-22T01:11:02+00:00"
         },
         {
             "name": "omnipay/firstdata",
@@ -2056,7 +2055,7 @@
                 "pay",
                 "payment"
             ],
-            "time": "2016-01-14 06:24:28"
+            "time": "2016-01-14T06:24:28+00:00"
         },
         {
             "name": "omnipay/gocardless",
@@ -2114,7 +2113,7 @@
                 "pay",
                 "payment"
             ],
-            "time": "2015-09-24 14:44:29"
+            "time": "2015-09-24T14:44:29+00:00"
         },
         {
             "name": "omnipay/manual",
@@ -2171,7 +2170,7 @@
                 "pay",
                 "payment"
             ],
-            "time": "2016-12-28 03:02:15"
+            "time": "2016-12-28T03:02:15+00:00"
         },
         {
             "name": "omnipay/migs",
@@ -2229,7 +2228,7 @@
                 "pay",
                 "payment"
             ],
-            "time": "2016-09-22 01:58:30"
+            "time": "2016-09-22T01:58:30+00:00"
         },
         {
             "name": "omnipay/mollie",
@@ -2286,7 +2285,7 @@
                 "pay",
                 "payment"
             ],
-            "time": "2016-09-14 09:25:40"
+            "time": "2016-09-14T09:25:40+00:00"
         },
         {
             "name": "omnipay/multisafepay",
@@ -2344,7 +2343,7 @@
                 "pay",
                 "payment"
             ],
-            "time": "2017-02-22 06:42:13"
+            "time": "2017-02-22T06:42:13+00:00"
         },
         {
             "name": "omnipay/netaxept",
@@ -2401,7 +2400,7 @@
                 "pay",
                 "payment"
             ],
-            "time": "2015-05-08 15:13:17"
+            "time": "2015-05-08T15:13:17+00:00"
         },
         {
             "name": "omnipay/netbanx",
@@ -2458,7 +2457,7 @@
                 "pay",
                 "payment"
             ],
-            "time": "2016-09-21 10:52:03"
+            "time": "2016-09-21T10:52:03+00:00"
         },
         {
             "name": "omnipay/omnipay",
@@ -2570,7 +2569,7 @@
                 "twocheckout",
                 "worldpay"
             ],
-            "time": "2014-12-10 13:55:00"
+            "time": "2014-12-10T13:55:00+00:00"
         },
         {
             "name": "omnipay/payfast",
@@ -2627,7 +2626,7 @@
                 "payfast",
                 "payment"
             ],
-            "time": "2014-09-29 01:07:03"
+            "time": "2014-09-29T01:07:03+00:00"
         },
         {
             "name": "omnipay/payflow",
@@ -2684,7 +2683,7 @@
                 "payflow",
                 "payment"
             ],
-            "time": "2016-07-30 08:33:58"
+            "time": "2016-07-30T08:33:58+00:00"
         },
         {
             "name": "omnipay/paymentexpress",
@@ -2747,7 +2746,7 @@
                 "pxpay",
                 "pxpost"
             ],
-            "time": "2016-05-02 13:46:54"
+            "time": "2016-05-02T13:46:54+00:00"
         },
         {
             "name": "omnipay/paypal",
@@ -2805,7 +2804,7 @@
                 "paypal",
                 "purchase"
             ],
-            "time": "2016-12-22 12:35:25"
+            "time": "2016-12-22T12:35:25+00:00"
         },
         {
             "name": "omnipay/pin",
@@ -2862,7 +2861,7 @@
                 "payment",
                 "pin"
             ],
-            "time": "2016-03-25 18:06:33"
+            "time": "2016-03-25T18:06:33+00:00"
         },
         {
             "name": "omnipay/sagepay",
@@ -2921,7 +2920,7 @@
                 "sage pay",
                 "sagepay"
             ],
-            "time": "2016-02-07 13:25:23"
+            "time": "2016-02-07T13:25:23+00:00"
         },
         {
             "name": "omnipay/securepay",
@@ -2978,7 +2977,7 @@
                 "payment",
                 "securepay"
             ],
-            "time": "2016-11-09 04:52:42"
+            "time": "2016-11-09T04:52:42+00:00"
         },
         {
             "name": "omnipay/stripe",
@@ -3035,7 +3034,7 @@
                 "payment",
                 "stripe"
             ],
-            "time": "2016-12-15 09:42:45"
+            "time": "2016-12-15T09:42:45+00:00"
         },
         {
             "name": "omnipay/targetpay",
@@ -3092,7 +3091,7 @@
                 "payment",
                 "targetpay"
             ],
-            "time": "2014-09-17 00:38:39"
+            "time": "2014-09-17T00:38:39+00:00"
         },
         {
             "name": "omnipay/worldpay",
@@ -3149,7 +3148,7 @@
                 "payment",
                 "worldpay"
             ],
-            "time": "2016-01-28 12:55:58"
+            "time": "2016-01-28T12:55:58+00:00"
         },
         {
             "name": "paragonie/random_compat",
@@ -3197,7 +3196,7 @@
                 "pseudorandom",
                 "random"
             ],
-            "time": "2017-03-13 16:27:32"
+            "time": "2017-03-13T16:27:32+00:00"
         },
         {
             "name": "paypal/rest-api-sdk-php",
@@ -3246,7 +3245,7 @@
                 "rest",
                 "sdk"
             ],
-            "time": "2016-12-14 21:59:21"
+            "time": "2016-12-14T21:59:21+00:00"
         },
         {
             "name": "payum/iso4217",
@@ -3310,7 +3309,7 @@
                 "iso",
                 "library"
             ],
-            "time": "2016-08-04 08:15:12"
+            "time": "2016-08-04T08:15:12+00:00"
         },
         {
             "name": "payum/omnipay-bridge",
@@ -3370,7 +3369,7 @@
                 "omnipay",
                 "payment"
             ],
-            "time": "2016-11-07 07:29:13"
+            "time": "2016-11-07T07:29:13+00:00"
         },
         {
             "name": "payum/payum",
@@ -3497,7 +3496,7 @@
                 "stripe.js",
                 "withdrawal"
             ],
-            "time": "2017-03-24 08:36:36"
+            "time": "2017-03-24T08:36:36+00:00"
         },
         {
             "name": "payum/payum-silex-provider",
@@ -3557,7 +3556,7 @@
                 "payment",
                 "silex"
             ],
-            "time": "2017-02-08 15:02:06"
+            "time": "2017-02-08T15:02:06+00:00"
         },
         {
             "name": "php-http/guzzle6-adapter",
@@ -3617,7 +3616,7 @@
                 "Guzzle",
                 "http"
             ],
-            "time": "2016-05-10 06:13:32"
+            "time": "2016-05-10T06:13:32+00:00"
         },
         {
             "name": "php-http/httplug",
@@ -3673,7 +3672,7 @@
                 "client",
                 "http"
             ],
-            "time": "2016-08-31 08:30:17"
+            "time": "2016-08-31T08:30:17+00:00"
         },
         {
             "name": "php-http/message",
@@ -3742,7 +3741,7 @@
                 "message",
                 "psr-7"
             ],
-            "time": "2017-02-14 08:58:37"
+            "time": "2017-02-14T08:58:37+00:00"
         },
         {
             "name": "php-http/message-factory",
@@ -3792,7 +3791,7 @@
                 "stream",
                 "uri"
             ],
-            "time": "2015-12-19 14:08:53"
+            "time": "2015-12-19T14:08:53+00:00"
         },
         {
             "name": "php-http/promise",
@@ -3842,7 +3841,7 @@
             "keywords": [
                 "promise"
             ],
-            "time": "2016-01-26 13:27:02"
+            "time": "2016-01-26T13:27:02+00:00"
         },
         {
             "name": "phpcollection/phpcollection",
@@ -3890,7 +3889,7 @@
                 "sequence",
                 "set"
             ],
-            "time": "2015-05-17 12:39:23"
+            "time": "2015-05-17T12:39:23+00:00"
         },
         {
             "name": "phpoption/phpoption",
@@ -3940,7 +3939,7 @@
                 "php",
                 "type"
             ],
-            "time": "2015-07-25 16:39:46"
+            "time": "2015-07-25T16:39:46+00:00"
         },
         {
             "name": "phpxmlrpc/phpxmlrpc",
@@ -3991,7 +3990,7 @@
                 "webservices",
                 "xmlrpc"
             ],
-            "time": "2016-10-01 12:29:37"
+            "time": "2016-10-01T12:29:37+00:00"
         },
         {
             "name": "pimple/pimple",
@@ -4037,7 +4036,7 @@
                 "container",
                 "dependency injection"
             ],
-            "time": "2013-11-22 08:30:29"
+            "time": "2013-11-22T08:30:29+00:00"
         },
         {
             "name": "psr/http-message",
@@ -4087,7 +4086,7 @@
                 "request",
                 "response"
             ],
-            "time": "2016-08-06 14:39:51"
+            "time": "2016-08-06T14:39:51+00:00"
         },
         {
             "name": "psr/log",
@@ -4134,7 +4133,7 @@
                 "psr",
                 "psr-3"
             ],
-            "time": "2016-10-10 12:19:37"
+            "time": "2016-10-10T12:19:37+00:00"
         },
         {
             "name": "seld/jsonlint",
@@ -4183,7 +4182,7 @@
                 "parser",
                 "validator"
             ],
-            "time": "2017-03-06 16:42:24"
+            "time": "2017-03-06T16:42:24+00:00"
         },
         {
             "name": "sentry/sentry",
@@ -4244,7 +4243,7 @@
                 "log",
                 "logging"
             ],
-            "time": "2017-02-03 07:32:53"
+            "time": "2017-02-03T07:32:53+00:00"
         },
         {
             "name": "silex/silex",
@@ -4321,7 +4320,7 @@
             "keywords": [
                 "microframework"
             ],
-            "time": "2016-01-06 14:59:35"
+            "time": "2016-01-06T14:59:35+00:00"
         },
         {
             "name": "sofort/sofortlib-php",
@@ -4363,7 +4362,7 @@
                 }
             ],
             "description": "SOFORT API wrapper for PHP",
-            "time": "2016-11-22 14:45:03"
+            "time": "2016-11-22T14:45:03+00:00"
         },
         {
             "name": "stripe/stripe-php",
@@ -4418,7 +4417,7 @@
                 "payment processing",
                 "stripe"
             ],
-            "time": "2016-09-15 18:16:59"
+            "time": "2016-09-15T18:16:59+00:00"
         },
         {
             "name": "symfony/config",
@@ -4474,7 +4473,7 @@
             ],
             "description": "Symfony Config Component",
             "homepage": "https://symfony.com",
-            "time": "2017-03-01 18:18:25"
+            "time": "2017-03-01T18:18:25+00:00"
         },
         {
             "name": "symfony/debug",
@@ -4531,7 +4530,7 @@
             ],
             "description": "Symfony Debug Component",
             "homepage": "https://symfony.com",
-            "time": "2017-02-18 17:28:00"
+            "time": "2017-02-18T17:28:00+00:00"
         },
         {
             "name": "symfony/event-dispatcher",
@@ -4591,7 +4590,7 @@
             ],
             "description": "Symfony EventDispatcher Component",
             "homepage": "https://symfony.com",
-            "time": "2016-07-19 10:44:15"
+            "time": "2016-07-19T10:44:15+00:00"
         },
         {
             "name": "symfony/filesystem",
@@ -4640,7 +4639,7 @@
             ],
             "description": "Symfony Filesystem Component",
             "homepage": "https://symfony.com",
-            "time": "2017-03-06 19:30:27"
+            "time": "2017-03-06T19:30:27+00:00"
         },
         {
             "name": "symfony/form",
@@ -4716,7 +4715,7 @@
             ],
             "description": "Symfony Form Component",
             "homepage": "https://symfony.com",
-            "time": "2017-03-06 19:30:27"
+            "time": "2017-03-06T19:30:27+00:00"
         },
         {
             "name": "symfony/http-foundation",
@@ -4771,7 +4770,7 @@
             ],
             "description": "Symfony HttpFoundation Component",
             "homepage": "https://symfony.com",
-            "time": "2017-03-04 12:20:59"
+            "time": "2017-03-04T12:20:59+00:00"
         },
         {
             "name": "symfony/http-kernel",
@@ -4853,7 +4852,7 @@
             ],
             "description": "Symfony HttpKernel Component",
             "homepage": "https://symfony.com",
-            "time": "2016-07-30 09:10:37"
+            "time": "2016-07-30T09:10:37+00:00"
         },
         {
             "name": "symfony/inflector",
@@ -4910,7 +4909,7 @@
                 "symfony",
                 "words"
             ],
-            "time": "2017-02-20 13:34:33"
+            "time": "2017-02-20T13:34:33+00:00"
         },
         {
             "name": "symfony/intl",
@@ -4985,7 +4984,7 @@
                 "l10n",
                 "localization"
             ],
-            "time": "2017-03-05 17:42:14"
+            "time": "2017-03-05T17:42:14+00:00"
         },
         {
             "name": "symfony/options-resolver",
@@ -5039,7 +5038,7 @@
                 "configuration",
                 "options"
             ],
-            "time": "2017-02-21 09:12:04"
+            "time": "2017-02-21T09:12:04+00:00"
         },
         {
             "name": "symfony/polyfill-intl-icu",
@@ -5097,7 +5096,7 @@
                 "portable",
                 "shim"
             ],
-            "time": "2016-11-14 01:06:16"
+            "time": "2016-11-14T01:06:16+00:00"
         },
         {
             "name": "symfony/polyfill-mbstring",
@@ -5156,7 +5155,7 @@
                 "portable",
                 "shim"
             ],
-            "time": "2016-11-14 01:06:16"
+            "time": "2016-11-14T01:06:16+00:00"
         },
         {
             "name": "symfony/polyfill-php54",
@@ -5214,7 +5213,7 @@
                 "portable",
                 "shim"
             ],
-            "time": "2016-11-14 01:06:16"
+            "time": "2016-11-14T01:06:16+00:00"
         },
         {
             "name": "symfony/polyfill-php55",
@@ -5270,7 +5269,7 @@
                 "portable",
                 "shim"
             ],
-            "time": "2016-11-14 01:06:16"
+            "time": "2016-11-14T01:06:16+00:00"
         },
         {
             "name": "symfony/polyfill-php56",
@@ -5326,7 +5325,7 @@
                 "portable",
                 "shim"
             ],
-            "time": "2016-11-14 01:06:16"
+            "time": "2016-11-14T01:06:16+00:00"
         },
         {
             "name": "symfony/polyfill-php70",
@@ -5385,7 +5384,7 @@
                 "portable",
                 "shim"
             ],
-            "time": "2016-11-14 01:06:16"
+            "time": "2016-11-14T01:06:16+00:00"
         },
         {
             "name": "symfony/polyfill-util",
@@ -5437,7 +5436,7 @@
                 "polyfill",
                 "shim"
             ],
-            "time": "2016-11-14 01:06:16"
+            "time": "2016-11-14T01:06:16+00:00"
         },
         {
             "name": "symfony/property-access",
@@ -5505,7 +5504,7 @@
                 "property path",
                 "reflection"
             ],
-            "time": "2017-02-18 17:28:00"
+            "time": "2017-02-18T17:28:00+00:00"
         },
         {
             "name": "symfony/routing",
@@ -5580,7 +5579,7 @@
                 "uri",
                 "url"
             ],
-            "time": "2016-06-29 05:40:00"
+            "time": "2016-06-29T05:40:00+00:00"
         },
         {
             "name": "symfony/security-core",
@@ -5646,7 +5645,7 @@
             ],
             "description": "Symfony Security Component - Core Library",
             "homepage": "https://symfony.com",
-            "time": "2017-02-21 14:41:00"
+            "time": "2017-02-21T14:41:00+00:00"
         },
         {
             "name": "symfony/security-csrf",
@@ -5704,7 +5703,7 @@
             ],
             "description": "Symfony Security Component - CSRF Library",
             "homepage": "https://symfony.com",
-            "time": "2017-02-18 17:28:00"
+            "time": "2017-02-18T17:28:00+00:00"
         },
         {
             "name": "symfony/translation",
@@ -5768,7 +5767,7 @@
             ],
             "description": "Symfony Translation Component",
             "homepage": "https://symfony.com",
-            "time": "2017-03-04 12:23:14"
+            "time": "2017-03-04T12:23:14+00:00"
         },
         {
             "name": "symfony/twig-bridge",
@@ -5849,7 +5848,7 @@
             ],
             "description": "Symfony Twig Bridge",
             "homepage": "https://symfony.com",
-            "time": "2017-02-28 13:16:45"
+            "time": "2017-02-28T13:16:45+00:00"
         },
         {
             "name": "symfony/validator",
@@ -5926,7 +5925,7 @@
             ],
             "description": "Symfony Validator Component",
             "homepage": "https://symfony.com",
-            "time": "2017-02-28 02:30:50"
+            "time": "2017-02-28T02:30:50+00:00"
         },
         {
             "name": "symfony/yaml",
@@ -5981,7 +5980,7 @@
             ],
             "description": "Symfony Yaml Component",
             "homepage": "https://symfony.com",
-            "time": "2017-03-07 16:47:02"
+            "time": "2017-03-07T16:47:02+00:00"
         },
         {
             "name": "twig/twig",
@@ -6043,7 +6042,7 @@
             "keywords": [
                 "templating"
             ],
-            "time": "2017-02-27 00:07:03"
+            "time": "2017-02-27T00:07:03+00:00"
         },
         {
             "name": "webmozart/assert",
@@ -6093,7 +6092,7 @@
                 "check",
                 "validate"
             ],
-            "time": "2016-11-23 20:04:58"
+            "time": "2016-11-23T20:04:58+00:00"
         },
         {
             "name": "webmozart/json",
@@ -6142,7 +6141,7 @@
                 }
             ],
             "description": "A robust JSON decoder/encoder with support for schema validation.",
-            "time": "2016-01-14 12:11:46"
+            "time": "2016-01-14T12:11:46+00:00"
         },
         {
             "name": "webmozart/path-util",
@@ -6188,7 +6187,7 @@
                 }
             ],
             "description": "A robust cross-platform utility for normalizing, comparing and modifying file paths.",
-            "time": "2015-12-17 08:42:14"
+            "time": "2015-12-17T08:42:14+00:00"
         }
     ],
     "packages-dev": [
@@ -6232,7 +6231,7 @@
                 "object",
                 "object graph"
             ],
-            "time": "2017-01-26 22:05:40"
+            "time": "2017-01-26T22:05:40+00:00"
         },
         {
             "name": "phpdocumentor/reflection-common",
@@ -6286,7 +6285,7 @@
                 "reflection",
                 "static analysis"
             ],
-            "time": "2015-12-27 11:43:31"
+            "time": "2015-12-27T11:43:31+00:00"
         },
         {
             "name": "phpdocumentor/reflection-docblock",
@@ -6331,7 +6330,7 @@
                 }
             ],
             "description": "With this component, a library can provide support for annotations via DocBlocks or otherwise retrieve information that is embedded in a DocBlock.",
-            "time": "2016-09-30 07:12:33"
+            "time": "2016-09-30T07:12:33+00:00"
         },
         {
             "name": "phpdocumentor/type-resolver",
@@ -6378,7 +6377,7 @@
                     "email": "me@mikevanriel.com"
                 }
             ],
-            "time": "2016-11-25 06:54:22"
+            "time": "2016-11-25T06:54:22+00:00"
         },
         {
             "name": "phpspec/prophecy",
@@ -6441,7 +6440,7 @@
                 "spy",
                 "stub"
             ],
-            "time": "2017-03-02 20:05:34"
+            "time": "2017-03-02T20:05:34+00:00"
         },
         {
             "name": "phpunit/php-code-coverage",
@@ -6504,7 +6503,7 @@
                 "testing",
                 "xunit"
             ],
-            "time": "2017-03-01 09:12:17"
+            "time": "2017-03-01T09:12:17+00:00"
         },
         {
             "name": "phpunit/php-file-iterator",
@@ -6551,7 +6550,7 @@
                 "filesystem",
                 "iterator"
             ],
-            "time": "2016-10-03 07:40:28"
+            "time": "2016-10-03T07:40:28+00:00"
         },
         {
             "name": "phpunit/php-text-template",
@@ -6592,7 +6591,7 @@
             "keywords": [
                 "template"
             ],
-            "time": "2015-06-21 13:50:34"
+            "time": "2015-06-21T13:50:34+00:00"
         },
         {
             "name": "phpunit/php-timer",
@@ -6641,7 +6640,7 @@
             "keywords": [
                 "timer"
             ],
-            "time": "2017-02-26 11:10:40"
+            "time": "2017-02-26T11:10:40+00:00"
         },
         {
             "name": "phpunit/php-token-stream",
@@ -6690,7 +6689,7 @@
             "keywords": [
                 "tokenizer"
             ],
-            "time": "2017-02-27 10:12:30"
+            "time": "2017-02-27T10:12:30+00:00"
         },
         {
             "name": "phpunit/phpunit",
@@ -6772,7 +6771,7 @@
                 "testing",
                 "xunit"
             ],
-            "time": "2017-03-19 16:52:12"
+            "time": "2017-03-19T16:52:12+00:00"
         },
         {
             "name": "phpunit/phpunit-mock-objects",
@@ -6831,7 +6830,7 @@
                 "mock",
                 "xunit"
             ],
-            "time": "2016-12-08 20:27:08"
+            "time": "2016-12-08T20:27:08+00:00"
         },
         {
             "name": "sebastian/code-unit-reverse-lookup",
@@ -6876,7 +6875,7 @@
             ],
             "description": "Looks up which function or method a line of code belongs to",
             "homepage": "https://github.com/sebastianbergmann/code-unit-reverse-lookup/",
-            "time": "2017-03-04 06:30:41"
+            "time": "2017-03-04T06:30:41+00:00"
         },
         {
             "name": "sebastian/comparator",
@@ -6940,7 +6939,7 @@
                 "compare",
                 "equality"
             ],
-            "time": "2017-01-29 09:50:25"
+            "time": "2017-01-29T09:50:25+00:00"
         },
         {
             "name": "sebastian/diff",
@@ -6992,7 +6991,7 @@
             "keywords": [
                 "diff"
             ],
-            "time": "2015-12-08 07:14:41"
+            "time": "2015-12-08T07:14:41+00:00"
         },
         {
             "name": "sebastian/environment",
@@ -7042,7 +7041,7 @@
                 "environment",
                 "hhvm"
             ],
-            "time": "2016-11-26 07:53:53"
+            "time": "2016-11-26T07:53:53+00:00"
         },
         {
             "name": "sebastian/exporter",
@@ -7109,7 +7108,7 @@
                 "export",
                 "exporter"
             ],
-            "time": "2016-11-19 08:54:04"
+            "time": "2016-11-19T08:54:04+00:00"
         },
         {
             "name": "sebastian/global-state",
@@ -7160,7 +7159,7 @@
             "keywords": [
                 "global state"
             ],
-            "time": "2015-10-12 03:26:01"
+            "time": "2015-10-12T03:26:01+00:00"
         },
         {
             "name": "sebastian/object-enumerator",
@@ -7206,7 +7205,7 @@
             ],
             "description": "Traverses array structures and object graphs to enumerate all referenced objects",
             "homepage": "https://github.com/sebastianbergmann/object-enumerator/",
-            "time": "2017-02-18 15:18:39"
+            "time": "2017-02-18T15:18:39+00:00"
         },
         {
             "name": "sebastian/recursion-context",
@@ -7259,7 +7258,7 @@
             ],
             "description": "Provides functionality to recursively process PHP variables",
             "homepage": "http://www.github.com/sebastianbergmann/recursion-context",
-            "time": "2016-11-19 07:33:16"
+            "time": "2016-11-19T07:33:16+00:00"
         },
         {
             "name": "sebastian/resource-operations",
@@ -7301,7 +7300,7 @@
             ],
             "description": "Provides a list of PHP built-in functions that operate on resources",
             "homepage": "https://www.github.com/sebastianbergmann/resource-operations",
-            "time": "2015-07-28 20:34:47"
+            "time": "2015-07-28T20:34:47+00:00"
         },
         {
             "name": "sebastian/version",
@@ -7344,7 +7343,7 @@
             ],
             "description": "Library that helps with managing the version number of Git-hosted PHP projects",
             "homepage": "https://github.com/sebastianbergmann/version",
-            "time": "2016-10-03 07:35:21"
+            "time": "2016-10-03T07:35:21+00:00"
         },
         {
             "name": "symfony/browser-kit",
@@ -7401,7 +7400,7 @@
             ],
             "description": "Symfony BrowserKit Component",
             "homepage": "https://symfony.com",
-            "time": "2017-02-21 09:12:04"
+            "time": "2017-02-21T09:12:04+00:00"
         },
         {
             "name": "symfony/css-selector",
@@ -7454,7 +7453,7 @@
             ],
             "description": "Symfony CssSelector Component",
             "homepage": "https://symfony.com",
-            "time": "2017-02-21 09:12:04"
+            "time": "2017-02-21T09:12:04+00:00"
         },
         {
             "name": "symfony/dom-crawler",
@@ -7510,7 +7509,7 @@
             ],
             "description": "Symfony DomCrawler Component",
             "homepage": "https://symfony.com",
-            "time": "2017-02-21 09:12:04"
+            "time": "2017-02-21T09:12:04+00:00"
         }
     ],
     "aliases": [],
