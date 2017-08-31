@@ -20,7 +20,7 @@ Create docker-compose.yml file:
 version: '2'
 services:
   payum-server:
-    image: payum/payum-server
+    image: payum/server
     environment:
       - PAYUM_MONGO_URI=mongodb://mongo:27017/payum_server
       - PAYUM_DEBUG=1
