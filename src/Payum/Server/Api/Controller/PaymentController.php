@@ -131,7 +131,7 @@ class PaymentController
     public function allAction()
     {
         $jsonPayments = [];
-        foreach ($this->paymentStorage->findAll() as $payment) {
+        foreach ($this->paymentStorage->find([], ['limit' => 50]) as $payment) {
             $jsonPayments[] = $this->paymentToJsonConverter->convert($payment);
 
         }
