@@ -1,25 +1,24 @@
 <?php
 namespace Payum\Server\Schema;
 
-use Payum\Core\Payum;
+use Payum\Core\Storage\StorageInterface;
 use Payum\ISO4217\Currency;
 use Payum\ISO4217\ISO4217;
 use Payum\Server\Model\GatewayConfig;
-use Payum\Server\Storage\YadmStorage;
 use Payum\Server\Util\StringUtil;
 
 class PaymentSchemaBuilder
 {
     /**
-     * @var YadmStorage
+     * @var StorageInterface
      */
     private $gatewayConfigStorage;
 
     /**
-     * @param YadmStorage $gatewayConfigStorage
+     * @param StorageInterface $gatewayConfigStorage
      * @internal param Payum $payum
      */
-    public function __construct(YadmStorage $gatewayConfigStorage)
+    public function __construct(StorageInterface $gatewayConfigStorage)
     {
         $this->gatewayConfigStorage = $gatewayConfigStorage;
     }

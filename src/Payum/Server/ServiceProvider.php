@@ -1,7 +1,6 @@
 <?php
 namespace Payum\Server;
 
-use Defuse\Crypto\Key;
 use Makasim\Yadm\Hydrator;
 use Makasim\Yadm\Storage;
 use MongoDB\Client;
