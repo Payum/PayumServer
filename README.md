@@ -9,7 +9,7 @@ PHP 5.6+ Payment processing server. Setup once and rule them all. [Here](https:/
 ## Try it online:
 
 * Demo: https://server.payum.forma-pro.com/demo.html
-* Backend: [https://server-ui.payum.forma-pro.com](https://server-ui.payum.forma-pro.com/#/app/settings?api=https:%2F%2Fserver.payum.forma-pro.com)
+* Backend: [https://server-ui.payum.forma-pro.com](https://server-ui.payum.forma-pro.com/#!/app/settings?api=https:%2F%2Fserver.payum.forma-pro.com)
 * Server: https://server.payum.forma-pro.com
 
 ## Run local server
