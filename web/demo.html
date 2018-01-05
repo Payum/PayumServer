@@ -1,7 +1,6 @@
 <html>
     <head>
         <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/js-url/2.0.2/url.js"></script>
         <script src="/payum.js"></script>
     </head>
 
@@ -49,7 +48,7 @@
             document.addEventListener('DOMContentLoaded', () => {
                 const payumServerUrl = location.protocol + '//' + window.location.hostname;
                 const payum = new Payum(payumServerUrl);
-                const paymentId = url('?paymentId', window.location.href);
+                const paymentId = (new URL(window.location.href)).searchParams.get("paymentId");
 
                 document.querySelector('#pay-btn').addEventListener('click', () => {
                     const payment = {totalAmountInput: 1, currencyCode: 'USD'};
