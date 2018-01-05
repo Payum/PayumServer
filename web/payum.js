@@ -158,6 +158,7 @@ class Payum {
         const containerElement = document.querySelector(container);
 
         containerElement.innerHTML = html;
+
         Payum.loadAndExeCuteJavascript(container);
     }
 
@@ -198,7 +199,14 @@ class Payum {
 
                 const code = script.textContent;
                 script.remove();
-                scriptsToExecute.push(code);
+
+                newScript.type = 'text/javascript';
+                newScript.appendChild(document.createTextNode(code));
+
+                scriptsToExecute.push({
+                    parentNode: scriptParent,
+                    scriptNode: newScript
+                });
             }
         }
 
@@ -212,7 +220,8 @@ class Payum {
      */
     static executeInlineJavascript(scriptsToExecute) {
         for (let code of scriptsToExecute) {
-            eval.call(window, code);
+            code.parentNode.appendChild(code.scriptNode);
         }
+
     }
 }
