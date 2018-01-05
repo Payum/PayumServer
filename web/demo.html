@@ -1,11 +1,9 @@
 <html>
     <head>
         <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
-
-        <script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/js-url/2.0.2/url.js"></script>
-        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
         <script src="/payum.js"></script>
+        <script src="/app.js"></script>
     </head>
 
     <body style="margin: 20px;">
@@ -46,52 +44,5 @@
                 </div>
             </div>
         </div>
-
-
-        <script>
-            var payumServerUrl = location.protocol+"//"+window.location.hostname;
-            var payum = new Payum(payumServerUrl);
-
-            // do new payment
-            $('#pay-btn').click(function() {
-                var payment = {totalAmountInput: 1, currencyCode: 'USD'};
-
-                payum.payment.create(payment, function(payment) {
-                    var token = {
-                        type: 'capture',
-                        paymentId: payment.id,
-                        afterUrl: window.location.href
-                    };
-
-                    payum.token.create(token, function(token) {
-                        payum.execute(token.targetUrl, '#payum-container');
-                    });
-                });
-            });
-
-            // do new payment
-            $('#pay-krona-btn').click(function() {
-                var payment = {totalAmountInput: 1, currencyCode: 'SEK', gatewayName: 'Klarna Checkout' };
-
-                payum.payment.create(payment, function(payment) {
-                    var token = {
-                        type: 'authorize',
-                        paymentId: payment.id,
-                        afterUrl: window.location.href
-                    };
-
-                    payum.token.create(token, function(token) {
-                        payum.execute(token.targetUrl, '#payum-container');
-                    });
-                });
-            });
-
-            // show status of previous payment.
-            if (paymentId = url('?paymentId', window.location.href)) {
-                payum.payment.get(paymentId, function(payment) {
-                    $('#payum-previous-payment').text('Previous payment '+paymentId+' status: '+ payment.status);
-                });
-            }
-        </script>
     </body>
 </html>
