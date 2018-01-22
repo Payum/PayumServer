@@ -24,9 +24,7 @@ RUN apk add \
     libstdc++ \
     icu-libs \
     libltdl \
-    libmcrypt \
-    icu-dev \
-    icu
+    libmcrypt
 
 # install php mongodb dependencies
 RUN apk add \
@@ -46,11 +44,22 @@ RUN pecl install mongodb \
 RUN apk add \
     --update \
     --no-cache \
+    icu-dev \
+    icu \
     php7-soap \
     php7-intl \
     && docker-php-ext-install intl \
     && docker-php-ext-configure intl \
     && docker-php-ext-install soap
+
+# install php zip module
+RUN apk add \
+    --update \
+    --no-cache \
+    php7-zip \
+    libzip \
+    zlib-dev \
+    && docker-php-ext-install zip
 
 # install composer
 RUN php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" \
