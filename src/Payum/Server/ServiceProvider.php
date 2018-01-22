@@ -44,97 +44,97 @@ class ServiceProvider implements ServiceProviderInterface
     public function register(SilexApplication $app)
     {
         $app['debug'] = (boolean) getenv('PAYUM_DEBUG');
-        $app['mongodb.uri'] = getenv('PAYUM_MONGO_URI') ?: 'mongodb://localhost:27017/payum_server';
-        $app['defuse.secret'] = getenv('DEFUSE_SECRET') ?: null;
-
-        if ($app['defuse.secret']) {
-            $app['payum.cypher'] = $app->share(function ($app) {
-                return new DefuseCypher($app['defuse.secret']);
-            });
-        }
-
-        $app['payum.yadm_gateway_config_storage'] = $app->share(function ($app) {
-            $gatewayConfigStorage = new YadmStorage($app['payum.gateway_config_storage']);
-
-            if (isset($app['payum.cypher'])) {
-                $gatewayConfigStorage = new CryptoStorageDecorator($gatewayConfigStorage, $app['payum.cypher']);
-            }
-
-            return $gatewayConfigStorage;
-        });
-
-        $app['payum.gateway_config_storage'] = $app->share(function ($app) {
-            /** @var Database $db */
-            $db = $app['mongodb.database'];
-
-            return new Storage($db->selectCollection('gateway_configs'), new Hydrator(GatewayConfig::class));
-        });
-
-        $app['payum.payment_storage'] = $app->share(function ($app) {
-            /** @var Database $db */
-            $db = $app['mongodb.database'];
-
-            return new PaymentStorage($db->selectCollection('payments'), new Hydrator(Payment::class));
-        });
-
-        $app['payum.token_storage'] = $app->share(function ($app) {
-            /** @var Database $db */
-            $db = $app['mongodb.database'];
-
-            return new Storage($db->selectCollection('security_tokens'), new Hydrator(SecurityToken::class));
-        });
-
-        $app['payum.builder'] = $app->share($app->extend('payum.builder', function (PayumBuilder $builder) use ($app) {
-
-
-
-            $builder
-                ->setTokenStorage(new YadmStorage($app['payum.token_storage']))
-                ->setGatewayConfigStorage($app['payum.yadm_gateway_config_storage'])
-                ->addStorage(Payment::class, new YadmStorage($app['payum.payment_storage']))
-
-                ->addCoreGatewayFactoryConfig([
-                    'payum.template.obtain_credit_card' => '@PayumServer/obtainCreditCardWithJessepollakCard.html.twig',
-                    'payum.template.obtain_missing_details' => '@PayumServer/obtainMissingDetails.html.twig',
-                    'payum.extension.update_payment_status' => new UpdatePaymentStatusExtension(),
-                    'payum.prepend_extensions' => ['payum.extension.update_payment_status'],
-                    'payum.action.server.capture_payment' => new CapturePaymentAction(),
-                    'payum.action.server.authorize_payment' => new AuthorizePaymentAction(),
-                    'payum.action.server.execute_same_request_with_payment_details' => new ExecuteSameRequestWithPaymentDetailsAction(),
-                    'payum.action.server.obtain_missing_details' => function(ArrayObject $config) use ($app) {
-                        return new ObtainMissingDetailsAction(
-                            $app['form.factory'],
-                            $config['payum.template.obtain_missing_details']
-                        );
-                    },
-
-                    'twig.env' => $app['twig'],
-
-                    'payum.paths' => [
-                        'PayumServer' => __DIR__.'/Resources/views',
-                    ],
-                ])
-
-                ->addGatewayFactoryConfig('be2bill_offsite', [
-                    'payum.action.server.obtain_missing_details' => function(ArrayObject $config) use ($app) {
-                        return new ObtainMissingDetailsForBe2BillAction(
-                            $app['form.factory'],
-                            $config['payum.template.obtain_missing_details']
-                        );
-                    },
-                ])
-                ->addGatewayFactoryConfig('be2bill_direct', [
-                    'payum.action.server.obtain_missing_details' => function(ArrayObject $config) use ($app) {
-                        return new ObtainMissingDetailsForBe2BillAction(
-                            $app['form.factory'],
-                            $config['payum.template.obtain_missing_details']
-                        );
-                    },
-                ])
-            ;
-
-            return $builder;
-        }));
+//        $app['mongodb.uri'] = getenv('PAYUM_MONGO_URI') ?: 'mongodb://localhost:27017/payum_server';
+//        $app['defuse.secret'] = getenv('DEFUSE_SECRET') ?: null;
+//
+//        if ($app['defuse.secret']) {
+//            $app['payum.cypher'] = $app->share(function ($app) {
+//                return new DefuseCypher($app['defuse.secret']);
+//            });
+//        }
+//
+//        $app['payum.yadm_gateway_config_storage'] = $app->share(function ($app) {
+//            $gatewayConfigStorage = new YadmStorage($app['payum.gateway_config_storage']);
+//
+//            if (isset($app['payum.cypher'])) {
+//                $gatewayConfigStorage = new CryptoStorageDecorator($gatewayConfigStorage, $app['payum.cypher']);
+//            }
+//
+//            return $gatewayConfigStorage;
+//        });
+//
+//        $app['payum.gateway_config_storage'] = $app->share(function ($app) {
+//            /** @var Database $db */
+//            $db = $app['mongodb.database'];
+//
+//            return new Storage($db->selectCollection('gateway_configs'), new Hydrator(GatewayConfig::class));
+//        });
+//
+//        $app['payum.payment_storage'] = $app->share(function ($app) {
+//            /** @var Database $db */
+//            $db = $app['mongodb.database'];
+//
+//            return new PaymentStorage($db->selectCollection('payments'), new Hydrator(Payment::class));
+//        });
+//
+//        $app['payum.token_storage'] = $app->share(function ($app) {
+//            /** @var Database $db */
+//            $db = $app['mongodb.database'];
+//
+//            return new Storage($db->selectCollection('security_tokens'), new Hydrator(SecurityToken::class));
+//        });
+//
+//        $app['payum.builder'] = $app->share($app->extend('payum.builder', function (PayumBuilder $builder) use ($app) {
+//
+//
+//
+//            $builder
+//                ->setTokenStorage(new YadmStorage($app['payum.token_storage']))
+//                ->setGatewayConfigStorage($app['payum.yadm_gateway_config_storage'])
+//                ->addStorage(Payment::class, new YadmStorage($app['payum.payment_storage']))
+//
+//                ->addCoreGatewayFactoryConfig([
+//                    'payum.template.obtain_credit_card' => '@PayumServer/obtainCreditCardWithJessepollakCard.html.twig',
+//                    'payum.template.obtain_missing_details' => '@PayumServer/obtainMissingDetails.html.twig',
+//                    'payum.extension.update_payment_status' => new UpdatePaymentStatusExtension(),
+//                    'payum.prepend_extensions' => ['payum.extension.update_payment_status'],
+//                    'payum.action.server.capture_payment' => new CapturePaymentAction(),
+//                    'payum.action.server.authorize_payment' => new AuthorizePaymentAction(),
+//                    'payum.action.server.execute_same_request_with_payment_details' => new ExecuteSameRequestWithPaymentDetailsAction(),
+//                    'payum.action.server.obtain_missing_details' => function(ArrayObject $config) use ($app) {
+//                        return new ObtainMissingDetailsAction(
+//                            $app['form.factory'],
+//                            $config['payum.template.obtain_missing_details']
+//                        );
+//                    },
+//
+//                    'twig.env' => $app['twig'],
+//
+//                    'payum.paths' => [
+//                        'PayumServer' => __DIR__.'/Resources/views',
+//                    ],
+//                ])
+//
+//                ->addGatewayFactoryConfig('be2bill_offsite', [
+//                    'payum.action.server.obtain_missing_details' => function(ArrayObject $config) use ($app) {
+//                        return new ObtainMissingDetailsForBe2BillAction(
+//                            $app['form.factory'],
+//                            $config['payum.template.obtain_missing_details']
+//                        );
+//                    },
+//                ])
+//                ->addGatewayFactoryConfig('be2bill_direct', [
+//                    'payum.action.server.obtain_missing_details' => function(ArrayObject $config) use ($app) {
+//                        return new ObtainMissingDetailsForBe2BillAction(
+//                            $app['form.factory'],
+//                            $config['payum.template.obtain_missing_details']
+//                        );
+//                    },
+//                ])
+//            ;
+//
+//            return $builder;
+//        }));
 
         $app['form.type.extensions'] = $app->share($app->extend('form.type.extensions', function ($extensions) use ($app) {
             $extensions[] = new CreditCardExtension();
@@ -162,20 +162,20 @@ class ServiceProvider implements ServiceProviderInterface
             return new ReplyToJsonResponseConverter();
         });
 
-        $app['mongodb.client'] = $app->share(function ($app) {
-            return new Client($app['mongodb.uri']);
-        });
-
-        $app['mongodb.database'] = $app->share(function ($app) {
-            /** @var Client $client */
-            $client = $app['mongodb.client'];
-
-            if (false == $database = trim(parse_url($app['mongodb.uri'], PHP_URL_PATH), '/')) {
-                throw new \LogicException('The mongodb.uri must have database specified. For example http://localhost:27017/payum_server');
-            }
-
-            return $client->selectDatabase($database);
-        });
+//        $app['mongodb.client'] = $app->share(function ($app) {
+//            return new Client($app['mongodb.uri']);
+//        });
+//
+//        $app['mongodb.database'] = $app->share(function ($app) {
+//            /** @var Client $client */
+//            $client = $app['mongodb.client'];
+//
+//            if (false == $database = trim(parse_url($app['mongodb.uri'], PHP_URL_PATH), '/')) {
+//                throw new \LogicException('The mongodb.uri must have database specified. For example http://localhost:27017/payum_server');
+//            }
+//
+//            return $client->selectDatabase($database);
+//        });
 
 
         $app['payum.gateway_choices_callback'] = $app->extend('payum.gateway_choices_callback', function (callable $choicesCallback) use ($app) {
@@ -237,9 +237,9 @@ class ServiceProvider implements ServiceProviderInterface
             };
         });
 
-        $app['json_decode'] = $app->share(function ($app) {
-            return new JsonDecode();
-        });
+//        $app['json_decode'] = $app->share(function ($app) {
+//            return new JsonDecode();
+//        });
 
         $app->before(function(Request $request, Application $app) {
             if (0 === strpos($request->getPathInfo(), '/payment/capture') || 0 === strpos($request->getPathInfo(), '/payment/authorize')) {
