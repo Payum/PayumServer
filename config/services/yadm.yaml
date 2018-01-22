@@ -1,0 +1,29 @@
+parameters:
+    gateway.class: 'Payum\Server\Model\GatewayConfig'
+    security.token.class: 'Payum\Server\Model\SecurityToken'
+    payment.class: 'Payum\Server\Model\Payment'
+
+services:
+
+    # default configuration for services in *this* file
+    _defaults:
+        autowire: true      # Automatically injects dependencies in your services.
+        autoconfigure: true # Automatically registers your services as commands, event subscribers, etc.
+        public: false       # Allows optimizing the container by removing unused services; this also means
+                            # fetching services directly from the container via $container->get() won't work.
+                            # The best practice is to be explicit about your dependencies anyway.
+
+    yadm.hydrator.gateway:
+        class: Makasim\Yadm\Hydrator
+        arguments:
+            - '%gateway.class%'
+
+    yadm.hydrator.security.token:
+        class: Makasim\Yadm\Hydrator
+        arguments:
+            - '%security.token.class%'
+
+    yadm.hydrator.payment:
+        class: Makasim\Yadm\Hydrator
+        arguments:
+            - '%payment.class%'

@@ -1,0 +1,28 @@
+payum.default:
+    resource: ./routes/payum/default.yaml
+    type: yaml
+
+payum.gateways:
+    resource: ./routes/payum/gateways.yaml
+    prefix: /gateways
+    type: yaml
+
+payum.payment:
+    resource: ./routes/payum/payment.yaml
+    prefix: /payments
+    type: yaml
+
+payum.schema.gateways:
+    resource: ./routes/payum/schema/gateways.yaml
+    prefix: /schema/gateways
+    type: yaml
+
+payum.schema.payments:
+    resource: ./routes/payum/schema/payments.yaml
+    prefix: /schema/payments
+    type: yaml
+
+payum.schema.tokens:
+    resource: ./routes/payum/schema/tokens.yaml
+    prefix: /schema/tokens
+    type: yaml

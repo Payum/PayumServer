@@ -1,0 +1,131 @@
+services:
+    # default configuration for services in *this* file
+    _defaults:
+        autowire: true      # Automatically injects dependencies in your services.
+        autoconfigure: true # Automatically registers your services as commands, event subscribers, etc.
+        public: false       # Allows optimizing the container by removing unused services; this also means
+                            # fetching services directly from the container via $container->get() won't work.
+                            # The best practice is to be explicit about your dependencies anyway.
+
+    # controller gateways
+    payum.api.controller.gateway:
+        class: Payum\Server\Api\Controller\GatewayController
+        public: true
+        arguments:
+            - '@Symfony\Component\Routing\Generator\UrlGeneratorInterface'
+            - '@payum.yadm_gateway_config_storage'
+            - '@api.view.gateway_config_to_json_converter'
+            - '@payum.gateway_schema_builder'
+            - '@payum.json_decode'
+
+    payum.yadm_gateway_config_storage:
+        class: Payum\Core\Storage\StorageInterface
+        factory: ['Payum\Server\Factory\GatewayConfigStorageFactory', create]
+        arguments:
+            - '@payum.gateway_config_storage'
+
+    payum.gateway_config_storage:
+        class: Makasim\Yadm\Storage
+        arguments:
+            - "@=service('mongodb.database').selectCollection('gateway_configs')"
+            - '@yadm.hydrator.gateway'
+
+    api.view.gateway_config_to_json_converter:
+        class: Payum\Server\Api\View\GatewayConfigToJsonConverter
+
+    payum.gateway_schema_builder:
+        class: Payum\Server\Schema\GatewaySchemaBuilder
+        arguments:
+            - '@payum.core.payum'
+
+    Payum\Server\JsonDecode: '@payum.json_decode'
+    payum.json_decode:
+        class: Payum\Server\JsonDecode
+
+    Payum\Core\Payum: '@payum.core.payum'
+    payum.core.payum:
+        class: Payum\Core\Payum
+        factory: 'payum.builder:getPayum'
+
+    payum.builder:
+        class: Payum\Core\PayumBuilder
+        factory: 'payum.builder.facade:get'
+        arguments:
+            - '@payum.builder.factory'
+            - '@payum.token_storage'
+            - '@payum.yadm_gateway_config_storage'
+            - '@payum.payment_storage'
+            - '@form.factory'
+            - '@twig'
+
+    payum.builder.factory:
+        class: Payum\Core\PayumBuilder
+
+    payum.builder.facade:
+        class: Payum\Server\Facade\PayumBuilderFacade
+
+    payum.token_storage:
+        class: Makasim\Yadm\Storage
+        arguments:
+            - "@=service('mongodb.database').selectCollection('security_tokens')"
+            - '@yadm.hydrator.security.token'
+
+    Payum\Server\Storage\PaymentStorage: '@payum.payment_storage'
+    payum.payment_storage:
+        class: Payum\Server\Storage\PaymentStorage
+        arguments:
+            - "@=service('mongodb.database').selectCollection('payments')"
+            - '@yadm.hydrator.payment'
+
+    # controller schema gateways
+    payum.schema.controller.gateways:
+        class: Payum\Server\Schema\Controller\GatewaySchemaController
+        public: true
+        arguments:
+            - '@payum.gateway_schema_builder'
+            - '@payum.server.schema.gateway_form_definition_builder'
+
+    payum.server.schema.gateway_form_definition_builder:
+        class: Payum\Server\Schema\GatewayFormDefinitionBuilder
+        arguments:
+            - '@payum.core.payum'
+
+    # controller schema payments
+    payum.schema.controller.payments:
+        class: Payum\Server\Schema\Controller\PaymentSchemaController
+        public: true
+        arguments:
+            - '@payum.payment_schema_builder'
+            - '@payum.payment_form_definition_builder'
+
+    Payum\Server\Schema\PaymentSchemaBuilder: '@payum.payment_schema_builder'
+    payum.payment_schema_builder:
+        class: Payum\Server\Schema\PaymentSchemaBuilder
+        arguments:
+            - '@payum.yadm_gateway_config_storage'
+
+    payum.payment_form_definition_builder:
+        class: Payum\Server\Schema\PaymentFormDefinitionBuilder
+        arguments:
+            - '@payum.yadm_gateway_config_storage'
+
+    # controller schema tokens
+    payum.schema.controller.tokens:
+        class: Payum\Server\Schema\Controller\TokenSchemaController
+        public: true
+        arguments:
+            - '@payum.token_schema_builder'
+
+    payum.token_schema_builder:
+        class: Payum\Server\Schema\TokenSchemaBuilder
+
+    # controller payment
+    payum.api.controller.payment:
+        class: Payum\Server\Api\Controller\PaymentController
+        public: true
+
+    Payum\Server\Api\View\PaymentToJsonConverter: '@api.view.payment_to_json_converter'
+    api.view.payment_to_json_converter:
+        class: Payum\Server\Api\View\PaymentToJsonConverter
+        arguments:
+            - '@payum.core.payum'

@@ -1,0 +1,27 @@
+# all
+payment_all:
+    path: /
+    methods: [GET]
+    defaults:
+        _controller: payum.api.controller.payment:allAction
+
+# create
+payment_create:
+    path: /
+    methods: [POST]
+    defaults:
+        _controller: payum.api.controller.payment:createAction
+
+# get
+payment_get:
+    path: /{id}
+    methods: [GET]
+    defaults:
+        _controller: payum.api.controller.payment:getAction
+
+# delete
+payment_delete:
+    path: /{id}
+    methods: [DELETE]
+    defaults:
+        _controller: payum.api.controller.payment:deleteAction

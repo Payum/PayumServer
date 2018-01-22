@@ -1,0 +1,13 @@
+# new
+payum.schema.controller.payments:
+    path: /new.json
+    methods: [GET]
+    defaults:
+        _controller: payum.schema.controller.payments:getNewAction
+
+# new form
+payum.schema.controller.payments.form:
+    path: /form/new.json
+    methods: [GET]
+    defaults:
+        _controller: payum.schema.controller.payments:getNewFormAction
