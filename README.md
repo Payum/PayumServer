@@ -19,6 +19,10 @@ PHP 7.2+ Payment processing server. Setup once and rule them all. [Here](https:/
 4. Run composer `composer install`
 5. Check result at [configured host](http://payum-server-symfony.local:8080)
 
+## Test local server
+1. Setup `TEST_PAYUM_MONGO_URI` in `phpunit.xml.dist`
+2. Setup `TEST_PAYUM_MONGO_URI` in `phpunit.xml.dist`
+
 ## Docker registry
 
 The [payum/server](https://hub.docker.com/r/payum/server/) image and [payum/server-ui](https://hub.docker.com/r/payum/server-ui/) are built automatically on success push to the master branch.  

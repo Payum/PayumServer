@@ -49,7 +49,10 @@
         "webmozart/json": "^1.2"
     },
     "require-dev": {
+        "symfony/browser-kit": "^4.0",
+        "symfony/css-selector": "^4.0",
         "symfony/dotenv": "^4.0",
+        "symfony/phpunit-bridge": "^4.0",
         "symfony/var-dumper": "^4.0"
     },
     "config": {

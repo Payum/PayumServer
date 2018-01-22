@@ -1,0 +1,16 @@
+parameters:
+    mongodb.uri: "%env(TEST_PAYUM_MONGO_URI)%"
+
+services:
+    _defaults:
+        public: true
+
+    test.client:
+        class: Payum\Server\Test\Client
+        shared: false
+        public: true
+        arguments:
+            - '@kernel'
+            - '%test.client.parameters%'
+            - '@test.client.history'
+            - '@test.client.cookiejar'

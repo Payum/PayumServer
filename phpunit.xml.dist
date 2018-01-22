@@ -26,4 +26,11 @@
             </exclude>
         </whitelist>
     </filter>
+
+    <php>
+        <!-- the value is the FQCN of the application kernel -->
+        <env name="KERNEL_CLASS" value="Payum\Server\Kernel" />
+        <env name="TEST_PAYUM_MONGO_URI" value="mongodb://mongo/payum_server_test" />
+        <env name="TEST_HTTP_HOST" value="payum-server-symfony.local:8080" />
+    </php>
 </phpunit>

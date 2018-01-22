@@ -25,6 +25,7 @@ services:
             - '@payum.gateway_config_storage'
 
     payum.gateway_config_storage:
+        public: true
         class: Makasim\Yadm\Storage
         arguments:
             - "@=service('mongodb.database').selectCollection('gateway_configs')"
@@ -65,6 +66,7 @@ services:
         class: Payum\Server\Facade\PayumBuilderFacade
 
     payum.token_storage:
+        public: true
         class: Makasim\Yadm\Storage
         arguments:
             - "@=service('mongodb.database').selectCollection('security_tokens')"
@@ -72,6 +74,7 @@ services:
 
     Payum\Server\Storage\PaymentStorage: '@payum.payment_storage'
     payum.payment_storage:
+        public: true
         class: Payum\Server\Storage\PaymentStorage
         arguments:
             - "@=service('mongodb.database').selectCollection('payments')"
