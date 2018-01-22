@@ -1,9 +1,12 @@
 <?php
+declare(strict_types=1);
+
 namespace Payum\Server\Action;
 
-use Payum\Core\Action\GatewayAwareAction;
+use Payum\Core\Action\ActionInterface;
 use Payum\Core\Bridge\Symfony\Reply\HttpResponse;
 use Payum\Core\Exception\RequestNotSupportedException;
+use Payum\Core\GatewayAwareTrait;
 use Payum\Core\Request\GetHttpRequest;
 use Payum\Core\Request\RenderTemplate;
 use Payum\Core\Security\TokenInterface;
@@ -15,8 +18,10 @@ use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Response;
 
-class ObtainMissingDetailsAction extends GatewayAwareAction
+class ObtainMissingDetailsAction implements ActionInterface
 {
+    use GatewayAwareTrait;
+
     /**
      * @var FormFactoryInterface
      */
@@ -29,7 +34,7 @@ class ObtainMissingDetailsAction extends GatewayAwareAction
 
     /**
      * @param FormFactoryInterface $formFactory
-     * @param string               $templateName
+     * @param string $templateName
      */
     public function __construct(FormFactoryInterface $formFactory, $templateName)
     {
@@ -42,7 +47,7 @@ class ObtainMissingDetailsAction extends GatewayAwareAction
      *
      * @param ObtainMissingDetailsRequest $request
      */
-    public function execute($request)
+    public function execute($request) : void
     {
         RequestNotSupportedException::assertSupports($this, $request);
 
@@ -77,7 +82,7 @@ class ObtainMissingDetailsAction extends GatewayAwareAction
     /**
      * {@inheritdoc}
      */
-    public function supports($request)
+    public function supports($request) : bool
     {
         return $request instanceof ObtainMissingDetailsRequest;
     }
@@ -88,7 +93,7 @@ class ObtainMissingDetailsAction extends GatewayAwareAction
      *
      * @return FormInterface
      */
-    protected function createPaymentForm(Payment $payment, TokenInterface $token = null)
+    protected function createPaymentForm(Payment $payment, TokenInterface $token = null) : FormInterface
     {
         return $this->createPaymentFormBuilder($payment, $token)->getForm();
     }
@@ -99,7 +104,7 @@ class ObtainMissingDetailsAction extends GatewayAwareAction
      *
      * @return FormBuilderInterface
      */
-    protected function createPaymentFormBuilder(Payment $payment, TokenInterface $token = null)
+    protected function createPaymentFormBuilder(Payment $payment, TokenInterface $token = null) : FormBuilderInterface
     {
         return $this->formFactory->createNamedBuilder('', FormType::class, $payment, [
             'method' => 'POST',

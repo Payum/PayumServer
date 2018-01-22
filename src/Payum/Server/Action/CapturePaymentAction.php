@@ -1,9 +1,12 @@
 <?php
+declare(strict_types=1);
+
 namespace Payum\Server\Action;
 
-use Payum\Core\Action\GatewayAwareAction;
+use Payum\Core\Action\ActionInterface;
 use Payum\Core\Bridge\Spl\ArrayObject;
 use Payum\Core\Exception\RequestNotSupportedException;
+use Payum\Core\GatewayAwareTrait;
 use Payum\Core\Model\Payment as PayumPayment;
 use Payum\Core\Request\Capture;
 use Payum\Core\Request\Convert;
@@ -11,14 +14,16 @@ use Payum\Core\Request\GetHumanStatus;
 use Payum\Server\Model\Payment;
 use Payum\Server\Request\ObtainMissingDetailsRequest;
 
-class CapturePaymentAction extends GatewayAwareAction
+class CapturePaymentAction implements ActionInterface
 {
+    use GatewayAwareTrait;
+
     /**
      * {@inheritDoc}
      *
      * @param $request Capture
      */
-    public function execute($request)
+    public function execute($request) : void
     {
         RequestNotSupportedException::assertSupports($this, $request);
 
@@ -61,11 +66,10 @@ class CapturePaymentAction extends GatewayAwareAction
     /**
      * {@inheritdoc}
      */
-    public function supports($request)
+    public function supports($request) : bool
     {
         return
             $request instanceof Capture &&
-            $request->getModel() instanceof Payment
-        ;
+            $request->getModel() instanceof Payment;
     }
 }

@@ -1,20 +1,25 @@
 <?php
+declare(strict_types=1);
+
 namespace Payum\Server\Action;
 
-use Payum\Core\Action\GatewayAwareAction;
+use Payum\Core\Action\ActionInterface;
 use Payum\Core\Bridge\Spl\ArrayObject;
 use Payum\Core\Exception\RequestNotSupportedException;
+use Payum\Core\GatewayAwareTrait;
 use Payum\Core\Request\Generic;
 use Payum\Server\Model\Payment;
 
-class ExecuteSameRequestWithPaymentDetailsAction extends GatewayAwareAction
+class ExecuteSameRequestWithPaymentDetailsAction implements ActionInterface
 {
+    use GatewayAwareTrait;
+
     /**
      * {@inheritDoc}
      *
      * @param $request Generic
      */
-    public function execute($request)
+    public function execute($request) : void
     {
         RequestNotSupportedException::assertSupports($this, $request);
 
@@ -34,11 +39,10 @@ class ExecuteSameRequestWithPaymentDetailsAction extends GatewayAwareAction
     /**
      * {@inheritDoc}
      */
-    public function supports($request)
+    public function supports($request) : bool
     {
         return
             $request instanceof Generic &&
-            $request->getModel() instanceof Payment
-        ;
+            $request->getModel() instanceof Payment;
     }
 }
