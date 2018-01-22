@@ -1,12 +1,20 @@
 <?php
+declare(strict_types=1);
+
 namespace Payum\Server\Api\Controller;
 
 use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\HttpFoundation\Response;
 
+/**
+ * Class RootController
+ * @package Payum\Server\Api\Controller
+ */
 class RootController
 {
-    public function rootAction()
+    /**
+     * @return JsonResponse
+     */
+    public function rootAction() : JsonResponse
     {
         return new JsonResponse([
             'name' => 'PayumServer',
