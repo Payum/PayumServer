@@ -1,6 +1,9 @@
 <?php
+declare(strict_types=1);
+
 namespace Payum\Server\Storage;
 
+use LogicException;
 use function Makasim\Yadm\get_object_id;
 use Makasim\Yadm\Storage;
 use Payum\Core\Model\Identity;
@@ -30,7 +33,7 @@ class YadmStorage extends AbstractStorage
      */
     protected function doUpdateModel($model)
     {
-        if (get_object_id($model)) {
+        if (get_object_id($model, true)) {
             $this->storage->update($model);
         } else {
             $this->storage->insert($model);
@@ -79,7 +82,7 @@ class YadmStorage extends AbstractStorage
     protected function getModelId($model, $strict = true)
     {
         if ($strict && false == $model->getId()) {
-            throw new \LogicException('The id is missing');
+            throw new LogicException('The id is missing');
         }
 
         return (string) $model->getId();

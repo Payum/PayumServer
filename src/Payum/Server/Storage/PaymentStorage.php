@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 namespace Payum\Server\Storage;
 
 use Makasim\Yadm\Hydrator;
@@ -38,9 +40,9 @@ class PaymentStorage extends Storage
      * @param array $data
      * @param Payment|null $model
      *
-     * @return Payment
+     * @return Payment | object
      */
-    public function hydrate(array $data, $model = null)
+    public function hydrate(array $data, $model = null) : Payment
     {
         return $this->hydrator->hydrate($data, $model ?: $this->create());
     }
@@ -48,15 +50,15 @@ class PaymentStorage extends Storage
     /**
      * @param string $id
      *
-     * @return Payment|null
+     * @return Payment | null | object
      */
-    public function findById($id)
+    public function findById($id) : ?Payment
     {
         return $this->findOne(['id' => $id]);
     }
 
     /**
-     * @return Payment[]
+     * @return Payment[] | \Traversable
      */
     public function findAll()
     {
