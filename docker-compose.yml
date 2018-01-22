@@ -1,0 +1,25 @@
+version: '3'
+
+services:
+
+    php-fpm:
+        build: ./docker/dev/php-fpm
+        container_name: payum-php-fpm
+        volumes:
+            - .:/var/www
+            - ./docker/dev/php-fpm/php.ini:/usr/local/etc/php/php.ini
+
+    nginx:
+        build: ./docker/dev/nginx
+        container_name: payum-nginx
+        volumes:
+            - ./public:/var/www/public
+            - ./docker/dev/nginx/site.conf:/etc/nginx/conf.d/site.conf
+        ports:
+            - "${PAYUM_NGINX_PORT}:80"
+
+    mongo:
+        build: ./docker/dev/mongo
+        container_name: payum-mongo-symfony
+        ports:
+            - "${PAYUM_MONGO_PORT}:27017"

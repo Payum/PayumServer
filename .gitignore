@@ -1,8 +1,8 @@
-vendor
-app
-bin
-data
-docker-compose.yml
-web/client
+.idea
 
-
+###> symfony/framework-bundle ###
+.env
+/public/bundles/
+/var/
+/vendor/
+###< symfony/framework-bundle ###
