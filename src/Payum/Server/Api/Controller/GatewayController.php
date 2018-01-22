@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 namespace Payum\Server\Api\Controller;
 
 use function Makasim\Values\set_values;
@@ -17,6 +19,10 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Generator\UrlGenerator;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
+/**
+ * Class GatewayController
+ * @package Payum\Server\Api\Controller
+ */
 class GatewayController
 {
     use ForwardExtensionTrait;
@@ -67,7 +73,12 @@ class GatewayController
         $this->jsonDecode = $jsonDecode;
     }
 
-    public function createAction(Request $request)
+    /**
+     * @param Request $request
+     *
+     * @return JsonResponse
+     */
+    public function createAction(Request $request) : JsonResponse
     {
         $this->forward400Unless('json' == $request->getContentType());
 
@@ -85,7 +96,7 @@ class GatewayController
                     'gatewayName' => [
                         sprintf('Gateway with such name "%s" already exists', $data['gatewayName']),
                     ],
-                ]
+                ],
             ], 400);
         }
 
@@ -96,7 +107,7 @@ class GatewayController
         $this->gatewayConfigStorage->update($gatewayConfig);
 
         $getUrl = $this->urlGenerator->generate('gateway_get',
-            array('name' => $gatewayConfig->getGatewayName()),
+            ['name' => $gatewayConfig->getGatewayName()],
             UrlGenerator::ABSOLUTE_URL
         );
 
@@ -106,29 +117,37 @@ class GatewayController
             ],
             201,
             [
-                'Location' => $getUrl
+                'Location' => $getUrl,
             ]
         );
     }
 
-    public function allAction()
+    /**
+     * @return JsonResponse
+     */
+    public function allAction() : JsonResponse
     {
-        $convertedGatewayConfigs = array();
+        $convertedGatewayConfigs = [];
         foreach ($this->gatewayConfigStorage->findBy([]) as $gatewayConfig) {
             /** @var GatewayConfigInterface $gatewayConfig */
 
             $convertedGatewayConfigs[$gatewayConfig->getGatewayName()] = $this->gatewayConfigToJsonConverter->convert($gatewayConfig);
         }
 
-        return new JsonResponse(array('gateways' => $convertedGatewayConfigs));
+        return new JsonResponse(['gateways' => $convertedGatewayConfigs]);
     }
 
-    public function getAction($name)
+    /**
+     * @param string $name
+     *
+     * @return JsonResponse
+     */
+    public function getAction(string $name) : JsonResponse
     {
         $gatewayConfig = $this->findGatewayConfigByName($name);
 
         return new JsonResponse([
-            'gateway' => $this->gatewayConfigToJsonConverter->convert($gatewayConfig)
+            'gateway' => $this->gatewayConfigToJsonConverter->convert($gatewayConfig),
         ]);
     }
 
@@ -137,7 +156,7 @@ class GatewayController
      *
      * @return Response
      */
-    public function deleteAction($name)
+    public function deleteAction(string $name) : Response
     {
         $gatewayConfig = $this->findGatewayConfigByName($name);
 
@@ -151,7 +170,7 @@ class GatewayController
      *
      * @return GatewayConfigInterface
      */
-    protected function findGatewayConfigByName($name)
+    protected function findGatewayConfigByName(string $name) : GatewayConfigInterface
     {
         if (false == $name) {
             throw new NotFoundHttpException(sprintf('Config name is empty.', $name));
@@ -159,7 +178,7 @@ class GatewayController
 
         /** @var GatewayConfigInterface[] $gatewayConfigs */
         $gatewayConfigs = $this->gatewayConfigStorage->findBy([
-            'gatewayName' => $name
+            'gatewayName' => $name,
         ]);
 
         if (empty($gatewayConfigs)) {
