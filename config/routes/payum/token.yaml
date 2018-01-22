@@ -1,0 +1,7 @@
+# create
+token_create:
+    path: /
+    methods: [POST]
+    defaults:
+        _controller: payum.api.controller.token:createAction
+

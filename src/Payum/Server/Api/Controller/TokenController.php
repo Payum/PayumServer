@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 namespace Payum\Server\Api\Controller;
 
 use Payum\Core\Payum;
@@ -59,7 +61,7 @@ class TokenController
      *
      * @return JsonResponse
      */
-    public function createAction(Request $request)
+    public function createAction(Request $request) : JsonResponse
     {
         $this->forward400Unless('json' == $request->getContentType() || 'form' == $request->getContentType());
 
@@ -74,8 +76,8 @@ class TokenController
         if (false == $payment = $this->payum->getStorage(Payment::class)->find($data['paymentId'])) {
             return new JsonResponse(['errors' => [
                 'paymentId' => [
-                    sprintf('Payment with id %s could not be found', $data['paymentId'])
-                ]
+                    sprintf('Payment with id %s could not be found', $data['paymentId']),
+                ],
             ]], 400);
         }
 

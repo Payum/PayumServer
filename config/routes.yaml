@@ -12,6 +12,12 @@ payum.payment:
     prefix: /payments
     type: yaml
 
+payum.schema.token:
+    resource: ./routes/payum/token.yaml
+    prefix: /tokens
+    type: yaml
+
+# schema
 payum.schema.gateways:
     resource: ./routes/payum/schema/gateways.yaml
     prefix: /schema/gateways

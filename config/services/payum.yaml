@@ -116,6 +116,7 @@ services:
         arguments:
             - '@payum.token_schema_builder'
 
+    Payum\Server\Schema\TokenSchemaBuilder: '@payum.token_schema_builder'
     payum.token_schema_builder:
         class: Payum\Server\Schema\TokenSchemaBuilder
 
@@ -129,3 +130,12 @@ services:
         class: Payum\Server\Api\View\PaymentToJsonConverter
         arguments:
             - '@payum.core.payum'
+
+    # controller payment
+    payum.api.controller.token:
+        class: Payum\Server\Api\Controller\TokenController
+        public: true
+
+    Payum\Server\Api\View\TokenToJsonConverter: '@api.view.token_to_json_converter'
+    api.view.token_to_json_converter:
+        class: Payum\Server\Api\View\TokenToJsonConverter
