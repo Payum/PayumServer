@@ -1,12 +1,16 @@
 <?php
+declare(strict_types=1);
+
 namespace Payum\Server\Schema\Controller;
 
 use Payum\Server\Controller\ForwardExtensionTrait;
-use Payum\Server\Schema\PaymentFormDefinitionBuilder;
-use Payum\Server\Schema\PaymentSchemaBuilder;
 use Payum\Server\Schema\TokenSchemaBuilder;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
+/**
+ * Class TokenSchemaController
+ * @package Payum\Server\Schema\Controller
+ */
 class TokenSchemaController
 {
     use ForwardExtensionTrait;
@@ -27,7 +31,7 @@ class TokenSchemaController
     /**
      * @return JsonResponse
      */
-    public function getNewAction()
+    public function getNewAction() : JsonResponse
     {
         return new JsonResponse($this->schemaBuilder->buildNew(), 200, [
             'Content-Type' => 'application/schema+json',

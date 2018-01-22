@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 namespace Payum\Server\Schema\Controller;
 
 use Payum\Server\Controller\ForwardExtensionTrait;
@@ -14,6 +16,7 @@ class PaymentSchemaController
      * @var PaymentSchemaBuilder
      */
     private $schemaBuilder;
+
     /**
      * @var PaymentFormDefinitionBuilder
      */
@@ -23,8 +26,10 @@ class PaymentSchemaController
      * @param PaymentSchemaBuilder $paymentSchemaBuilder
      * @param PaymentFormDefinitionBuilder $paymentFormDefinitionBuilder
      */
-    public function __construct(PaymentSchemaBuilder $paymentSchemaBuilder, PaymentFormDefinitionBuilder $paymentFormDefinitionBuilder)
-    {
+    public function __construct(
+        PaymentSchemaBuilder $paymentSchemaBuilder,
+        PaymentFormDefinitionBuilder $paymentFormDefinitionBuilder
+    ) {
         $this->schemaBuilder = $paymentSchemaBuilder;
         $this->formDefinitionBuilder = $paymentFormDefinitionBuilder;
     }
@@ -32,7 +37,7 @@ class PaymentSchemaController
     /**
      * @return JsonResponse
      */
-    public function getNewAction()
+    public function getNewAction() : JsonResponse
     {
         return new JsonResponse($this->schemaBuilder->buildNew(), 200, [
             'Content-Type' => 'application/schema+json',
@@ -42,7 +47,7 @@ class PaymentSchemaController
     /**
      * @return JsonResponse
      */
-    public function getNewFormAction()
+    public function getNewFormAction() : JsonResponse
     {
         return new JsonResponse($this->formDefinitionBuilder->buildNew());
     }

@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 namespace Payum\Server\Schema\Controller;
 
 use Payum\Server\Controller\ForwardExtensionTrait;
@@ -6,6 +8,10 @@ use Payum\Server\Schema\GatewayFormDefinitionBuilder;
 use Payum\Server\Schema\GatewaySchemaBuilder;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
+/**
+ * Class GatewaySchemaController
+ * @package Payum\Server\Schema\Controller
+ */
 class GatewaySchemaController
 {
     use ForwardExtensionTrait;
@@ -24,8 +30,10 @@ class GatewaySchemaController
      * @param GatewaySchemaBuilder $schemaBuilder
      * @param GatewayFormDefinitionBuilder $formDefinitionBuilder
      */
-    public function __construct(GatewaySchemaBuilder $schemaBuilder, GatewayFormDefinitionBuilder $formDefinitionBuilder)
-    {
+    public function __construct(
+        GatewaySchemaBuilder $schemaBuilder,
+        GatewayFormDefinitionBuilder $formDefinitionBuilder
+    ) {
         $this->schemaBuilder = $schemaBuilder;
         $this->formDefinitionBuilder = $formDefinitionBuilder;
     }
@@ -33,7 +41,7 @@ class GatewaySchemaController
     /**
      * @return JsonResponse
      */
-    public function getDefaultAction()
+    public function getDefaultAction() : JsonResponse
     {
         return new JsonResponse($this->schemaBuilder->buildDefault(), 200, [
             'Content-Type' => 'application/schema+json',
@@ -43,15 +51,18 @@ class GatewaySchemaController
     /**
      * @return JsonResponse
      */
-    public function getDefaultFormAction()
+    public function getDefaultFormAction() : JsonResponse
     {
         return new JsonResponse($this->formDefinitionBuilder->buildDefault());
     }
 
     /**
+     *
+     * @param string $name
+     *
      * @return JsonResponse
      */
-    public function getAction($name)
+    public function getAction(string $name) : JsonResponse
     {
         return new JsonResponse($this->schemaBuilder->build($name), 200, [
             'Content-Type' => 'application/schema+json',
@@ -59,9 +70,11 @@ class GatewaySchemaController
     }
 
     /**
+     * @param string $name
+     *
      * @return JsonResponse
      */
-    public function getFormAction($name)
+    public function getFormAction(string $name) : JsonResponse
     {
         return new JsonResponse($this->formDefinitionBuilder->build($name));
     }

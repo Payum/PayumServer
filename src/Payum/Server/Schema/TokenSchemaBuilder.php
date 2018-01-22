@@ -1,8 +1,14 @@
 <?php
+declare(strict_types=1);
+
 namespace Payum\Server\Schema;
 
 use Payum\Server\Util\StringUtil;
 
+/**
+ * Class TokenSchemaBuilder
+ * @package Payum\Server\Schema
+ */
 class TokenSchemaBuilder
 {
     /**
@@ -28,7 +34,7 @@ class TokenSchemaBuilder
                     'title' => StringUtil::nameToTitle('paymentId'),
                 ],
             ],
-            "required" => [ "type", "afterUrl", "paymentId"],
+            "required" => ["type", "afterUrl", "paymentId"],
         ];
     }
 }
