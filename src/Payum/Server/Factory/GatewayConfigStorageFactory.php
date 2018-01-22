@@ -20,7 +20,7 @@ class GatewayConfigStorageFactory
      *
      * @return StorageInterface
      */
-    public function create(Storage $storage) : StorageInterface
+    public static function create(Storage $storage) : StorageInterface
     {
         $defuseSecret = getenv('DEFUSE_SECRET');
 
