@@ -1,10 +1,10 @@
 <?php
 namespace Payum\Server\Api;
 
-use Payum\Server\Api\Controller\GatewayController;
-use Payum\Server\Api\Controller\PaymentController;
-use Payum\Server\Api\Controller\RootController;
-use Payum\Server\Api\Controller\TokenController;
+//use Payum\Server\Api\Controller\GatewayController;
+//use Payum\Server\Api\Controller\PaymentController;
+//use Payum\Server\Api\Controller\RootController;
+//use Payum\Server\Api\Controller\TokenController;
 use Silex\Application as SilexApplication;
 use Silex\ControllerCollection;
 use Silex\ServiceProviderInterface;
@@ -87,7 +87,7 @@ class ApiControllerProvider implements ServiceProviderInterface
             $tokens->after($app['api.view.pretty_print_json']);
         }
     }
-
+//
 //    /**
 //     * {@inheritDoc}
 //     */

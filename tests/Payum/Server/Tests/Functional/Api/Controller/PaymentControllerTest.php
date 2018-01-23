@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 namespace Payum\Server\Tests\Functional\Api\Controller;
 
 use Makasim\Yadm\Storage;
@@ -17,14 +19,14 @@ class PaymentControllerTest extends ClientTestCase
     public function shouldAllowGetPayment()
     {
         /** @var Storage $storage */
-        $storage = $this->app['payum.payment_storage'];
+        $storage = $this->getContainer()->get('payum.payment_storage');
 
         $payment = new Payment();
         $payment->setId(uniqid());
         $payment->setClientEmail('theExpectedPayment');
         $storage->insert($payment);
 
-        $this->getClient()->request('GET', '/payments/'.$payment->getId());
+        $this->getClient()->request('GET', '/payments/' . $payment->getId());
 
         $this->assertClientResponseStatus(200);
         $this->assertClientResponseContentJson();
@@ -47,18 +49,20 @@ class PaymentControllerTest extends ClientTestCase
         $payment->setClientEmail('theExpectedPayment');
 
         /** @var Storage $storage */
-        $storage = $this->app['payum.payment_storage'];
+        $storage = $this->getContainer()->get('payum.payment_storage');
         $storage->insert($payment);
 
         //guard
-        $this->getClient()->request('GET', '/payments/'.$payment->getId());
+        $this->getClient()->request('GET', '/payments/' . $payment->getId());
         $this->assertClientResponseStatus(200);
 
-        $this->getClient()->request('DELETE', '/payments/'.$payment->getId());
+        $this->getClient()->request('DELETE', '/payments/' . $payment->getId());
         $this->assertClientResponseStatus(204);
 
-        $this->setExpectedException(NotFoundHttpException::class);
-        $this->getClient()->request('GET', '/payments/'.$payment->getId());
+        // @todo roll back expectException
+//        $this->expectException(NotFoundHttpException::class);
+        $this->getClient()->request('GET', '/payments/' . $payment->getId());
+        $this->assertClientResponseStatus(404);
     }
 
     /**
@@ -83,6 +87,6 @@ class PaymentControllerTest extends ClientTestCase
         $this->assertObjectHasAttribute('clientEmail', $content->payment);
         $this->assertEquals('foo@example.com', $content->payment->clientEmail);
 
-        $this->assertStringStartsWith('http://localhost/payments/', $this->getClient()->getResponse()->headers->get('Location'));
+        $this->assertStringStartsWith(getenv('PAYUM_HTTP_HOST') . '/payments/', $this->getClient()->getResponse()->headers->get('Location'));
     }
 }

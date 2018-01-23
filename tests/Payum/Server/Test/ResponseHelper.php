@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 namespace Payum\Server\Test;
 
 use Symfony\Component\DomCrawler\Crawler;
@@ -95,7 +97,7 @@ trait ResponseHelper
                     list($trace) = explode("\n", trim($crawler->filter('#traces-0 li')->text()));
                 }
 
-                return $message = 'Internal Server Error: '.$exceptionMessage.' '.$trace;
+                return $message = 'Internal Server Error: ' . $exceptionMessage . ' ' . $trace;
             }
         }
 
@@ -141,7 +143,7 @@ trait ResponseHelper
         $this->assertEquals('application/json', $response->headers->get('Content-Type'));
         $this->assertNotNull(
             $this->getResponseJsonContent($response),
-            "Failed to decode content. The content is not valid json: \n\n".$response->getContent()
+            "Failed to decode content. The content is not valid json: \n\n" . $response->getContent()
         );
     }
 
@@ -158,7 +160,7 @@ trait ResponseHelper
         $this->assertEquals('application/schema+json', $response->headers->get('Content-Type'));
         $this->assertNotNull(
             $this->getResponseJsonContent($response),
-            "Failed to decode content. The content is not valid json: \n\n".$response->getContent()
+            "Failed to decode content. The content is not valid json: \n\n" . $response->getContent()
         );
     }
 

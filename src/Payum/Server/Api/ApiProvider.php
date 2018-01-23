@@ -19,17 +19,17 @@ class ApiProvider implements ServiceProviderInterface
      */
     public function register(SilexApplication $app)
     {
-        $app['api.view.payment_to_json_converter'] = function() use ($app) {
-            return new PaymentToJsonConverter($app['payum']);
-        };
-
-        $app['api.view.token_to_json_converter'] = function() use ($app) {
-            return new TokenToJsonConverter();
-        };
-
-        $app['api.view.gateway_config_to_json_converter'] = function() {
-            return new GatewayConfigToJsonConverter();
-        };
+//        $app['api.view.payment_to_json_converter'] = function() use ($app) {
+//            return new PaymentToJsonConverter($app['payum']);
+//        };
+//
+//        $app['api.view.token_to_json_converter'] = function() use ($app) {
+//            return new TokenToJsonConverter();
+//        };
+//
+//        $app['api.view.gateway_config_to_json_converter'] = function() {
+//            return new GatewayConfigToJsonConverter();
+//        };
 
         $app['api.parse_json_request'] = function() {
             return function (Request $request, Application $app) {
@@ -64,10 +64,10 @@ class ApiProvider implements ServiceProviderInterface
         };
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    public function boot(SilexApplication $app)
-    {
-    }
+//    /**
+//     * {@inheritDoc}
+//     */
+//    public function boot(SilexApplication $app)
+//    {
+//    }
 }

@@ -45,7 +45,7 @@ class CaptureControllerTest extends ClientTestCase
         /** @var Payum $payum */
         $payum = $this->app['payum'];
 
-        $token = $payum->getTokenFactory()->createCaptureToken('', $payment, 'http://localhost');
+        $token = $payum->getTokenFactory()->createCaptureToken('', $payment, getenv('PAYUM_HTTP_HOST') . '');
 
         $crawler = $this->getClient()->request('GET', $token->getTargetUrl());
 
@@ -62,7 +62,7 @@ class CaptureControllerTest extends ClientTestCase
         $crawler = $this->getClient()->submit($form);
 
         $this->assertClientResponseStatus(302);
-        $this->assertClientResponseRedirectionStartsWith('http://localhost?payum_token=');
+        $this->assertClientResponseRedirectionStartsWith(getenv('PAYUM_HTTP_HOST') . '?payum_token=');
     }
 
     public function testShouldObtainMissingDetails()
@@ -95,7 +95,7 @@ class CaptureControllerTest extends ClientTestCase
 
         $storage->insert($payment);
 
-        $token = $payum->getTokenFactory()->createCaptureToken('be2bill', $payment, 'http://localhost');
+        $token = $payum->getTokenFactory()->createCaptureToken('be2bill', $payment, getenv('PAYUM_HTTP_HOST') . '');
 
         $crawler = $this->getClient()->request('GET', $token->getTargetUrl());
 

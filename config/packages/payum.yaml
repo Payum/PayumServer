@@ -1,6 +1,3 @@
-yadm:
-    mongo_uri: "%env(PAYUM_MONGO_URI)%"
-
 payum:
     storages:
         Payum\Core\Model\Payment:

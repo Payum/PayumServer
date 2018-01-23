@@ -1,42 +1,75 @@
 <?php
+declare(strict_types=1);
+
 namespace Payum\Server\Test;
 
 use Makasim\Values\HookStorage;
 use Makasim\Yadm\Storage;
-use Payum\Server\Application;
-use Silex\WebTestCase as SilexWebTestCase;
-use Symfony\Component\HttpFoundation\Session\Storage\MockArraySessionStorage;
+use Payum\Server\Storage\PaymentStorage;
+use Symfony\Bundle\FrameworkBundle\Client;
+use Symfony\Bundle\FrameworkBundle\Test\WebTestCase as SymfonyWebTestCase;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
-abstract class WebTestCase extends SilexWebTestCase
+/**
+ * Class WebTestCase
+ * @package Payum\Server\Test
+ */
+abstract class WebTestCase extends SymfonyWebTestCase
 {
-    public function setUp()
+    /**
+     * @var Client
+     */
+    private $client;
+
+    /**
+     * @inheritdoc
+     */
+    protected function setUp()
     {
         HookStorage::clearAll();
 
         parent::setUp();
 
-        $this->app->boot();
+        $this->client = static::createClient([], [
+//            'HTTP_HOST' => getenv('PAYUM_HTTP_HOST'),
+            'HTTP_HOST' => getenv('PAYUM_SERVER_NAME'),
+//            'SERVER_NAME' => getenv('PAYUM_SERVER_NAME'),
+//            'SERVER_PORT' => getenv('PAYUM_NGINX_PORT'),
+        ]);
 
         /** @var Storage $storage */
-
-        $storage = $this->app['payum.gateway_config_storage'];
+        $storage = $this->getContainer()->get('payum.gateway_config_storage');
         $storage->getCollection()->drop();
 
-        $storage = $this->app['payum.payment_storage'];
+        /** @var PaymentStorage $storage */
+        $storage = $this->getContainer()->get('payum.payment_storage');
         $storage->getCollection()->drop();
 
-        $storage = $this->app['payum.token_storage'];
+        /** @var Storage $storage */
+        $storage = $this->getContainer()->get('payum.token_storage');
         $storage->getCollection()->drop();
     }
 
-    public function createApplication()
+    protected function tearDown()
     {
-        $app = new Application();
-        $app['payum.root_dir'] = __DIR__;
-        $app['exception_handler']->disable();
-        $app['mongo.database'] = 'payum_server_test';
-        $app['session.storage'] = new MockArraySessionStorage();
+        parent::tearDown();
 
-        return $app;
+        $this->client = null;
+    }
+
+    /**
+     * @return Client
+     */
+    protected function getClient()
+    {
+        return $this->client;
+    }
+
+    /**
+     * @return ContainerInterface
+     */
+    protected function getContainer() : ContainerInterface
+    {
+        return $this->getClient()->getContainer();
     }
 }

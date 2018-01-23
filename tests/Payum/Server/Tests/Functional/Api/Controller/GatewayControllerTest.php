@@ -1,9 +1,10 @@
 <?php
+declare(strict_types=1);
+
 namespace Payum\Server\Tests\Functional\Api\Controller;
 
 use Makasim\Yadm\Storage;
 use Payum\Core\Model\GatewayConfigInterface;
-use Payum\Core\Storage\StorageInterface;
 use Payum\Server\Test\ClientTestCase;
 use Payum\Server\Test\ResponseHelper;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -11,13 +12,13 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 class GatewayControllerTest extends ClientTestCase
 {
     use ResponseHelper;
-    
+
     public function setUp()
     {
         parent::setUp();
 
         /** @var Storage $gatewayConfigStorage */
-        $gatewayConfigStorage = $this->app['payum.gateway_config_storage'];
+        $gatewayConfigStorage = $this->getContainer()->get('payum.gateway_config_storage');
 
         /** @var GatewayConfigInterface $gatewayConfig */
         $gatewayConfig = $gatewayConfigStorage->create();
@@ -61,7 +62,10 @@ class GatewayControllerTest extends ClientTestCase
         $this->assertObjectHasAttribute('factoryName', $content->gateway);
         $this->assertEquals('offline', $content->gateway->factoryName);
 
-        $this->assertStringStartsWith('http://localhost/gateways/', $this->getClient()->getResponse()->headers->get('Location'));
+        $this->assertStringStartsWith(
+            getenv('PAYUM_HTTP_HOST') . '/gateways/',
+            $this->getClient()->getResponse()->headers->get('Location')
+        );
     }
 
     /**
@@ -180,8 +184,9 @@ class GatewayControllerTest extends ClientTestCase
         $this->getClient()->request('DELETE', '/gateways/stripe_checkout');
         $this->assertClientResponseStatus(204);
 
-
-        $this->setExpectedException(NotFoundHttpException::class);
+        // @todo roll back expectException
+//        $this->expectException(NotFoundHttpException::class);
         $this->getClient()->request('GET', '/gateways/stripe_checkout');
+        $this->assertClientResponseStatus(404);
     }
 }

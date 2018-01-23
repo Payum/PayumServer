@@ -4,7 +4,9 @@ declare(strict_types=1);
 namespace Payum\Server\Facade;
 
 use Makasim\Yadm\Storage;
+use Payum\Core\Bridge\PlainPhp\Security\TokenFactory;
 use Payum\Core\PayumBuilder;
+use Payum\Core\Registry\StorageRegistryInterface;
 use Payum\Core\Storage\StorageInterface;
 use Payum\Server\Action\ExecuteSameRequestWithPaymentDetailsAction;
 use Payum\Server\Action\ObtainMissingDetailsForBe2BillAction;
@@ -35,6 +37,9 @@ class PayumBuilderFacade
     ) : PayumBuilder {
         $builder
             ->setTokenStorage(new YadmStorage($tokenStorage))
+            ->setTokenFactory(function (StorageInterface $tokenStorage, StorageRegistryInterface $storageRegistry) {
+                return new TokenFactory($tokenStorage, $storageRegistry, getenv('PAYUM_HTTP_HOST'));
+            })
             ->setGatewayConfigStorage($gatewayConfigStorage)
             ->addStorage(Payment::class, new YadmStorage($paymentStorage))
             ->addCoreGatewayFactoryConfig([
@@ -73,6 +78,12 @@ class PayumBuilderFacade
                         $config['payum.template.obtain_missing_details']
                     );
                 },
+            ])
+            ->setGenericTokenFactoryPaths([
+                'capture' => 'payment/capture',
+                'notify' => 'payment/notify',
+                'authorize' => 'payment/authorize',
+                'refund' => 'payment/refund'
             ]);
 
         return $builder;

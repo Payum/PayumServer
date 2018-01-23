@@ -44,7 +44,7 @@ class AuthorizeControllerTest extends ClientTestCase
 
         $storage->insert($payment);
 
-        $token = $payum->getTokenFactory()->createAuthorizeToken('itDoesNotMatter', $payment, 'http://localhost');
+        $token = $payum->getTokenFactory()->createAuthorizeToken('itDoesNotMatter', $payment, getenv('PAYUM_HTTP_HOST') . '');
 
         $crawler = $this->getClient()->request('GET', $token->getTargetUrl());
 
@@ -62,6 +62,6 @@ class AuthorizeControllerTest extends ClientTestCase
         $this->getClient()->submit($form);
 
         $this->assertClientResponseStatus(302);
-        $this->assertClientResponseRedirectionStartsWith('http://localhost?payum_token=');
+        $this->assertClientResponseRedirectionStartsWith(getenv('PAYUM_HTTP_HOST') . '?payum_token=');
     }
 }

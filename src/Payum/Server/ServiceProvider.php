@@ -328,10 +328,10 @@ class ServiceProvider implements ServiceProviderInterface
         }, $priority = -100);
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    public function boot(SilexApplication $app)
-    {
-    }
+//    /**
+//     * {@inheritDoc}
+//     */
+//    public function boot(SilexApplication $app)
+//    {
+//    }
 }
