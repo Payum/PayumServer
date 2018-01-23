@@ -4,7 +4,8 @@ declare(strict_types=1);
 namespace Payum\Server\Facade;
 
 use Makasim\Yadm\Storage;
-use Payum\Core\Bridge\PlainPhp\Security\TokenFactory;
+use Payum\Core\Bridge\Symfony\Security\HttpRequestVerifier;
+use Payum\Core\Bridge\Symfony\Security\TokenFactory;
 use Payum\Core\PayumBuilder;
 use Payum\Core\Registry\StorageRegistryInterface;
 use Payum\Core\Storage\StorageInterface;
@@ -18,6 +19,7 @@ use Payum\Server\Action\AuthorizePaymentAction;
 use Payum\Server\Action\CapturePaymentAction;
 use Payum\Server\Action\ObtainMissingDetailsAction;
 use Payum\Server\Model\Payment;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Form\FormFactory;
 use Twig_Environment;
 
@@ -33,12 +35,16 @@ class PayumBuilderFacade
         StorageInterface $gatewayConfigStorage,
         PaymentStorage $paymentStorage,
         FormFactory $formFactory,
-        Twig_Environment $twig
+        Twig_Environment $twig,
+        ContainerInterface $container
     ) : PayumBuilder {
         $builder
             ->setTokenStorage(new YadmStorage($tokenStorage))
-            ->setTokenFactory(function (StorageInterface $tokenStorage, StorageRegistryInterface $storageRegistry) {
-                return new TokenFactory($tokenStorage, $storageRegistry, getenv('PAYUM_HTTP_HOST'));
+            ->setTokenFactory(function (
+                StorageInterface $tokenStorage,
+                StorageRegistryInterface $storageRegistry
+            ) use ($container) {
+                return new TokenFactory($tokenStorage, $storageRegistry, $container->get('router')); // symfony
             })
             ->setGatewayConfigStorage($gatewayConfigStorage)
             ->addStorage(Payment::class, new YadmStorage($paymentStorage))
@@ -50,7 +56,8 @@ class PayumBuilderFacade
                 'payum.action.server.capture_payment' => new CapturePaymentAction(),
                 'payum.action.server.authorize_payment' => new AuthorizePaymentAction(),
                 'payum.action.server.execute_same_request_with_payment_details' => new ExecuteSameRequestWithPaymentDetailsAction(),
-                'payum.action.server.obtain_missing_details' => function (ArrayObject $config) use ($formFactory, $twig) {
+                'payum.action.server.obtain_missing_details' => function (ArrayObject $config) use ($formFactory, $twig
+                ) {
                     return new ObtainMissingDetailsAction(
                         $formFactory,
                         $config['payum.template.obtain_missing_details']
@@ -80,11 +87,16 @@ class PayumBuilderFacade
                 },
             ])
             ->setGenericTokenFactoryPaths([
-                'capture' => 'payment/capture',
-                'notify' => 'payment/notify',
-                'authorize' => 'payment/authorize',
-                'refund' => 'payment/refund'
-            ]);
+                'capture' => $container->getParameter('payum.capture_path'),
+                'notify' => $container->getParameter('payum.notify_path'),
+                'authorize' => $container->getParameter('payum.authorize_path'),
+                'refund' => $container->getParameter('payum.refund_path'),
+                'cancel' => $container->getParameter('payum.cancel_path'),
+                'payout' => $container->getParameter('payum.payout_path'),
+            ])
+            ->setHttpRequestVerifier(function ($tokenStorage) {
+                return new HttpRequestVerifier($tokenStorage);
+            });
 
         return $builder;
     }
