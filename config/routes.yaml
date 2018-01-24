@@ -36,3 +36,13 @@ payum.schema.tokens:
 # payum bundle
 payum_all:
     resource: "@PayumBundle/Resources/config/routing/all.xml"
+
+payum_capture_do:
+    path: /payment/capture/{payum_token}
+    defaults:
+        _controller: Payum\Server\Controller\CaptureController::doAction
+
+payum_authorize_do:
+    path: /payment/authorize/{payum_token}
+    defaults:
+        _controller: Payum\Server\Controller\AuthorizeController::doAction

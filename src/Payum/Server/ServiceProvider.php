@@ -194,58 +194,58 @@ class ServiceProvider implements ServiceProviderInterface
             };
         });
 
-        $app['payum.listener.choose_gateway'] = $app->share(function() use ($app) {
-            return function(Request $request, Application $app) {
-                /** @var Payum $payum */
-                $payum = $app['payum'];
-
-                /** @var SecurityToken $token */
-                $token = $payum->getHttpRequestVerifier()->verify($request);
-
-                /** @var Payment $payment */
-                $payment = $payum->getStorage(Payment::class)->find($token->getDetails()->getId());
-
-                if (false == $payment->getGatewayName()) {
-                    /** @var FormFactoryInterface $formFactory */
-                    $formFactory = $app['form.factory'];
-
-                    $form = $formFactory->createNamed('', ChooseGatewayType::class, $payment, [
-                        'action' => $token->getTargetUrl(),
-                    ]);
-
-                    $form->handleRequest($request);
-                    if ($form->isSubmitted() && $form->isValid()) {
-                        $payum->getStorage($payment)->update($payment);
-                    } else {
-                        // the twig paths have to be initialized.
-                        $payum->getGatewayFactory('core')->create();
-
-                        $twig = $app['twig'];
-
-                        throw new HttpResponse($twig->render('@PayumServer/chooseGateway.html.twig', [
-                            'form' => $form->createView(),
-                            'payment' => $payment,
-                            'layout' => '@PayumCore/layout.html.twig',
-                        ]));
-                    }
-                }
-
-                $token->setGatewayName($payment->getGatewayName());
-
-                // do not verify it second time.
-                $request->attributes->set('payum_token', $token);
-            };
-        });
-
+//        $app['payum.listener.choose_gateway'] = $app->share(function() use ($app) {
+//            return function(Request $request, Application $app) {
+//                /** @var Payum $payum */
+//                $payum = $app['payum'];
+//
+//                /** @var SecurityToken $token */
+//                $token = $payum->getHttpRequestVerifier()->verify($request);
+//
+//                /** @var Payment $payment */
+//                $payment = $payum->getStorage(Payment::class)->find($token->getDetails()->getId());
+//
+//                if (false == $payment->getGatewayName()) {
+//                    /** @var FormFactoryInterface $formFactory */
+//                    $formFactory = $app['form.factory'];
+//
+//                    $form = $formFactory->createNamed('', ChooseGatewayType::class, $payment, [
+//                        'action' => $token->getTargetUrl(),
+//                    ]);
+//
+//                    $form->handleRequest($request);
+//                    if ($form->isSubmitted() && $form->isValid()) {
+//                        $payum->getStorage($payment)->update($payment);
+//                    } else {
+//                        // the twig paths have to be initialized.
+//                        $payum->getGatewayFactory('core')->create();
+//
+//                        $twig = $app['twig'];
+//
+//                        throw new HttpResponse($twig->render('@PayumServer/chooseGateway.html.twig', [
+//                            'form' => $form->createView(),
+//                            'payment' => $payment,
+//                            'layout' => '@PayumCore/layout.html.twig',
+//                        ]));
+//                    }
+//                }
+//
+//                $token->setGatewayName($payment->getGatewayName());
+//
+//                // do not verify it second time.
+//                $request->attributes->set('payum_token', $token);
+//            };
+//        });
+//
 //        $app['json_decode'] = $app->share(function ($app) {
 //            return new JsonDecode();
 //        });
-
-        $app->before(function(Request $request, Application $app) {
-            if (0 === strpos($request->getPathInfo(), '/payment/capture') || 0 === strpos($request->getPathInfo(), '/payment/authorize')) {
-                return call_user_func($app['payum.listener.choose_gateway'], $request, $app);
-            }
-        });
+//
+//        $app->before(function(Request $request, Application $app) {
+//            if (0 === strpos($request->getPathInfo(), '/payment/capture') || 0 === strpos($request->getPathInfo(), '/payment/authorize')) {
+//                return call_user_func($app['payum.listener.choose_gateway'], $request, $app);
+//            }
+//        });
 
         $app->after($app["cors"]);
 
