@@ -4,14 +4,21 @@ services:
 
     php-fpm:
         build: ./docker/dev/php-fpm
-#        container_name: payum-php-fpm
         volumes:
             - .:/var/www
             - ./docker/dev/php-fpm/php.ini:/usr/local/etc/php/php.ini
+        environment:
+            XDEBUG_CONFIG: "remote_host=172.17.0.1"
+        expose:
+            - "9000"
+            - "9001"
+        extra_hosts:
+            # IMPORTANT: Replace with your Docker Host Ip (will be appended to /etc/hosts)
+            # To detect your docker host ip on Linux run this cmd `ifconfig | grep docker -A 2 | grep inet\ addr`
+          - "dockerhost:172.17.0.1"
 
     nginx:
         build: ./docker/dev/nginx
-#        container_name: payum-nginx
         volumes:
             - ./public:/var/www/public
             - ./docker/dev/nginx/site.conf:/etc/nginx/conf.d/site.conf
@@ -20,6 +27,5 @@ services:
 
     mongo:
         build: ./docker/dev/mongo
-#        container_name: payum-mongo-symfony
         ports:
             - "${PAYUM_MONGO_PORT}:27017"
