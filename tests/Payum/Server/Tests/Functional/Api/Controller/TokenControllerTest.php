@@ -1,17 +1,17 @@
 <?php
 declare(strict_types=1);
 
-namespace Payum\Server\Tests\Functional\Api\Controller;
+namespace App\Tests\Functional\Api\Controller;
 
 use Makasim\Yadm\Storage;
-use Payum\Server\Model\GatewayConfig;
-use Payum\Server\Model\Payment;
-use Payum\Server\Test\ClientTestCase;
-use Payum\Server\Test\ResponseHelper;
+use App\Model\GatewayConfig;
+use App\Model\Payment;
+use App\Test\ClientTestCase;
+use App\Test\ResponseHelper;
 
 /**
  * Class TokenControllerTest
- * @package Payum\Server\Tests\Functional\Api\Controller
+ * @package App\Tests\Functional\Api\Controller
  */
 class TokenControllerTest extends ClientTestCase
 {

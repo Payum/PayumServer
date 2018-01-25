@@ -1,8 +1,8 @@
 <?php
-namespace Payum\Server\Tests\Functional\Schema\Controller;
+namespace App\Tests\Functional\Schema\Controller;
 
-use Payum\Server\Test\ClientTestCase;
-use Payum\Server\Test\ResponseHelper;
+use App\Test\ClientTestCase;
+use App\Test\ResponseHelper;
 
 class TokenControllerTest extends ClientTestCase
 {

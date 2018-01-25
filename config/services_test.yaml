@@ -6,7 +6,7 @@ services:
         public: true
 
     test.client:
-        class: Payum\Server\Test\Client
+        class: App\Test\Client
         shared: false
         public: true
         arguments:

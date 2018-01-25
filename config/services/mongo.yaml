@@ -12,7 +12,7 @@ services:
                             # The best practice is to be explicit about your dependencies anyway.
 
     mongodb.database.factory:
-        class: Payum\Server\Factory\MongoDb\DatabaseFactory
+        class: App\Factory\MongoDb\DatabaseFactory
 
     MongoDB\Database: '@mongodb.database'
     mongodb.database:

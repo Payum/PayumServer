@@ -1,4 +1,4 @@
 api_root:
     path: /
     methods: [GET]
-    controller: Payum\Server\Api\Controller\RootController::rootAction
+    controller: App\Api\Controller\RootController::rootAction

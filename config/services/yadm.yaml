@@ -1,7 +1,7 @@
 parameters:
-    gateway.class: 'Payum\Server\Model\GatewayConfig'
-    security.token.class: 'Payum\Server\Model\SecurityToken'
-    payment.class: 'Payum\Server\Model\Payment'
+    gateway.class: 'App\Model\GatewayConfig'
+    security.token.class: 'App\Model\SecurityToken'
+    payment.class: 'App\Model\Payment'
 
 services:
 

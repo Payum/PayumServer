@@ -1,12 +1,12 @@
 <?php
 declare(strict_types=1);
 
-namespace Payum\Server\Tests\Functional\Api\Controller;
+namespace App\Tests\Functional\Api\Controller;
 
 use Makasim\Yadm\Storage;
 use Payum\Core\Model\GatewayConfigInterface;
-use Payum\Server\Test\ClientTestCase;
-use Payum\Server\Test\ResponseHelper;
+use App\Test\ClientTestCase;
+use App\Test\ResponseHelper;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class GatewayControllerTest extends ClientTestCase

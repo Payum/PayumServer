@@ -15,7 +15,7 @@ services:
 
     payum.yadm_gateway_config_storage:
         class: Payum\Core\Storage\StorageInterface
-        factory: ['Payum\Server\Factory\GatewayConfigStorageFactory', create]
+        factory: ['App\Factory\GatewayConfigStorageFactory', create]
         arguments:
             - '@payum.gateway_config_storage'
 
@@ -27,16 +27,16 @@ services:
             - '@yadm.hydrator.gateway'
 
     api.view.gateway_config_to_json_converter:
-        class: Payum\Server\Api\View\GatewayConfigToJsonConverter
+        class: App\Api\View\GatewayConfigToJsonConverter
 
     payum.gateway_schema_builder:
-        class: Payum\Server\Schema\GatewaySchemaBuilder
+        class: App\Schema\GatewaySchemaBuilder
         arguments:
             - '@payum'
 
-    Payum\Server\JsonDecode: '@payum.json_decode'
+    App\JsonDecode: '@payum.json_decode'
     payum.json_decode:
-        class: Payum\Server\JsonDecode
+        class: App\JsonDecode
 
     Payum\Core\Payum: '@payum'
 
@@ -55,7 +55,7 @@ services:
         class: Payum\Core\PayumBuilder
 
     payum.builder.facade:
-        class: Payum\Server\Facade\PayumBuilderFacade
+        class: App\Facade\PayumBuilderFacade
 
     payum.security.token_storage:
         public: true
@@ -64,43 +64,43 @@ services:
             - "@=service('mongodb.database').selectCollection('security_tokens')"
             - '@yadm.hydrator.security.token'
 
-    Payum\Server\Storage\PaymentStorage: '@payum.payment_storage'
+    App\Storage\PaymentStorage: '@payum.payment_storage'
     payum.payment_storage:
         public: true
-        class: Payum\Server\Storage\PaymentStorage
+        class: App\Storage\PaymentStorage
         arguments:
             - "@=service('mongodb.database').selectCollection('payments')"
             - '@yadm.hydrator.payment'
 
     payum.server.schema.gateway_form_definition_builder:
-        class: Payum\Server\Schema\GatewayFormDefinitionBuilder
+        class: App\Schema\GatewayFormDefinitionBuilder
         arguments:
             - '@payum'
 
-    Payum\Server\Schema\PaymentSchemaBuilder: '@payum.payment_schema_builder'
+    App\Schema\PaymentSchemaBuilder: '@payum.payment_schema_builder'
     payum.payment_schema_builder:
-        class: Payum\Server\Schema\PaymentSchemaBuilder
+        class: App\Schema\PaymentSchemaBuilder
         arguments:
             - '@payum.yadm_gateway_config_storage'
 
     payum.payment_form_definition_builder:
-        class: Payum\Server\Schema\PaymentFormDefinitionBuilder
+        class: App\Schema\PaymentFormDefinitionBuilder
         arguments:
             - '@payum.yadm_gateway_config_storage'
 
-    Payum\Server\Schema\TokenSchemaBuilder: '@payum.token_schema_builder'
+    App\Schema\TokenSchemaBuilder: '@payum.token_schema_builder'
     payum.token_schema_builder:
-        class: Payum\Server\Schema\TokenSchemaBuilder
+        class: App\Schema\TokenSchemaBuilder
 
-    Payum\Server\Api\View\PaymentToJsonConverter: '@api.view.payment_to_json_converter'
+    App\Api\View\PaymentToJsonConverter: '@api.view.payment_to_json_converter'
     api.view.payment_to_json_converter:
-        class: Payum\Server\Api\View\PaymentToJsonConverter
+        class: App\Api\View\PaymentToJsonConverter
         arguments:
             - '@payum'
 
-    Payum\Server\Api\View\TokenToJsonConverter: '@api.view.token_to_json_converter'
+    App\Api\View\TokenToJsonConverter: '@api.view.token_to_json_converter'
     api.view.token_to_json_converter:
-        class: Payum\Server\Api\View\TokenToJsonConverter
+        class: App\Api\View\TokenToJsonConverter
 
     payum.core_gateway_factory_builder:
         public: true
@@ -108,15 +108,15 @@ services:
         calls:
             - [setContainer, ['@service_container']]
 
-#    Payum\Server\Form\Type\ChooseGatewayType: '@payum.server.form.type.choose_gateway_type'
+#    App\Form\Type\ChooseGatewayType: '@payum.server.form.type.choose_gateway_type'
 #    payum.server.form.type.choose_gateway_type:
-#        class: Payum\Server\Form\Type\ChooseGatewayType
+#        class: App\Form\Type\ChooseGatewayType
 #        arguments:
 #            - '@payum.gateway_choices_callback'
 #
-#    Payum\Server\Factory\GatewayChoicesCallbackFactory: '@payum.gateway_choices_callback'
+#    App\Factory\GatewayChoicesCallbackFactory: '@payum.gateway_choices_callback'
 #    payum.gateway_choices_callback:
 #        class: callback
-#        factory: ['Payum\Server\Factory\GatewayChoicesCallbackFactory', create]
+#        factory: ['App\Factory\GatewayChoicesCallbackFactory', create]
 #        arguments:
 #            - '@service_container'

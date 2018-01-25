@@ -1,18 +1,18 @@
 <?php
 declare(strict_types=1);
 
-namespace Payum\Server\Test;
+namespace App\Test;
 
 use Makasim\Values\HookStorage;
 use Makasim\Yadm\Storage;
-use Payum\Server\Storage\PaymentStorage;
+use App\Storage\PaymentStorage;
 use Symfony\Bundle\FrameworkBundle\Client;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase as SymfonyWebTestCase;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Class WebTestCase
- * @package Payum\Server\Test
+ * @package App\Test
  */
 abstract class WebTestCase extends SymfonyWebTestCase
 {

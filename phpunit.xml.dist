@@ -29,7 +29,7 @@
 
     <php>
         <!-- the value is the FQCN of the application kernel -->
-        <env name="KERNEL_CLASS" value="Payum\Server\Kernel" />
+        <env name="KERNEL_CLASS" value="App\Kernel" />
         <env name="TEST_PAYUM_MONGO_URI" value="mongodb://mongo/payum_server_test" />
         <env name="PAYUM_HTTP_HOST" value="http://payum-server-symfony.local" />
         <env name="PAYUM_SERVER_NAME" value="payum-server-symfony.local" />

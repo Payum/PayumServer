@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace Payum\Server\Test;
+namespace App\Test;
 
 //use Symfony\Bundle\FrameworkBundle\Client;
 

@@ -1,14 +1,14 @@
 <?php
 declare(strict_types=1);
 
-namespace Payum\Server\Tests\Functional\Controller;
+namespace App\Tests\Functional\Controller;
 
 use Makasim\Yadm\Storage;
 use Payum\Core\Payum;
-use Payum\Server\Model\GatewayConfig;
-use Payum\Server\Model\Payment;
-use Payum\Server\Test\ClientTestCase;
-use Payum\Server\Test\ResponseHelper;
+use App\Model\GatewayConfig;
+use App\Model\Payment;
+use App\Test\ClientTestCase;
+use App\Test\ResponseHelper;
 
 class CaptureControllerTest extends ClientTestCase
 {

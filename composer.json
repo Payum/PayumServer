@@ -63,8 +63,8 @@
         "sort-packages": true
     },
     "autoload": {
-        "psr-0": {
-            "Payum\\Server": "src/"
+        "psr-4": {
+            "App\\": "src/"
         }
     },
     "autoload-dev": {

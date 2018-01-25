@@ -11,5 +11,5 @@ EOM;
     exit(1);
 }
 
-$loader->add('Payum\Server\Tests', __DIR__);
-$loader->add('Payum\Server\Test', __DIR__);
+$loader->add('App\Tests', __DIR__);
+$loader->add('App\Test', __DIR__);

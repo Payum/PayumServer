@@ -1,11 +1,11 @@
 <?php
 declare(strict_types=1);
 
-namespace Payum\Server\Tests\Functional\Model;
+namespace App\Tests\Functional\Model;
 
 use Makasim\Yadm\Storage;
-use Payum\Server\Model\Payment;
-use Payum\Server\Test\WebTestCase;
+use App\Model\Payment;
+use App\Test\WebTestCase;
 
 class PaymentTest extends WebTestCase
 {

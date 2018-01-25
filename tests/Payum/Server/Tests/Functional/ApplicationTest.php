@@ -1,15 +1,15 @@
 <?php
 declare(strict_types=1);
 
-namespace Payum\Server\Tests\Functional;
+namespace App\Tests\Functional;
 
 use Payum\Core\Payum;
 use Payum\Core\PayumBuilder;
 use Payum\Core\Security\GenericTokenFactory;
 use Payum\Core\Storage\StorageInterface;
-use Payum\Server\Model\Payment;
-use Payum\Server\Storage\YadmStorage;
-use Payum\Server\Test\WebTestCase;
+use App\Model\Payment;
+use App\Storage\YadmStorage;
+use App\Test\WebTestCase;
 
 class ApplicationTest extends WebTestCase
 {

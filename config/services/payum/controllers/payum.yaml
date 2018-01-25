@@ -9,7 +9,7 @@ services:
 
     # controller gateways
     payum.api.controller.gateway:
-        class: Payum\Server\Api\Controller\GatewayController
+        class: App\Api\Controller\GatewayController
         public: true
         arguments:
             - '@Symfony\Component\Routing\Generator\UrlGeneratorInterface'
@@ -20,7 +20,7 @@ services:
 
     # controller schema gateways
     payum.schema.controller.gateways:
-        class: Payum\Server\Schema\Controller\GatewaySchemaController
+        class: App\Schema\Controller\GatewaySchemaController
         public: true
         arguments:
             - '@payum.gateway_schema_builder'
@@ -28,7 +28,7 @@ services:
 
     # controller schema payments
     payum.schema.controller.payments:
-        class: Payum\Server\Schema\Controller\PaymentSchemaController
+        class: App\Schema\Controller\PaymentSchemaController
         public: true
         arguments:
             - '@payum.payment_schema_builder'
@@ -36,17 +36,17 @@ services:
 
     # controller schema tokens
     payum.schema.controller.tokens:
-        class: Payum\Server\Schema\Controller\TokenSchemaController
+        class: App\Schema\Controller\TokenSchemaController
         public: true
         arguments:
             - '@payum.token_schema_builder'
 
     # controller payment
     payum.api.controller.payment:
-        class: Payum\Server\Api\Controller\PaymentController
+        class: App\Api\Controller\PaymentController
         public: true
 
     # controller payment
     payum.api.controller.token:
-        class: Payum\Server\Api\Controller\TokenController
+        class: App\Api\Controller\TokenController
         public: true

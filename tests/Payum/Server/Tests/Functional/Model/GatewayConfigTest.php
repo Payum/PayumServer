@@ -1,9 +1,9 @@
 <?php
-namespace Payum\Server\Tests\Functional\Model;
+namespace App\Tests\Functional\Model;
 
 use Makasim\Yadm\Storage;
-use Payum\Server\Model\GatewayConfig;
-use Payum\Server\Test\WebTestCase;
+use App\Model\GatewayConfig;
+use App\Test\WebTestCase;
 
 class GatewayConfigTest extends WebTestCase
 {

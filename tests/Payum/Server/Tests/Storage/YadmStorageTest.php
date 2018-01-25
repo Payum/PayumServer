@@ -1,11 +1,11 @@
 <?php
 declare(strict_types=1);
 
-namespace Payum\Server\Tests\Storage;
+namespace App\Tests\Storage;
 
 use Makasim\Yadm\Storage;
 use Payum\Core\Storage\StorageInterface;
-use Payum\Server\Storage\YadmStorage;
+use App\Storage\YadmStorage;
 use PHPUnit\Framework\TestCase;
 use ReflectionClass;
 

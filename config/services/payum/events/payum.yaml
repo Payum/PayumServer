@@ -9,6 +9,6 @@ services:
 
 
     payum.listener.choose_gateway:
-        class: Payum\Server\EventListener\Request\GatewayChooserListener
+        class: App\EventListener\Request\GatewayChooserListener
         tags:
             - { name: kernel.event_subscriber }
