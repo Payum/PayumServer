@@ -12,16 +12,19 @@ PHP 7.2+ Payment processing server. Setup once and rule them all. [Here](https:/
 * Backend: [https://server-ui.payum.forma-pro.com](https://server-ui.payum.forma-pro.com/#!/app/settings?api=https:%2F%2Fserver.payum.forma-pro.com)
 * Server: https://server.payum.forma-pro.com
 
-## Run local server
-1. Copy .env file `cp .env.dist .env`
-2. Run build container and up `docker-compose down && docker-compose build && docker-compose up`
-3. Go inside php-fpm container `docker-compose exec php-fpm /bin/ash`
-4. Run composer `composer install`
-5. Check result at [configured host](http://payum-server-symfony.local:8080)
+## Run local server for development
+1. You need to have installed `docker` and `docker-compose`
+2. Copy .env file `cp .env.dist .env`
+3. Run build container and up `docker-compose down && docker-compose build && docker-compose up`
+4. Go inside php-fpm container `docker-compose exec php-fpm /bin/ash`
+5. Run composer `composer install`
+6. Check result at [configured host](http://payum-server-symfony.local:8080)
 
 ## Test local server
 1. Setup `TEST_PAYUM_MONGO_URI` in `phpunit.xml.dist`
-2. Setup `TEST_PAYUM_MONGO_URI` in `phpunit.xml.dist`
+2. Setup `PAYUM_HTTP_HOST` in `phpunit.xml.dist`
+3. Setup `PAYUM_SERVER_NAME` in `phpunit.xml.dist`
+3. Setup `PAYUM_NGINX_PORT` in `phpunit.xml.dist`
 
 ## Docker registry
 
