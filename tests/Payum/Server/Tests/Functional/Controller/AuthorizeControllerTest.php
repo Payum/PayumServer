@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 namespace Payum\Server\Tests\Functional\Controller;
 
 use Makasim\Yadm\Storage;
@@ -15,7 +17,7 @@ class AuthorizeControllerTest extends ClientTestCase
     public function testShouldAllowChooseGateway()
     {
         /** @var Storage $gatewayConfigStorage */
-        $gatewayConfigStorage = $this->app['payum.gateway_config_storage'];
+        $gatewayConfigStorage = $this->getContainer()->get('payum.gateway_config_storage');
 
         /** @var GatewayConfig $gatewayConfig */
         $gatewayConfig = $gatewayConfigStorage->create();
@@ -32,10 +34,10 @@ class AuthorizeControllerTest extends ClientTestCase
         $gatewayConfigStorage->insert($gatewayConfig);
 
         /** @var Payum $payum */
-        $payum = $this->app['payum'];
+        $payum = $this->getContainer()->get('payum');
 
         /** @var Storage $storage */
-        $storage = $this->app['payum.payment_storage'];
+        $storage = $this->getContainer()->get('payum.payment_storage');
 
         /** @var Payment $payment */
         $payment = $storage->create();

@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 namespace Payum\Server\Tests\Functional\Model;
 
 use Makasim\Yadm\Storage;
@@ -10,7 +12,7 @@ class PaymentTest extends WebTestCase
     public function testShouldAllowPersistPaymentToMongo()
     {
         /** @var Storage $storage */
-        $storage = $this->app['payum.payment_storage'];
+        $storage = $this->getContainer()->get('payum.payment_storage');
 
         /** @var Payment $payment */
         $payment = $storage->create();
@@ -46,7 +48,7 @@ class PaymentTest extends WebTestCase
     public function testShouldAllowStorePaymentsDetails()
     {
         /** @var Storage $storage */
-        $storage = $this->app['payum.payment_storage'];
+        $storage = $this->getContainer()->get('payum.payment_storage');
 
         /** @var Payment $payment */
         $payment = $storage->create();
@@ -56,8 +58,8 @@ class PaymentTest extends WebTestCase
 
         $payment->setId(uniqid());
         $payment->setClientEmail('theClientEmail');
-        $payment->setDetails(array('foo' => 'bar'));
-        $payment->setDetails(array('bar' => array('foo' => 'baz')));
+        $payment->setDetails(['foo' => 'bar']);
+        $payment->setDetails(['bar' => ['foo' => 'baz']]);
 
         $storage->insert($payment);
 

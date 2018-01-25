@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 namespace Payum\Server\Tests\Functional\Controller;
 
 use Makasim\Yadm\Storage;
@@ -16,7 +18,7 @@ class CaptureControllerTest extends ClientTestCase
     {
 
         /** @var Storage $gatewayConfigStorage */
-        $gatewayConfigStorage = $this->app['payum.gateway_config_storage'];
+        $gatewayConfigStorage = $this->getContainer()->get('payum.gateway_config_storage');
 
         /** @var GatewayConfig $gatewayConfig */
         $gatewayConfig = $gatewayConfigStorage->create();
@@ -33,7 +35,7 @@ class CaptureControllerTest extends ClientTestCase
         $gatewayConfigStorage->insert($gatewayConfig);
 
         /** @var Storage $storage */
-        $storage = $this->app['payum.payment_storage'];
+        $storage = $this->getContainer()->get('payum.payment_storage');
 
         /** @var Payment $payment */
         $payment = $storage->create();
@@ -43,7 +45,7 @@ class CaptureControllerTest extends ClientTestCase
         $storage->insert($payment);
 
         /** @var Payum $payum */
-        $payum = $this->app['payum'];
+        $payum = $this->getContainer()->get('payum');
 
         $token = $payum->getTokenFactory()->createCaptureToken('', $payment, getenv('PAYUM_HTTP_HOST') . '');
 
@@ -68,7 +70,7 @@ class CaptureControllerTest extends ClientTestCase
     public function testShouldObtainMissingDetails()
     {
         /** @var Storage $gatewayConfigStorage */
-        $gatewayConfigStorage = $this->app['payum.gateway_config_storage'];
+        $gatewayConfigStorage = $this->getContainer()->get('payum.gateway_config_storage');
 
         /** @var GatewayConfig $gatewayConfig */
         $gatewayConfig = $gatewayConfigStorage->create();
@@ -78,15 +80,15 @@ class CaptureControllerTest extends ClientTestCase
             'factory' => 'be2bill_offsite',
             'identifier' => 'foo',
             'password' => 'bar',
-            'sandbox' => true
+            'sandbox' => true,
         ]);
         $gatewayConfigStorage->insert($gatewayConfig);
 
         /** @var Payum $payum */
-        $payum = $this->app['payum'];
+        $payum = $this->getContainer()->get('payum');
 
         /** @var Storage $storage */
-        $storage = $this->app['payum.payment_storage'];
+        $storage = $this->getContainer()->get('payum.payment_storage');
 
         /** @var Payment $payment */
         $payment = $storage->create();

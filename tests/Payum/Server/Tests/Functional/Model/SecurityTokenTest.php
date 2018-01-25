@@ -1,9 +1,10 @@
 <?php
+declare(strict_types=1);
+
 namespace Payum\Server\Tests\Functional\Model;
 
 use Makasim\Yadm\Storage;
 use Payum\Core\Model\Identity;
-use Payum\Core\Payum;
 use Payum\Server\Model\Payment;
 use Payum\Server\Model\SecurityToken;
 use Payum\Server\Test\WebTestCase;
@@ -13,7 +14,7 @@ class SecurityTokenTest extends WebTestCase
     public function testShouldAllowPersistSecurityTokenToMongo()
     {
         /** @var Storage $storage */
-        $storage = $this->app['payum.token_storage'];
+        $storage = $this->getContainer()->get('payum.security.token_storage');
 
         /** @var SecurityToken $token */
         $token = $storage->create();
@@ -44,7 +45,7 @@ class SecurityTokenTest extends WebTestCase
     public function testShouldAllowStoreTokenDetails()
     {
         /** @var Storage $storage */
-        $storage = $this->app['payum.token_storage'];
+        $storage = $this->getContainer()->get('payum.security.token_storage');
 
         /** @var SecurityToken $token */
         $token = $storage->create();
@@ -76,7 +77,7 @@ class SecurityTokenTest extends WebTestCase
     public function testShouldGetsGatewayNameFromUnderlyingPaymentModel()
     {
         /** @var Storage $paymentStorage */
-        $paymentStorage = $this->app['payum.payment_storage'];
+        $paymentStorage = $this->getContainer()->get('payum.payment_storage');
 
         /** @var Payment $payment */
         $payment = $paymentStorage->create();
@@ -87,7 +88,7 @@ class SecurityTokenTest extends WebTestCase
         $paymentStorage->insert($payment);
 
         /** @var Storage $tokenStorage */
-        $tokenStorage = $this->app['payum.token_storage'];
+        $tokenStorage = $this->getContainer()->get('payum.security.token_storage');
 
         /** @var SecurityToken $token */
         $token = $tokenStorage->create();

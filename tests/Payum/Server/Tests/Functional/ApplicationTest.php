@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 namespace Payum\Server\Tests\Functional;
 
 use Payum\Core\Payum;
@@ -13,21 +15,21 @@ class ApplicationTest extends WebTestCase
 {
     public function testShouldAllowGetPayumBuilderService()
     {
-        $payum = $this->app['payum.builder'];
+        $payum = $this->getContainer()->get('payum.builder');
 
         $this->assertInstanceOf(PayumBuilder::class, $payum);
     }
 
     public function testShouldAllowGetPayumService()
     {
-        $payum = $this->app['payum'];
+        $payum = $this->getContainer()->get('payum');
 
         $this->assertInstanceOf(Payum::class, $payum);
     }
 
     public function testShouldAllowGetGatewayConfigStorageAsService()
     {
-        $storage = $this->app['payum.yadm_gateway_config_storage'];
+        $storage = $this->getContainer()->get('payum.yadm_gateway_config_storage');
 
         $this->assertInstanceOf(StorageInterface::class, $storage);
         $this->assertInstanceOf(YadmStorage::class, $storage);
@@ -36,7 +38,7 @@ class ApplicationTest extends WebTestCase
     public function testShouldAllowGetTokenStorageFromPayumService()
     {
         /** @var Payum $payum */
-        $payum = $this->app['payum'];
+        $payum = $this->getContainer()->get('payum');
 
         $this->assertInstanceOf(YadmStorage::class, $payum->getTokenStorage());
     }
@@ -44,7 +46,7 @@ class ApplicationTest extends WebTestCase
     public function testShouldAllowGetPaymentStorageFromPayumService()
     {
         /** @var Payum $payum */
-        $payum = $this->app['payum'];
+        $payum = $this->getContainer()->get('payum');
 
         $this->assertInstanceOf(YadmStorage::class, $payum->getStorage(Payment::class));
     }
@@ -52,7 +54,7 @@ class ApplicationTest extends WebTestCase
     public function testShouldAllowGetTokenFactoryFromPayumService()
     {
         /** @var Payum $payum */
-        $payum = $this->app['payum'];
+        $payum = $this->getContainer()->get('payum');
 
         $this->assertInstanceOf(GenericTokenFactory::class, $payum->getTokenFactory());
     }

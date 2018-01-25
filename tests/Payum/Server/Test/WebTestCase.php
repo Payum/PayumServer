@@ -31,10 +31,7 @@ abstract class WebTestCase extends SymfonyWebTestCase
         parent::setUp();
 
         $this->client = static::createClient([], [
-//            'HTTP_HOST' => getenv('PAYUM_HTTP_HOST'),
             'HTTP_HOST' => getenv('PAYUM_SERVER_NAME'),
-//            'SERVER_NAME' => getenv('PAYUM_SERVER_NAME'),
-//            'SERVER_PORT' => getenv('PAYUM_NGINX_PORT'),
         ]);
 
         /** @var Storage $storage */
@@ -46,7 +43,7 @@ abstract class WebTestCase extends SymfonyWebTestCase
         $storage->getCollection()->drop();
 
         /** @var Storage $storage */
-        $storage = $this->getContainer()->get('payum.token_storage');
+        $storage = $this->getContainer()->get('payum.security.token_storage');
         $storage->getCollection()->drop();
     }
 
