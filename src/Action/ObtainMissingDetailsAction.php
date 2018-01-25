@@ -6,6 +6,7 @@ namespace App\Action;
 use Payum\Core\Action\ActionInterface;
 use Payum\Core\Bridge\Symfony\Reply\HttpResponse;
 use Payum\Core\Exception\RequestNotSupportedException;
+use Payum\Core\GatewayAwareInterface;
 use Payum\Core\GatewayAwareTrait;
 use Payum\Core\Request\GetHttpRequest;
 use Payum\Core\Request\RenderTemplate;
@@ -18,7 +19,7 @@ use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Response;
 
-class ObtainMissingDetailsAction implements ActionInterface
+class ObtainMissingDetailsAction implements ActionInterface, GatewayAwareInterface
 {
     use GatewayAwareTrait;
 
