@@ -1,0 +1,99 @@
+<html>
+    <head>
+        <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+        <script src="/payum.js"></script>
+    </head>
+
+    <body style="margin: 20px;">
+        <div class="col-xs-offset-1 col-xs-10">
+            <div class="col-xs-offset-3">
+                <h2>PayumServer demo application</h2>
+
+                <div class="row">
+                    <p>
+                        The demo shows how you can use <a href="https://github.com/Payum/PayumServer">PayumServer</a> the payment processing server.
+                    </p>
+                    <p>
+                        It connects to <a href="https://server.payum.forma-pro.com">https://server.payum.forma-pro.com</a>, you can use <a href="https://server-ui.payum.forma-pro.com/#!/app/settings?api=https:%2F%2Fserver.payum.forma-pro.com">backend</a> client to manage gateways&payments.
+                    </p>
+                    <p>
+                        This is pure html,js app. Click "Pay" button to pay 1$ (virtual).
+                    </p>
+
+                    <div class="alert alert-warning" role="alert">The pre configured gateways are roll backed every midnight.</div>
+
+                    <p id="payum-previous-payment"></p>
+
+                    <button id="pay-btn" class="btn" value="Create">Pay 1 USD</button>
+                    <button id="pay-krona-btn" class="btn" value="Create">Pay 1 SEK</button>
+                </div>
+
+                <div id="payum-container" class="row" style="margin-top: 5.0em;"></div>
+
+                <div class="row" style="margin-top: 5.0em;">
+                    <p>Give it a try, send me your feedback, contribute. I am looking forward to get from you.</p>
+                    <ul>
+                        <li>Author: Maksim Kotlyar</li>
+
+                        <li>GitHub: <a href="https://github.com/makasim">https://github.com/makasim</a></li>
+
+                        <li>LinkedIn: <a href="https://ua.linkedin.com/in/kotlyarmaksim">https://ua.linkedin.com/in/kotlyarmaksim</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+
+        <script>
+            document.addEventListener('DOMContentLoaded', () => {
+                const payumServerUrl = location.protocol + '//' + window.location.hostname;
+                const payum = new Payum(payumServerUrl);
+                const paymentId = (new URL(window.location.href)).searchParams.get("paymentId");
+
+                document.querySelector('#pay-btn').addEventListener('click', () => {
+                    const payment = {totalAmountInput: 1, currencyCode: 'USD'};
+
+                    payum.payment.create(payment, (payment) => {
+                        const token = {
+                            type: 'capture',
+                            paymentId: payment.id,
+                            afterUrl: window.location.href
+                        };
+
+                        payum.token.create(token, (responseToken) => {
+                            payum.execute(responseToken.targetUrl, '#payum-container');
+                        });
+                    });
+                });
+
+                document.querySelector('#pay-krona-btn').addEventListener('click', () => {
+                    const payment = {totalAmountInput: 1, currencyCode: 'SEK', gatewayName: 'Klarna Checkout'};
+
+                    payum.payment.create(payment, (payment) => {
+                        const token = {
+                            type: 'authorize',
+                            paymentId: payment.id,
+                            afterUrl: window.location.href
+                        };
+
+
+                        payum.token.create(token, (responseToken) => {
+                            payum.execute(responseToken.targetUrl, '#payum-container');
+                        });
+                    });
+                });
+
+                // show status of previous payment.
+                if (paymentId) {
+                    payum.payment.get(paymentId, (payment) => {
+                        document.querySelector('#payum-previous-payment')
+                            .insertAdjacentHTML(
+                                'afterBegin',
+                                'Previous payment ' + paymentId + ' status: ' + payment.status
+                            );
+                    });
+                }
+            });
+        </script>
+    </body>
+</html>
