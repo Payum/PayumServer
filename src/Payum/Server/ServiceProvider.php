@@ -176,24 +176,24 @@ class ServiceProvider implements ServiceProviderInterface
 //
 //            return $client->selectDatabase($database);
 //        });
-
-
-        $app['payum.gateway_choices_callback'] = $app->extend('payum.gateway_choices_callback', function (callable $choicesCallback) use ($app) {
-            return function(Options $options) use ($app, $choicesCallback) {
-                $choices = call_user_func($choicesCallback, $options);
-
-                /** @var Storage $gatewayConfigStorage */
-                $gatewayConfigStorage = $app['payum.gateway_config_storage'];
-                foreach ($gatewayConfigStorage->find([]) as $config) {
-                    /** @var GatewayConfigInterface $config */
-
-                    $choices[StringUtil::nameToTitle($config->getGatewayName())] = $config->getGatewayName();
-                }
-
-                return $choices;
-            };
-        });
-
+//
+//
+//        $app['payum.gateway_choices_callback'] = $app->extend('payum.gateway_choices_callback', function (callable $choicesCallback) use ($app) {
+//            return function(Options $options) use ($app, $choicesCallback) {
+//                $choices = call_user_func($choicesCallback, $options);
+//
+//                /** @var Storage $gatewayConfigStorage */
+//                $gatewayConfigStorage = $app['payum.gateway_config_storage'];
+//                foreach ($gatewayConfigStorage->find([]) as $config) {
+//                    /** @var GatewayConfigInterface $config */
+//
+//                    $choices[StringUtil::nameToTitle($config->getGatewayName())] = $config->getGatewayName();
+//                }
+//
+//                return $choices;
+//            };
+//        });
+//
 //        $app['payum.listener.choose_gateway'] = $app->share(function() use ($app) {
 //            return function(Request $request, Application $app) {
 //                /** @var Payum $payum */
