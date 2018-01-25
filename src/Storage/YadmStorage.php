@@ -5,10 +5,17 @@ namespace App\Storage;
 
 use LogicException;
 use function Makasim\Yadm\get_object_id;
+use function Makasim\Values\get_value;
+use MongoDB\BSON\ObjectId;
 use Makasim\Yadm\Storage;
 use Payum\Core\Model\Identity;
 use Payum\Core\Storage\AbstractStorage;
+use Payum\Core\Storage\IdentityInterface;
 
+/**
+ * Class YadmStorage
+ * @package App\Storage
+ */
 class YadmStorage extends AbstractStorage
 {
     /**
@@ -17,34 +24,39 @@ class YadmStorage extends AbstractStorage
     private $storage;
 
     /**
-     * {@inheritdoc}
-     *
-     * @param Storage $storage
+     * @var string
      */
-    public function __construct(Storage $storage)
+    private $idProperty;
+
+    /**
+     * @param Storage $storage
+     * @param $idProperty
+     * @param string $modelClass
+     */
+    public function __construct(Storage $storage, $idProperty, string $modelClass)
     {
-        parent::__construct(get_class($storage->create()));
+        parent::__construct($modelClass);
 
         $this->storage = $storage;
+        $this->idProperty = $idProperty;
     }
 
     /**
      * {@inheritdoc}
      */
-    protected function doUpdateModel($model)
+    protected function doUpdateModel($model) : void
     {
         if (get_object_id($model, true)) {
             $this->storage->update($model);
         } else {
             $this->storage->insert($model);
         }
-
     }
 
     /**
      * {@inheritdoc}
      */
-    protected function doDeleteModel($model)
+    protected function doDeleteModel($model) : void
     {
         $this->storage->delete($model);
     }
@@ -52,7 +64,7 @@ class YadmStorage extends AbstractStorage
     /**
      * {@inheritdoc}
      */
-    protected function doGetIdentity($model)
+    protected function doGetIdentity($model) : IdentityInterface
     {
         return new Identity($this->getModelId($model), $model);
     }
@@ -60,15 +72,19 @@ class YadmStorage extends AbstractStorage
     /**
      * {@inheritdoc}
      */
-    protected function doFind($id)
+    protected function doFind($id) : ?object
     {
-        return $this->storage->findOne(['id' => (string) $id]);
+        if ('_id' == $this->idProperty) {
+            $id = new ObjectId($id);
+        }
+
+        return $this->storage->findOne([$this->idProperty => $id]);
     }
 
     /**
      * {@inheritdoc}
      */
-    public function findBy(array $criteria)
+    public function findBy(array $criteria) : array
     {
         return iterator_to_array($this->storage->find($criteria));
     }
@@ -79,12 +95,18 @@ class YadmStorage extends AbstractStorage
      *
      * @return string
      */
-    protected function getModelId($model, $strict = true)
+    protected function getModelId($model, $strict = true) : string
     {
-        if ($strict && false == $model->getId()) {
+        if ('_id' === $this->idProperty) {
+            $id = get_object_id($model, true);
+        } else {
+            $id = get_value($model, $this->idProperty);
+        }
+
+        if ($strict && false == $id) {
             throw new LogicException('The id is missing');
         }
 
-        return (string) $model->getId();
+        return (string) $id;
     }
 }

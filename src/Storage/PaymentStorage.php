@@ -7,6 +7,7 @@ use Makasim\Yadm\Hydrator;
 use Makasim\Yadm\Storage;
 use MongoDB\Collection;
 use App\Model\Payment;
+use Traversable;
 
 /**
  * @method Payment create
@@ -58,9 +59,9 @@ class PaymentStorage extends Storage
     }
 
     /**
-     * @return Payment[] | \Traversable
+     * @return Payment[] | Traversable
      */
-    public function findAll()
+    public function findAll() : Traversable
     {
         return $this->find([], [
             'sort' => ['createdAt.unix' => -1],

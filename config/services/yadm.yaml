@@ -2,6 +2,7 @@ parameters:
     gateway.class: 'App\Model\GatewayConfig'
     security.token.class: 'App\Model\SecurityToken'
     payment.class: 'App\Model\Payment'
+    mongo_database: '%env(PAYUM_MONGO_DATABASE)%'
 
 services:
 

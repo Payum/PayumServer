@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 namespace App\Model;
 
 use Makasim\Values\ValuesTrait;
@@ -7,6 +9,10 @@ use Payum\Core\Model\Identity;
 use Payum\Core\Security\TokenInterface;
 use Payum\Core\Storage\IdentityInterface;
 
+/**
+ * Class SecurityToken
+ * @package App\Model
+ */
 class SecurityToken implements TokenInterface
 {
     use ValuesTrait;

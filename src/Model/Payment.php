@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 namespace App\Model;
 
 use Makasim\Values\CastTrait;
@@ -7,6 +9,10 @@ use Makasim\Values\ValuesTrait;
 use Payum\Core\Model\CreditCardInterface;
 use Payum\Core\Request\GetHumanStatus;
 
+/**
+ * Class Payment
+ * @package App\Model
+ */
 class Payment
 {
     use ValuesTrait {
@@ -222,9 +228,9 @@ class Payment
     }
 
     /**
-     * @return Payer
+     * @return Payer | object
      */
-    public function getPayer()
+    public function getPayer() : Payer
     {
         if (false == $this->getValue('payer')) {
             $this->setPayer(new Payer());

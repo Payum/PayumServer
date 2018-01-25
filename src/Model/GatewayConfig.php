@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 namespace App\Model;
 
 use Makasim\Values\CastTrait;
@@ -7,6 +9,10 @@ use Payum\Core\Model\GatewayConfigInterface;
 use Payum\Core\Security\CryptedInterface;
 use Payum\Core\Security\CypherInterface;
 
+/**
+ * Class GatewayConfig
+ * @package App\Model
+ */
 class GatewayConfig implements GatewayConfigInterface, CryptedInterface
 {
     use ValuesTrait;

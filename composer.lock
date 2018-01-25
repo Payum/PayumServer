@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "72f2876af47c59c53b97014950ad1b56",
+    "content-hash": "df983f673cf211b770e6bbdb6477b21d",
     "packages": [
         {
             "name": "authorizenet/authorizenet",
@@ -1849,16 +1849,16 @@
         },
         {
             "name": "makasim/yadm-bundle",
-            "version": "0.2.0",
+            "version": "dev-master",
             "source": {
                 "type": "git",
                 "url": "https://github.com/makasim/yadm-bundle.git",
-                "reference": "1e129ad2ffda8709bf02b4ee0ab74485cc3c0903"
+                "reference": "1d914b6985890eb12c8aa2235ac75beb7d4aaeed"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/makasim/yadm-bundle/zipball/1e129ad2ffda8709bf02b4ee0ab74485cc3c0903",
-                "reference": "1e129ad2ffda8709bf02b4ee0ab74485cc3c0903",
+                "url": "https://api.github.com/repos/makasim/yadm-bundle/zipball/1d914b6985890eb12c8aa2235ac75beb7d4aaeed",
+                "reference": "1d914b6985890eb12c8aa2235ac75beb7d4aaeed",
                 "shasum": ""
             },
             "require": {
@@ -1885,7 +1885,7 @@
             "license": [
                 "MIT"
             ],
-            "time": "2017-03-20T18:10:31+00:00"
+            "time": "2017-06-09T07:53:18+00:00"
         },
         {
             "name": "mikemccabe/json-patch-php",
@@ -3225,16 +3225,16 @@
         },
         {
             "name": "seld/jsonlint",
-            "version": "1.7.0",
+            "version": "1.7.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Seldaek/jsonlint.git",
-                "reference": "9b355654ea99460397b89c132b5c1087b6bf4473"
+                "reference": "d15f59a67ff805a44c50ea0516d2341740f81a38"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Seldaek/jsonlint/zipball/9b355654ea99460397b89c132b5c1087b6bf4473",
-                "reference": "9b355654ea99460397b89c132b5c1087b6bf4473",
+                "url": "https://api.github.com/repos/Seldaek/jsonlint/zipball/d15f59a67ff805a44c50ea0516d2341740f81a38",
+                "reference": "d15f59a67ff805a44c50ea0516d2341740f81a38",
                 "shasum": ""
             },
             "require": {
@@ -3270,7 +3270,7 @@
                 "parser",
                 "validator"
             ],
-            "time": "2018-01-03T12:13:57+00:00"
+            "time": "2018-01-24T12:46:19+00:00"
         },
         {
             "name": "sensiolabs/security-checker",
@@ -3951,16 +3951,16 @@
         },
         {
             "name": "symfony/flex",
-            "version": "v1.0.66",
+            "version": "v1.0.67",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/flex.git",
-                "reference": "b366e902710c8dc8d8be97ed8d64ef574d9bffcb"
+                "reference": "ac1c6aaafc4a9fddba3626867d786d151d2cc2ac"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/flex/zipball/b366e902710c8dc8d8be97ed8d64ef574d9bffcb",
-                "reference": "b366e902710c8dc8d8be97ed8d64ef574d9bffcb",
+                "url": "https://api.github.com/repos/symfony/flex/zipball/ac1c6aaafc4a9fddba3626867d786d151d2cc2ac",
+                "reference": "ac1c6aaafc4a9fddba3626867d786d151d2cc2ac",
                 "shasum": ""
             },
             "require": {
@@ -3993,7 +3993,7 @@
                     "email": "fabien.potencier@gmail.com"
                 }
             ],
-            "time": "2018-01-21T09:15:48+00:00"
+            "time": "2018-01-25T06:46:31+00:00"
         },
         {
             "name": "symfony/form",
@@ -5997,6 +5997,7 @@
     "aliases": [],
     "minimum-stability": "dev",
     "stability-flags": {
+        "makasim/yadm-bundle": 20,
         "payum/omnipay-v3-bridge": 15,
         "symfony/lts": 20
     },
@@ -6006,5 +6007,8 @@
         "php": "^7.2",
         "ext-iconv": "*"
     },
-    "platform-dev": []
+    "platform-dev": [],
+    "platform-overrides": {
+        "php": "7.2"
+    }
 }
