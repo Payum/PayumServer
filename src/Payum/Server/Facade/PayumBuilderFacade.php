@@ -20,7 +20,7 @@ use Payum\Server\Action\CapturePaymentAction;
 use Payum\Server\Action\ObtainMissingDetailsAction;
 use Payum\Server\Model\Payment;
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use Symfony\Component\Form\FormFactory;
+use Symfony\Component\Form\FormFactoryInterface;
 use Twig_Environment;
 
 /**
@@ -29,12 +29,23 @@ use Twig_Environment;
  */
 class PayumBuilderFacade
 {
+    /**
+     * @param PayumBuilder $builder
+     * @param Storage $tokenStorage
+     * @param StorageInterface $gatewayConfigStorage
+     * @param PaymentStorage $paymentStorage
+     * @param FormFactoryInterface $formFactory
+     * @param Twig_Environment $twig
+     * @param ContainerInterface $container
+     *
+     * @return PayumBuilder
+     */
     public static function get(
         PayumBuilder $builder,
         Storage $tokenStorage,
         StorageInterface $gatewayConfigStorage,
         PaymentStorage $paymentStorage,
-        FormFactory $formFactory,
+        FormFactoryInterface $formFactory,
         Twig_Environment $twig,
         ContainerInterface $container
     ) : PayumBuilder {
@@ -44,7 +55,7 @@ class PayumBuilderFacade
                 StorageInterface $tokenStorage,
                 StorageRegistryInterface $storageRegistry
             ) use ($container) {
-                return new TokenFactory($tokenStorage, $storageRegistry, $container->get('router')); // symfony
+                return new TokenFactory($tokenStorage, $storageRegistry, $container->get('router'));
             })
             ->setGatewayConfigStorage($gatewayConfigStorage)
             ->addStorage(Payment::class, new YadmStorage($paymentStorage))
@@ -56,8 +67,7 @@ class PayumBuilderFacade
                 'payum.action.server.capture_payment' => new CapturePaymentAction(),
                 'payum.action.server.authorize_payment' => new AuthorizePaymentAction(),
                 'payum.action.server.execute_same_request_with_payment_details' => new ExecuteSameRequestWithPaymentDetailsAction(),
-                'payum.action.server.obtain_missing_details' => function (ArrayObject $config) use ($formFactory, $twig
-                ) {
+                'payum.action.server.obtain_missing_details' => function (ArrayObject $config) use ($formFactory, $twig) {
                     return new ObtainMissingDetailsAction(
                         $formFactory,
                         $config['payum.template.obtain_missing_details']
@@ -67,7 +77,7 @@ class PayumBuilderFacade
                 'twig.env' => $twig,
 
                 'payum.paths' => [
-                    'PayumServer' => __DIR__ . '/Resources/views',
+                    'PayumServer' => __DIR__ . '/../Resources/views',
                 ],
             ])
             ->addGatewayFactoryConfig('be2bill_offsite', [
@@ -96,7 +106,8 @@ class PayumBuilderFacade
             ])
             ->setHttpRequestVerifier(function ($tokenStorage) {
                 return new HttpRequestVerifier($tokenStorage);
-            });
+            })
+            ->setCoreGatewayFactory($container->get('payum.core_gateway_factory_builder'));
 
         return $builder;
     }

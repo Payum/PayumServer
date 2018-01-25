@@ -31,6 +31,7 @@
         "klarna/checkout": "^4.0",
         "makasim/yadm-bundle": "^0.2.0",
         "paypal/rest-api-sdk-php": "^1.13",
+        "payum/offline": "^1.5",
         "payum/omnipay-v3-bridge": "^1.0@alpha",
         "payum/payum": "^1.5",
         "payum/payum-bundle": "^2.3",

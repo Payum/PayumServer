@@ -1,6 +1,7 @@
 imports:
     - { resource: events/payum.yaml }
     - { resource: controllers/payum.yaml }
+    - { resource: "@PayumBundle/Resources/config/payum.xml" }
 
 services:
     # default configuration for services in *this* file
@@ -31,23 +32,20 @@ services:
     payum.gateway_schema_builder:
         class: Payum\Server\Schema\GatewaySchemaBuilder
         arguments:
-            - '@payum.core.payum'
+            - '@payum'
 
     Payum\Server\JsonDecode: '@payum.json_decode'
     payum.json_decode:
         class: Payum\Server\JsonDecode
 
-    Payum\Core\Payum: '@payum.core.payum'
-    payum.core.payum:
-        class: Payum\Core\Payum
-        factory: 'payum.builder:getPayum'
+    Payum\Core\Payum: '@payum'
 
     payum.builder:
         class: Payum\Core\PayumBuilder
         factory: 'payum.builder.facade:get'
         arguments:
             - '@payum.builder.factory'
-            - '@payum.token_storage'
+            - '@payum.security.token_storage'
             - '@payum.yadm_gateway_config_storage'
             - '@payum.payment_storage'
             - '@form.factory'
@@ -59,7 +57,7 @@ services:
     payum.builder.facade:
         class: Payum\Server\Facade\PayumBuilderFacade
 
-    payum.token_storage:
+    payum.security.token_storage:
         public: true
         class: Makasim\Yadm\Storage
         arguments:
@@ -77,7 +75,7 @@ services:
     payum.server.schema.gateway_form_definition_builder:
         class: Payum\Server\Schema\GatewayFormDefinitionBuilder
         arguments:
-            - '@payum.core.payum'
+            - '@payum'
 
     Payum\Server\Schema\PaymentSchemaBuilder: '@payum.payment_schema_builder'
     payum.payment_schema_builder:
@@ -98,8 +96,27 @@ services:
     api.view.payment_to_json_converter:
         class: Payum\Server\Api\View\PaymentToJsonConverter
         arguments:
-            - '@payum.core.payum'
+            - '@payum'
 
     Payum\Server\Api\View\TokenToJsonConverter: '@api.view.token_to_json_converter'
     api.view.token_to_json_converter:
         class: Payum\Server\Api\View\TokenToJsonConverter
+
+    payum.core_gateway_factory_builder:
+        public: true
+        class: Payum\Core\Bridge\Symfony\Builder\CoreGatewayFactoryBuilder
+        calls:
+            - [setContainer, ['@service_container']]
+
+#    Payum\Server\Form\Type\ChooseGatewayType: '@payum.server.form.type.choose_gateway_type'
+#    payum.server.form.type.choose_gateway_type:
+#        class: Payum\Server\Form\Type\ChooseGatewayType
+#        arguments:
+#            - '@payum.gateway_choices_callback'
+#
+#    Payum\Server\Factory\GatewayChoicesCallbackFactory: '@payum.gateway_choices_callback'
+#    payum.gateway_choices_callback:
+#        class: callback
+#        factory: ['Payum\Server\Factory\GatewayChoicesCallbackFactory', create]
+#        arguments:
+#            - '@service_container'
