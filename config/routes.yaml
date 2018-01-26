@@ -1,37 +1,120 @@
-payum.default:
-    resource: ./routes/payum/default.yaml
-    type: yaml
+# home
+api_root:
+    path: /
+    methods: [GET]
+    controller: App\Api\Controller\RootController::rootAction
 
-payum.gateways:
-    resource: ./routes/payum/gateways.yaml
-    prefix: /gateways
-    type: yaml
+# gateway all
+gateway_all:
+    path: /gateways/
+    methods: [GET]
+    defaults:
+        _controller: payum.api.controller.gateway:allAction
 
-payum.payment:
-    resource: ./routes/payum/payment.yaml
-    prefix: /payments
-    type: yaml
+# gateway create
+gateway_create:
+    path: /gateways/
+    methods: [POST]
+    defaults:
+        _controller: payum.api.controller.gateway:createAction
 
-payum.schema.token:
-    resource: ./routes/payum/token.yaml
-    prefix: /tokens
-    type: yaml
+# gateway get
+gateway_get:
+    path: /gateways/{name}
+    methods: [GET]
+    defaults:
+        _controller: payum.api.controller.gateway:getAction
 
-# schema
-payum.schema.gateways:
-    resource: ./routes/payum/schema/gateways.yaml
-    prefix: /schema/gateways
-    type: yaml
+# gateway delete
+gateway_delete:
+    path: /gateways/{name}
+    methods: [DELETE]
+    defaults:
+        _controller: payum.api.controller.gateway:deleteAction
 
-payum.schema.payments:
-    resource: ./routes/payum/schema/payments.yaml
-    prefix: /schema/payments
-    type: yaml
+# payments all
+payment_all:
+    path: /payments/
+    methods: [GET]
+    defaults:
+        _controller: payum.api.controller.payment:allAction
 
-payum.schema.tokens:
-    resource: ./routes/payum/schema/tokens.yaml
-    prefix: /schema/tokens
-    type: yaml
+# payments create
+payment_create:
+    path: /payments/
+    methods: [POST]
+    defaults:
+        _controller: payum.api.controller.payment:createAction
+
+# payments get
+payment_get:
+    path: /payments/{id}
+    methods: [GET]
+    defaults:
+        _controller: payum.api.controller.payment:getAction
+
+# payments delete
+payment_delete:
+    path: /payments/{id}
+    methods: [DELETE]
+    defaults:
+        _controller: payum.api.controller.payment:deleteAction
+
+# tokens create
+token_create:
+    path: /tokens/
+    methods: [POST]
+    defaults:
+        _controller: payum.api.controller.token:createAction
+
+# schema/gateways default
+payum.schema.controller.gateways.default:
+    path: /schema/gateways/default.json
+    methods: [GET]
+    defaults:
+        _controller: payum.schema.controller.gateways:getDefaultAction
+
+# schema/gateways form default
+payum.schema.controller.gateways.form.default:
+    path: /schema/gateways/form/default.json
+    methods: [GET]
+    defaults:
+        _controller: payum.schema.controller.gateways:getDefaultFormAction
+
+# schema/gateways action
+payum.schema.controller.gateways.action:
+    path: /schema/gateways/{name}.json
+    methods: [GET]
+    defaults:
+        _controller: payum.schema.controller.gateways:getAction
+
+# schema/gateways form action
+payum.schema.controller.gateways.form.action:
+    path: /schema/gateways/form/{name}.json
+    methods: [GET]
+    defaults:
+        _controller: payum.schema.controller.gateways:getFormAction
+
+# schema/payments new
+payum.schema.controller.payments:
+    path: /schema/payments/new.json
+    methods: [GET]
+    defaults:
+        _controller: payum.schema.controller.payments:getNewAction
+
+# schema/payments new form
+payum.schema.controller.payments.form:
+    path: /schema/payments/form/new.json
+    methods: [GET]
+    defaults:
+        _controller: payum.schema.controller.payments:getNewFormAction
+
+# schema/tokens new
+payum.schema.controller.tokens:
+    path: /schema/tokens/new.json
+    methods: [GET]
+    defaults:
+        _controller: payum.schema.controller.tokens:getNewAction
 
 # payum bundle
 payum_all:

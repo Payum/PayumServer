@@ -1,6 +1,0 @@
-# new
-payum.schema.controller.tokens:
-    path: /new.json
-    methods: [GET]
-    defaults:
-        _controller: payum.schema.controller.tokens:getNewAction

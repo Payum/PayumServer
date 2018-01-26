@@ -1,4 +1,0 @@
-api_root:
-    path: /
-    methods: [GET]
-    controller: App\Api\Controller\RootController::rootAction
