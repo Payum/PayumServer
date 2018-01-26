@@ -1,8 +1,6 @@
 parameters:
-#    gateway.class: 'App\Model\GatewayConfig'
-#    security.token.class: 'App\Model\SecurityToken'
-#    payment.class: 'App\Model\Payment'
     mongo_database: '%env(PAYUM_MONGO_DATABASE)%'
+    mongodb.uri: "%env(PAYUM_MONGO_URI)%"
 
 services:
 
@@ -14,29 +12,14 @@ services:
                             # fetching services directly from the container via $container->get() won't work.
                             # The best practice is to be explicit about your dependencies anyway.
 
-#    yadm.hydrator.gateway:
-#        class: Makasim\Yadm\Hydrator
-#        arguments:
-#            - '%gateway.class%'
-#
-#    yadm.hydrator.security.token:
-#        class: Makasim\Yadm\Hydrator
-#        arguments:
-#            - '%security.token.class%'
-#
-#    yadm.hydrator.payment:
-#        class: Makasim\Yadm\Hydrator
-#        arguments:
-#            - '%payment.class%'
 
 yadm:
-    mongo_uri: "%env(PAYUM_MONGO_URI)%"
+    mongo_uri: "%mongodb.uri%"
     models:
         gateway_config:
             class: 'App\Model\GatewayConfig'
             collection: 'gateway_configs'
             database: '%mongo_database%'
-#            hydrator: '@yadm.hydrator.gateway'
             hydrator_class: 'App\Yadm\Hydrator\GatewayConfigHydrator'
             storage_class: 'App\Storage\GatewayConfigStorage'
             pessimistic_lock: true
@@ -45,7 +28,6 @@ yadm:
             class: 'App\Model\Payment'
             collection: 'payments'
             database: '%mongo_database%'
-#            hydrator: '@yadm.hydrator.payment'
             hydrator_class: 'App\Yadm\Hydrator\PaymentHydrator'
             storage_class: 'App\Storage\PaymentStorage'
             pessimistic_lock: true
@@ -54,7 +36,6 @@ yadm:
             class: 'App\Model\SecurityToken'
             collection: 'security_tokens'
             database: '%mongo_database%'
-#            hydrator: '@yadm.hydrator.security.token'
             hydrator_class: 'App\Yadm\Hydrator\SecurityTokenHydrator'
             storage_class: 'App\Storage\SecurityTokenStorage'
             pessimistic_lock: true
