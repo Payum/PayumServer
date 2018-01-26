@@ -6,14 +6,14 @@ namespace App\Model;
 use Makasim\Values\ValuesTrait;
 use Payum\Core\Exception\LogicException;
 use Payum\Core\Model\Identity;
-use Payum\Core\Security\TokenInterface;
+use Payum\Core\Model\Token;
 use Payum\Core\Storage\IdentityInterface;
 
 /**
  * Class SecurityToken
  * @package App\Model
  */
-class SecurityToken implements TokenInterface
+class SecurityToken extends Token
 {
     use ValuesTrait;
 

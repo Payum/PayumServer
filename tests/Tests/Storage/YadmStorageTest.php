@@ -9,6 +9,10 @@ use App\Storage\YadmStorage;
 use PHPUnit\Framework\TestCase;
 use ReflectionClass;
 
+/**
+ * Class YadmStorageTest
+ * @package App\Tests\Storage
+ */
 class YadmStorageTest extends TestCase
 {
     /**
@@ -21,10 +25,13 @@ class YadmStorageTest extends TestCase
         $this->assertTrue($rc->implementsInterface(StorageInterface::class));
     }
 
+    /**
+     * @return YadmStorage
+     */
     public function testCouldBeConstructedWithYadmStorageAsFirstArgument() : YadmStorage
     {
         $storageMock = $this->createMock(Storage::class);
 
-        new YadmStorage($storageMock);
+        new YadmStorage($storageMock, YadmStorage::DEFAULT_ID_PROPERTY, Storage::class);
     }
 }

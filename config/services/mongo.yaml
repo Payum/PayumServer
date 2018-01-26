@@ -11,19 +11,19 @@ services:
                             # fetching services directly from the container via $container->get() won't work.
                             # The best practice is to be explicit about your dependencies anyway.
 
-    mongodb.database.factory:
-        class: App\Factory\MongoDb\DatabaseFactory
+#    mongodb.database.factory:
+#        class: App\Factory\MongoDb\DatabaseFactory
 
-    MongoDB\Database: '@mongodb.database'
-    mongodb.database:
-        class: MongoDB\Database
-        factory: 'mongodb.database.factory:create'
-        arguments:
-            - '@mongodb.client'
-            - '%mongodb.uri%'
+#    MongoDB\Database: '@mongodb.database'
+#    mongodb.database:
+#        class: MongoDB\Database
+#        factory: 'mongodb.database.factory:create'
+#        arguments:
+#            - '@mongodb.client'
+#            - '%mongodb.uri%'
 
-    MongoDB\Client: '@mongodb.client'
-    mongodb.client:
-        class: MongoDB\Client
-        arguments:
-            - '%mongodb.uri%'
+#    MongoDB\Client: '@mongodb.client'
+#    mongodb.client:
+#        class: MongoDB\Client
+#        arguments:
+#            - '%mongodb.uri%'

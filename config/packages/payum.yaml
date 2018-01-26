@@ -1,17 +1,23 @@
 payum:
     storages:
-        Payum\Core\Model\Payment:
-            filesystem:
-                storage_dir: "%kernel.root_dir%/Resources/payments"
-                id_property: number
+        App\Model\Payment:
+            yadm:
+                id_property: _id
+        App\Model\GatewayConfig:
+            yadm:
+                id_property: _id
 
     security:
         token_storage:
-            Payum\Core\Model\Token:
-                filesystem:
-                    storage_dir: "%kernel.root_dir%/Resources/gateways"
+            App\Model\SecurityToken:
+                yadm:
                     id_property: hash
 
     gateways:
         offline:
             factory: offline
+
+        stripe_checkout:
+            factory: stripe_checkout
+            publishable_key: "EDIT IT"
+            secret_key: "EDIT IT"

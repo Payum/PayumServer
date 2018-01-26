@@ -18,6 +18,8 @@ use Payum\Core\Storage\IdentityInterface;
  */
 class YadmStorage extends AbstractStorage
 {
+    const DEFAULT_ID_PROPERTY = '_id';
+
     /**
      * @var Storage
      */
@@ -30,10 +32,10 @@ class YadmStorage extends AbstractStorage
 
     /**
      * @param Storage $storage
-     * @param $idProperty
+     * @param string $idProperty
      * @param string $modelClass
      */
-    public function __construct(Storage $storage, $idProperty, string $modelClass)
+    public function __construct(Storage $storage, string $idProperty, string $modelClass)
     {
         parent::__construct($modelClass);
 
@@ -74,7 +76,7 @@ class YadmStorage extends AbstractStorage
      */
     protected function doFind($id) : ?object
     {
-        if ('_id' == $this->idProperty) {
+        if (static::DEFAULT_ID_PROPERTY === $this->idProperty) {
             $id = new ObjectId($id);
         }
 
@@ -97,7 +99,7 @@ class YadmStorage extends AbstractStorage
      */
     protected function getModelId($model, $strict = true) : string
     {
-        if ('_id' === $this->idProperty) {
+        if (static::DEFAULT_ID_PROPERTY === $this->idProperty) {
             $id = get_object_id($model, true);
         } else {
             $id = get_value($model, $this->idProperty);

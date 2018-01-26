@@ -35,7 +35,7 @@ class YadmStorageFactory extends AbstractStorageFactory
         $builder
             ->addDefaultsIfNotSet()
             ->children()
-                ->scalarNode('id_property')->defaultValue('_id')->end()
+                ->scalarNode('id_property')->defaultValue(YadmStorage::DEFAULT_ID_PROPERTY)->end()
             ->end();
         // @formatter:on
     }

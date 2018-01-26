@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\Facade;
 
+use App\Model\SecurityToken;
 use Makasim\Yadm\Storage;
 use Payum\Core\Bridge\Symfony\Security\HttpRequestVerifier;
 use Payum\Core\Bridge\Symfony\Security\TokenFactory;
@@ -50,7 +51,7 @@ class PayumBuilderFacade
         ContainerInterface $container
     ) : PayumBuilder {
         $builder
-            ->setTokenStorage(new YadmStorage($tokenStorage))
+            ->setTokenStorage(new YadmStorage($tokenStorage, YadmStorage::DEFAULT_ID_PROPERTY, SecurityToken::class))
             ->setTokenFactory(function (
                 StorageInterface $tokenStorage,
                 StorageRegistryInterface $storageRegistry
@@ -58,7 +59,7 @@ class PayumBuilderFacade
                 return new TokenFactory($tokenStorage, $storageRegistry, $container->get('router'));
             })
             ->setGatewayConfigStorage($gatewayConfigStorage)
-            ->addStorage(Payment::class, new YadmStorage($paymentStorage))
+            ->addStorage(Payment::class, new YadmStorage($paymentStorage, YadmStorage::DEFAULT_ID_PROPERTY, Payment::class))
             ->addCoreGatewayFactoryConfig([
                 'payum.template.obtain_credit_card' => '@PayumServer/obtainCreditCardWithJessepollakCard.html.twig',
                 'payum.template.obtain_missing_details' => '@PayumServer/obtainMissingDetails.html.twig',

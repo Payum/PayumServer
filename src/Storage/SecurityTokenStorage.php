@@ -8,9 +8,9 @@ use Makasim\Yadm\Storage;
 use MongoDB\Collection;
 
 /**
- * @method PaymentTokenStorage create
+ * @method SecurityTokenStorage create
  */
-class PaymentTokenStorage extends Storage
+class SecurityTokenStorage extends Storage
 {
     /**
      * @var Hydrator

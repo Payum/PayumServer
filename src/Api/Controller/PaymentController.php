@@ -16,6 +16,10 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
+/**
+ * Class PaymentController
+ * @package App\Api\Controller
+ */
 class PaymentController
 {
     use ForwardExtensionTrait;
