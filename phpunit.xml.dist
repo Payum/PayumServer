@@ -34,5 +34,6 @@
         <env name="PAYUM_HTTP_HOST" value="http://payum-server-symfony.local" />
         <env name="PAYUM_SERVER_NAME" value="payum-server-symfony.local" />
         <env name="PAYUM_NGINX_PORT" value="8080" />
+        <env name="TEST_PAYUM_MONGO_DATABASE" value="payum_server_test" />
     </php>
 </phpunit>

@@ -1,4 +1,5 @@
 parameters:
+    mongo_database: '%env(TEST_PAYUM_MONGO_DATABASE)%'
     mongodb.uri: "%env(TEST_PAYUM_MONGO_URI)%"
 
 services:
