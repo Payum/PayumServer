@@ -1,6 +1,4 @@
 imports:
-    - { resource: events/payum.yaml }
-    - { resource: controllers/payum.yaml }
     - { resource: "@PayumBundle/Resources/config/payum.xml" }
 
 services:
@@ -19,30 +17,7 @@ services:
         arguments:
             - '@payum.gateway_config_storage'
 
-#    App\Storage\GatewayConfigStorage: '@payum.storage._app_model_gatewayconfig'
     payum.gateway_config_storage: '@payum.storage._app_model_gatewayconfig'
-
-#    App\Storage\GatewayConfigStorage: '@payum.storage._app_model_gatewayconfig'
-#    payum.gateway_config_storage: '@App\Storage\GatewayConfigStorage'
-
-#    App\Storage\GatewayConfigStorage: '@payum.storage._app_model_gatewayconfig'
-#    payum.gateway_config_storage:
-#        public: true
-#        alias: '@payum.storage._app_model_gatewayconfig'
-
-#    App\Storage\PaymentStorage: '@payum.storage._app_model_payment'
-#    payum.payment_storage: '@payum.storage._app_model_payment'
-
-#    payum.gateway_config_storage:
-#        alias: '@payum.storage._app_model_gatewayconfig'
-#        public: true
-
-#    payum.gateway_config_storage:
-#        public: true
-#        class: Makasim\Yadm\Storage
-#        arguments:
-#            - "@=service('mongodb.database').selectCollection('gateway_configs')"
-#            - '@yadm.hydrator.gateway'
 
     api.view.gateway_config_to_json_converter:
         class: App\Api\View\GatewayConfigToJsonConverter
@@ -75,34 +50,10 @@ services:
     payum.builder.facade:
         class: App\Facade\PayumBuilderFacade
 
-#    payum.security.token_storage:
-#        alias: '@payum.storage._app_model_securitytoken'
-
     payum.security.token_storage: '@payum.storage._app_model_securitytoken'
-
-#    payum.security.token_storage:
-#        public: true
-#        class: App\Storage\PaymentTokenStorage
-##        class: Makasim\Yadm\Storage
-##        arguments:
-##            - "@=service('mongodb.database').selectCollection('security_tokens')"
-##            - '@yadm.hydrator.security.token'
-
-
-#    App\Storage\PaymentStorage: '@payum.payment_storage'
-#    payum.payment_storage:
-#        alias: '@payum.storage._payum_core_model_payment'
 
     App\Storage\PaymentStorage: '@payum.storage._app_model_payment'
     payum.payment_storage: '@payum.storage._app_model_payment'
-
-#    App\Storage\PaymentStorage: '@payum.payment_storage'
-#    payum.payment_storage:
-#        public: true
-#        class: App\Storage\PaymentStorage
-##        arguments:
-##            - "@=service('mongodb.database').selectCollection('payments')"
-##            - '@yadm.hydrator.payment'
 
     payum.server.schema.gateway_form_definition_builder:
         class: App\Schema\GatewayFormDefinitionBuilder
@@ -152,3 +103,53 @@ services:
 #        factory: ['App\Factory\GatewayChoicesCallbackFactory', create]
 #        arguments:
 #            - '@service_container'
+
+    # controller gateways
+    payum.api.controller.gateway:
+        class: App\Api\Controller\GatewayController
+        public: true
+        arguments:
+            - '@Symfony\Component\Routing\Generator\UrlGeneratorInterface'
+            - '@payum.yadm_gateway_config_storage'
+            - '@api.view.gateway_config_to_json_converter'
+            - '@payum.gateway_schema_builder'
+            - '@payum.json_decode'
+
+    # controller schema gateways
+    payum.schema.controller.gateways:
+        class: App\Schema\Controller\GatewaySchemaController
+        public: true
+        arguments:
+            - '@payum.gateway_schema_builder'
+            - '@payum.server.schema.gateway_form_definition_builder'
+
+    # controller schema payments
+    payum.schema.controller.payments:
+        class: App\Schema\Controller\PaymentSchemaController
+        public: true
+        arguments:
+            - '@payum.payment_schema_builder'
+            - '@payum.payment_form_definition_builder'
+
+    # controller schema tokens
+    payum.schema.controller.tokens:
+        class: App\Schema\Controller\TokenSchemaController
+        public: true
+        arguments:
+            - '@payum.token_schema_builder'
+
+    # controller payment
+    payum.api.controller.payment:
+        class: App\Api\Controller\PaymentController
+        public: true
+
+    # controller payment
+    payum.api.controller.token:
+        class: App\Api\Controller\TokenController
+        public: true
+
+    # event request
+    payum.listener.choose_gateway:
+        class: App\EventListener\Request\GatewayChooserListener
+        tags:
+            - { name: kernel.event_subscriber }

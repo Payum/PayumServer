@@ -3,9 +3,6 @@ payum:
         App\Model\Payment:
             yadm:
                 id_property: _id
-        App\Model\GatewayConfig:
-            yadm:
-                id_property: _id
 
     security:
         token_storage:
@@ -21,3 +18,9 @@ payum:
             factory: stripe_checkout
             publishable_key: "EDIT IT"
             secret_key: "EDIT IT"
+
+    dynamic_gateways:
+        config_storage:
+            App\Model\GatewayConfig:
+                yadm:
+                    id_property: _id
