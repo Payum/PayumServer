@@ -1,9 +1,15 @@
 <?php
+declare(strict_types=1);
+
 namespace App\Schema;
 
 use Payum\Core\Payum;
 use App\Util\StringUtil;
 
+/**
+ * Class GatewaySchemaBuilder
+ * @package App\Schema
+ */
 class GatewaySchemaBuilder
 {
     /**
@@ -22,24 +28,24 @@ class GatewaySchemaBuilder
     /**
      * @return object
      */
-    public function buildDefault()
+    public function buildDefault() : object
     {
         return (object) [
             '$schema' => 'http://json-schema.org/schema#',
             'type' => 'object',
             'properties' => (object) [
-                'gatewayName' => (object)  [
+                'gatewayName' => (object) [
                     'type' => 'string',
                     'title' => StringUtil::nameToTitle('gatewayName'),
-                    'pattern' => '^[\w\d\s_.-]*$'
+                    'pattern' => '^[\w\d\s_.-]*$',
                 ],
-                'factoryName' => (object)  [
+                'factoryName' => (object) [
                     'type' => 'string',
                     'enum' => array_keys($this->payum->getGatewayFactories()),
                     'title' => StringUtil::nameToTitle('factoryName'),
-                ]
+                ],
             ],
-            "required" => [ "gatewayName", "factoryName" ]
+            "required" => ["gatewayName", "factoryName"],
         ];
     }
 
@@ -48,7 +54,7 @@ class GatewaySchemaBuilder
      *
      * @return object
      */
-    public function build($name)
+    public function build($name) : object
     {
         $config = $this->payum->getGatewayFactory($name)->createConfig();
 
@@ -64,10 +70,10 @@ class GatewaySchemaBuilder
                         'maxLength' => '512',
                         'title' => $title,
                     ];
-                } else if (is_bool($value)) {
+                } elseif (is_bool($value)) {
                     $properties[$name] = (object) ['type' => 'boolean', 'title' => $title];
                 } else {
-                    $properties[$name] = (object)  [ 'type' => ['string', 'number', 'boolean', 'title' => $title]];
+                    $properties[$name] = (object) ['type' => ['string', 'number', 'boolean', 'title' => $title]];
                 }
             }
         }

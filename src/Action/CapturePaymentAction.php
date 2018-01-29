@@ -15,6 +15,10 @@ use Payum\Core\Request\GetHumanStatus;
 use App\Model\Payment;
 use App\Request\ObtainMissingDetailsRequest;
 
+/**
+ * Class CapturePaymentAction
+ * @package App\Action
+ */
 class CapturePaymentAction implements ActionInterface, GatewayAwareInterface
 {
     use GatewayAwareTrait;

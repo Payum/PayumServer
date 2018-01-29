@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 namespace App\Extension;
 
 use Payum\Core\Extension\Context;
@@ -8,6 +10,10 @@ use Payum\Core\Request\GetHumanStatus;
 use Payum\Core\Request\GetStatusInterface;
 use App\Model\Payment;
 
+/**
+ * Class UpdatePaymentStatusExtension
+ * @package App\Extension
+ */
 class UpdatePaymentStatusExtension implements ExtensionInterface
 {
     /**
@@ -35,9 +41,11 @@ class UpdatePaymentStatusExtension implements ExtensionInterface
 
         /** @var Generic $request */
         $request = $context->getRequest();
+
         if (false == $request instanceof Generic) {
             return;
         }
+
         if ($request instanceof GetStatusInterface) {
             return;
         }

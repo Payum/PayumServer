@@ -9,6 +9,10 @@ use App\Test\ClientTestCase;
 use App\Test\ResponseHelper;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
+/**
+ * Class PaymentControllerTest
+ * @package App\Tests\Functional\Api\Controller
+ */
 class PaymentControllerTest extends ClientTestCase
 {
     use ResponseHelper;
@@ -19,7 +23,7 @@ class PaymentControllerTest extends ClientTestCase
     public function shouldAllowGetPayment()
     {
         /** @var Storage $storage */
-        $storage = $this->getContainer()->get('payum.payment_storage');
+        $storage = $this->getPaymentStorage();
 
         $payment = new Payment();
         $payment->setId(uniqid());
@@ -49,7 +53,7 @@ class PaymentControllerTest extends ClientTestCase
         $payment->setClientEmail('theExpectedPayment');
 
         /** @var Storage $storage */
-        $storage = $this->getContainer()->get('payum.payment_storage');
+        $storage = $this->getPaymentStorage();
         $storage->insert($payment);
 
         //guard

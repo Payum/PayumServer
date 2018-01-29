@@ -1,6 +1,32 @@
 imports:
     - { resource: "@PayumBundle/Resources/config/payum.xml" }
 
+parameters:
+    genericTokenFactoryPaths:
+        capture: "%payum.capture_path%"
+        notify: "%payum.notify_path%"
+        authorize: "%payum.authorize_path%"
+        refund: "%payum.refund_path%"
+        cancel: "%payum.cancel_path%"
+        payout: "%payum.payout_path%"
+
+    payum.template.obtain_missing_details: "%kernel.project_dir%/src/Resources/views/obtainMissingDetails.html.twig"
+    payum.paths:
+        PayumServer: "%kernel.project_dir%/src/Resources/views"
+
+#    coreGatewayFactoryConfig:
+#        payum.template.obtain_credit_card: "%kernel.project_dir%/src/Resources/views/obtainCreditCardWithJessepollakCard.html.twig"
+#        payum.template.obtain_missing_details: "%kernel.project_dir%/src/Resources/views/obtainMissingDetails.html.twig"
+#        payum.extension.update_payment_status: "App\\Extension\\UpdatePaymentStatusExtension"
+#        payum.prepend_extensions:
+#            - "@payum.extension.update_payment_status"
+#        payum.action.server.capture_payment: "App\\Action\\CapturePaymentAction"
+#        payum.action.server.authorize_payment: "App\\Action\\AuthorizePaymentAction"
+#        payum.action.server.execute_same_request_with_payment_details: "App\\Action\\ExecuteSameRequestWithPaymentDetailsAction"
+#        payum.action.server.obtain_missing_details: "App\\Factory\\ObtainMissingDetailsFactory"
+#        twig.env: "@twig"
+#        payum.paths: "%payum.paths%"
+
 services:
     # default configuration for services in *this* file
     _defaults:
@@ -35,30 +61,73 @@ services:
 
     payum.builder:
         class: Payum\Core\PayumBuilder
-        factory: 'payum.builder.facade:get'
+        calls:
+            - method: addStorage
+              arguments:
+                  - "App\\Model\\Payment"
+                  - "@payum.storage.app_model_payment"
+            - method: addStorage
+              arguments:
+                  - "App\\Model\\GatewayConfig"
+                  - "@payum.storage.app_model_gatewayconfig"
+            - method: addStorage
+              arguments:
+                  - "App\\Model\\SecurityToken"
+                  - "@payum.storage.app_model_securitytoken"
+            - method: setGatewayConfigStorage
+              arguments:
+                  - "@payum.yadm_gateway_config_storage"
+            - method: setMainRegistry
+              arguments:
+                  - "@payum.static_registry"
+            - method: setHttpRequestVerifier
+              arguments:
+                  - "@payum.http_request_verifier_builder"
+            - method: setTokenFactory
+              arguments:
+                  - "@payum.token_factory_builder"
+            - method: setTokenStorage
+              arguments:
+                  - "@payum.storage.app_model_securitytoken"
+            - method: setGenericTokenFactoryPaths
+              arguments:
+                  - "%genericTokenFactoryPaths%"
+            - method: setCoreGatewayFactory
+              arguments:
+                  - "@payum.core_gateway_factory_builder"
+            - method: addCoreGatewayFactoryConfig
+              arguments:
+                  - "@payum.core_gateway_config_facade"
+
+    payum.core_gateway_config_facade:
+        class: array
+        factory: ['App\Facade\CoreGatewayConfigFacade', get]
         arguments:
-            - '@payum.builder.factory'
-            - '@payum.security.token_storage'
-            - '@payum.yadm_gateway_config_storage'
-            - '@payum.payment_storage'
+            - '@service_container'
             - '@form.factory'
             - '@twig'
 
-    payum.builder.factory:
-        class: Payum\Core\PayumBuilder
-
-    payum.builder.facade:
-        class: App\Facade\PayumBuilderFacade
+#    payum.builder:
+#        class: Payum\Core\PayumBuilder
+#        factory: 'payum.builder.facade:get'
+#        arguments:
+#            - '@payum.builder.factory'
+#            - '@payum.security.token_storage'
+#            - '@payum.yadm_gateway_config_storage'
+#            - '@payum.payment_storage'
+#            - '@form.factory'
+#            - '@twig'
+#
+#    payum.builder.factory:
+#        class: Payum\Core\PayumBuilder
+#
+#    payum.builder.facade:
+#        class: App\Facade\PayumBuilderFacade
 
     payum.security.token_storage: '@payum.storage._app_model_securitytoken'
 
     App\Storage\PaymentStorage: '@payum.storage._app_model_payment'
     payum.payment_storage: '@payum.storage._app_model_payment'
-
-    payum.server.schema.gateway_form_definition_builder:
-        class: App\Schema\GatewayFormDefinitionBuilder
-        arguments:
-            - '@payum'
 
     App\Schema\PaymentSchemaBuilder: '@payum.payment_schema_builder'
     payum.payment_schema_builder:
@@ -91,18 +160,32 @@ services:
         calls:
             - [setContainer, ['@service_container']]
 
-#    App\Form\Type\ChooseGatewayType: '@payum.server.form.type.choose_gateway_type'
-#    payum.server.form.type.choose_gateway_type:
-#        class: App\Form\Type\ChooseGatewayType
-#        arguments:
-#            - '@payum.gateway_choices_callback'
-#
-#    App\Factory\GatewayChoicesCallbackFactory: '@payum.gateway_choices_callback'
-#    payum.gateway_choices_callback:
-#        class: callback
-#        factory: ['App\Factory\GatewayChoicesCallbackFactory', create]
-#        arguments:
-#            - '@service_container'
+    App\Form\Type\ChooseGatewayType: '@payum.server.form.type.choose_gateway_type'
+    payum.server.form.type.choose_gateway_type:
+        class: App\Form\Type\ChooseGatewayType
+        arguments:
+            - '@payum.gateway_choices_callback'
+
+    App\Factory\GatewayChoicesCallbackFactory: '@payum.gateway_choices_callback'
+    payum.gateway_choices_callback:
+        class: callback
+        factory: ['App\Factory\GatewayChoicesCallbackFactory', create]
+        arguments:
+            - '@service_container'
+
+    payum.gateway_form_definition_builder:
+        class: App\Schema\GatewayFormDefinitionBuilder
+        arguments:
+            - '@payum'
+
+    payum.gateway_factory_choices_callback:
+        class: callback
+        factory: ['App\Factory\GatewayFactoryChoicesCallbackFactory', create]
+        arguments:
+            - '@service_container'
+
+    payum.reply_to_json_response_converter:
+        class: App\ReplyToJsonResponseConverter
 
     # controller gateways
     payum.api.controller.gateway:
@@ -121,7 +204,7 @@ services:
         public: true
         arguments:
             - '@payum.gateway_schema_builder'
-            - '@payum.server.schema.gateway_form_definition_builder'
+            - '@payum.gateway_form_definition_builder'
 
     # controller schema payments
     payum.schema.controller.payments:

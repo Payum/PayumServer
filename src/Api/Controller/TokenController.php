@@ -14,6 +14,10 @@ use App\Schema\TokenSchemaBuilder;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 
+/**
+ * Class TokenController
+ * @package App\Api\Controller
+ */
 class TokenController
 {
     use ForwardExtensionTrait;
@@ -63,13 +67,13 @@ class TokenController
      */
     public function createAction(Request $request) : JsonResponse
     {
-        $this->forward400Unless('json' == $request->getContentType() || 'form' == $request->getContentType());
+        $this->forward400Unless('json' === $request->getContentType() || 'form' === $request->getContentType());
 
         try {
             $content = $request->getContent();
             $data = $this->jsonDecode->decode($content, $this->schemaBuilder->buildNew());
         } catch (InvalidJsonException $e) {
-            return new JsonResponse(['errors' => $e->getErrors(),], 400);
+            return new JsonResponse(['errors' => $e->getErrors()], 400);
         }
 
         /** @var Payment $payment */
@@ -81,14 +85,14 @@ class TokenController
             ]], 400);
         }
 
-        if ($data['type'] == 'capture') {
+        if ($data['type'] === 'capture') {
             $token = $this->payum->getTokenFactory()->createCaptureToken('', $payment, $data['afterUrl'], [
                 'payum_token' => null,
                 'paymentId' => $payment->getId(),
             ]);
 
             return new JsonResponse(['token' => $this->tokenToJsonConverter->convert($token)], 201);
-        } else if ($data['type'] == 'authorize') {
+        } elseif ($data['type'] === 'authorize') {
             $token = $this->payum->getTokenFactory()->createAuthorizeToken('', $payment, $data['afterUrl'], [
                 'payum_token' => null,
                 'paymentId' => $payment->getId(),

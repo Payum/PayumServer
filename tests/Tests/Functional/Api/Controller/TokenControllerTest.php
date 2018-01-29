@@ -34,7 +34,7 @@ class TokenControllerTest extends ClientTestCase
     public function testShouldAllowCreateCaptureToken()
     {
         /** @var Storage $gatewayConfigStorage */
-        $gatewayConfigStorage = $this->getContainer()->get('payum.gateway_config_storage');
+        $gatewayConfigStorage = $this->getGatewayConfigStorage();
 
         /** @var GatewayConfig $gatewayConfig */
         $gatewayConfig = $gatewayConfigStorage->create();
@@ -44,7 +44,7 @@ class TokenControllerTest extends ClientTestCase
         $gatewayConfigStorage->insert($gatewayConfig);
 
         /** @var Storage $storage */
-        $storage = $this->getContainer()->get('payum.payment_storage');
+        $storage = $this->getPaymentStorage();
 
         /** @var Payment $payment */
         $payment = $storage->create();
@@ -81,7 +81,7 @@ class TokenControllerTest extends ClientTestCase
     public function testShouldAllowCreateAuthorizeToken()
     {
         /** @var Storage $gatewayConfigStorage */
-        $gatewayConfigStorage = $this->getContainer()->get('payum.gateway_config_storage');
+        $gatewayConfigStorage = $this->getGatewayConfigStorage();
 
         /** @var GatewayConfig $gatewayConfig */
         $gatewayConfig = $gatewayConfigStorage->create();
@@ -91,7 +91,7 @@ class TokenControllerTest extends ClientTestCase
         $gatewayConfigStorage->insert($gatewayConfig);
 
         /** @var Storage $storage */
-        $storage = $this->getContainer()->get('payum.payment_storage');
+        $storage = $this->getPaymentStorage();
 
         /** @var Payment $payment */
         $payment = $storage->create();

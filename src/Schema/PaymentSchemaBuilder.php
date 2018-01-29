@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 namespace App\Schema;
 
 use Payum\Core\Storage\StorageInterface;
@@ -7,6 +9,10 @@ use Payum\ISO4217\ISO4217;
 use App\Model\GatewayConfig;
 use App\Util\StringUtil;
 
+/**
+ * Class PaymentSchemaBuilder
+ * @package App\Schema
+ */
 class PaymentSchemaBuilder
 {
     /**
@@ -16,6 +22,7 @@ class PaymentSchemaBuilder
 
     /**
      * @param StorageInterface $gatewayConfigStorage
+     *
      * @internal param Payum $payum
      */
     public function __construct(StorageInterface $gatewayConfigStorage)
@@ -26,14 +33,14 @@ class PaymentSchemaBuilder
     /**
      * @return object
      */
-    public function buildNew()
+    public function buildNew() : object
     {
-        $enum = array_map(function(GatewayConfig $gatewayConfig) {
+        $enum = array_map(function (GatewayConfig $gatewayConfig) {
             return $gatewayConfig->getGatewayName();
         }, $this->gatewayConfigStorage->findBy([]));
 
 
-        $currencyCodes = array_map(function(Currency $currency) {
+        $currencyCodes = array_map(function (Currency $currency) {
             return $currency->getAlpha3();
         }, (new ISO4217())->findAll());
 
@@ -55,22 +62,22 @@ class PaymentSchemaBuilder
                 'currencyCode' => (object) [
                     'type' => 'string',
                     'enum' => $currencyCodes,
-                    'title' => StringUtil::nameToTitle('currencyCode')
+                    'title' => StringUtil::nameToTitle('currencyCode'),
                 ],
                 'clientEmail' => (object) [
                     'type' => 'string',
-                    'title' => StringUtil::nameToTitle('clientEmail')
+                    'title' => StringUtil::nameToTitle('clientEmail'),
                 ],
                 'clientId' => (object) [
                     'type' => ['string', 'numeric'],
-                    'title' => StringUtil::nameToTitle('clientId')
+                    'title' => StringUtil::nameToTitle('clientId'),
                 ],
                 'description' => (object) [
                     'type' => 'string',
-                    'title' => StringUtil::nameToTitle('description')
+                    'title' => StringUtil::nameToTitle('description'),
                 ],
             ],
-            "required" => [ "currencyCode", "totalAmountInput"]
+            "required" => ["currencyCode", "totalAmountInput"],
         ];
     }
 }

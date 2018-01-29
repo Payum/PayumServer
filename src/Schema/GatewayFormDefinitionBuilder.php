@@ -1,9 +1,16 @@
 <?php
+declare(strict_types=1);
+
 namespace App\Schema;
 
+use Payum\Core\GatewayFactoryInterface;
 use Payum\Core\Payum;
 use App\Util\StringUtil;
 
+/**
+ * Class GatewayFormDefinitionBuilder
+ * @package App\Schema
+ */
 class GatewayFormDefinitionBuilder
 {
     /**
@@ -22,12 +29,16 @@ class GatewayFormDefinitionBuilder
     /**
      * @return array
      */
-    public function buildDefault()
+    public function buildDefault() : array
     {
         $titleMap = [];
 
+        /**
+         * @var string $name
+         * @var GatewayFactoryInterface $factory
+         */
         foreach ($this->payum->getGatewayFactories() as $name => $factory) {
-            if ('core' == $name) {
+            if ('core' === $name) {
                 continue;
             }
 
@@ -38,13 +49,13 @@ class GatewayFormDefinitionBuilder
             $group = 'Others';
             if (false !== strpos($name, 'omnipay')) {
                 $group = 'Omnipay';
-            } else if (false !== strpos($name, 'paypal')) {
+            } elseif (false !== strpos($name, 'paypal')) {
                 $group = 'Paypal';
-            } else if (false !== strpos($name, 'be2bill')) {
+            } elseif (false !== strpos($name, 'be2bill')) {
                 $group = 'Be2bill';
-            } else if (false !== strpos($name, 'klarna')) {
+            } elseif (false !== strpos($name, 'klarna')) {
                 $group = 'Klarna';
-            } else if (false !== strpos($name, 'stripe')) {
+            } elseif (false !== strpos($name, 'stripe')) {
                 $group = 'Stripe';
             }
 
@@ -56,7 +67,7 @@ class GatewayFormDefinitionBuilder
             [
                 "key" => "factoryName",
                 "type" => "select",
-                "titleMap" => $titleMap
+                "titleMap" => $titleMap,
             ],
         ];
     }
@@ -66,14 +77,14 @@ class GatewayFormDefinitionBuilder
      *
      * @return array
      */
-    public function build($name)
+    public function build($name) : array
     {
         $definition = $this->buildDefault();
 
         $config = $this->payum->getGatewayFactory($name)->createConfig();
         if (isset($config['payum.default_options'])) {
             foreach ($config['payum.default_options'] as $name => $value) {
-                $definition[] = 'config.'.$name;
+                $definition[] = 'config.' . $name;
             }
         }
 

@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\Facade;
 
+use App\Model\GatewayConfig;
 use App\Model\SecurityToken;
 use Makasim\Yadm\Storage;
 use Payum\Core\Bridge\Symfony\Security\HttpRequestVerifier;
@@ -60,27 +61,9 @@ class PayumBuilderFacade
             })
             ->setGatewayConfigStorage($gatewayConfigStorage)
             ->addStorage(Payment::class, new YadmStorage($paymentStorage, YadmStorage::DEFAULT_ID_PROPERTY, Payment::class))
-            ->addCoreGatewayFactoryConfig([
-                'payum.template.obtain_credit_card' => '@PayumServer/obtainCreditCardWithJessepollakCard.html.twig',
-                'payum.template.obtain_missing_details' => '@PayumServer/obtainMissingDetails.html.twig',
-                'payum.extension.update_payment_status' => new UpdatePaymentStatusExtension(),
-                'payum.prepend_extensions' => ['payum.extension.update_payment_status'],
-                'payum.action.server.capture_payment' => new CapturePaymentAction(),
-                'payum.action.server.authorize_payment' => new AuthorizePaymentAction(),
-                'payum.action.server.execute_same_request_with_payment_details' => new ExecuteSameRequestWithPaymentDetailsAction(),
-                'payum.action.server.obtain_missing_details' => function (ArrayObject $config) use ($formFactory, $twig) {
-                    return new ObtainMissingDetailsAction(
-                        $formFactory,
-                        $config['payum.template.obtain_missing_details']
-                    );
-                },
-
-                'twig.env' => $twig,
-
-                'payum.paths' => [
-                    'PayumServer' => __DIR__ . '/../Resources/views',
-                ],
-            ])
+//            ->addStorage(GatewayConfig::class, new YadmStorage(/*$paymentStorage*/, YadmStorage::DEFAULT_ID_PROPERTY, GatewayConfig::class))
+//            ->addStorage(SecurityToken::class, new YadmStorage(/*$paymentStorage*/, 'hash', SecurityToken::class))
+            ->addCoreGatewayFactoryConfig(CoreGatewayConfigFacade::get($container, $formFactory, $twig))
             ->addGatewayFactoryConfig('be2bill_offsite', [
                 'payum.action.server.obtain_missing_details' => function (ArrayObject $config) use ($formFactory) {
                     return new ObtainMissingDetailsForBe2BillAction(

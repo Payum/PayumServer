@@ -1,16 +1,22 @@
 <?php
+declare(strict_types=1);
+
 namespace App\Api\View;
 
-use App\Model\SecurityToken;
+use Payum\Core\Security\TokenInterface;
 
+/**
+ * Class TokenToJsonConverter
+ * @package App\Api\View
+ */
 class TokenToJsonConverter
 {
     /**
-     * @param SecurityToken $token
+     * @param TokenInterface $token
      *
      * @return array
      */
-    public function convert(SecurityToken $token)
+    public function convert(TokenInterface $token)
     {
         $normalizedToken = [
             'hash' => $token->getHash(),

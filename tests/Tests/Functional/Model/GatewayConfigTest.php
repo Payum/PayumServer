@@ -1,16 +1,22 @@
 <?php
+declare(strict_types=1);
+
 namespace App\Tests\Functional\Model;
 
 use Makasim\Yadm\Storage;
 use App\Model\GatewayConfig;
 use App\Test\WebTestCase;
 
+/**
+ * Class GatewayConfigTest
+ * @package App\Tests\Functional\Model
+ */
 class GatewayConfigTest extends WebTestCase
 {
     public function testShouldAllowPersistGatewayConfigToMongo()
     {
         /** @var Storage $storage */
-        $storage = $this->getContainer()->get('payum.gateway_config_storage');
+        $storage = $this->getGatewayConfigStorage();
 
         /** @var GatewayConfig $gatewayConfig */
         $gatewayConfig = $storage->create();

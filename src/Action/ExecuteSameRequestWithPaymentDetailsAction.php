@@ -11,6 +11,10 @@ use Payum\Core\GatewayAwareTrait;
 use Payum\Core\Request\Generic;
 use App\Model\Payment;
 
+/**
+ * Class ExecuteSameRequestWithPaymentDetailsAction
+ * @package App\Action
+ */
 class ExecuteSameRequestWithPaymentDetailsAction implements ActionInterface, GatewayAwareInterface
 {
     use GatewayAwareTrait;

@@ -19,6 +19,10 @@ use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Response;
 
+/**
+ * Class ObtainMissingDetailsAction
+ * @package App\Action
+ */
 class ObtainMissingDetailsAction implements ActionInterface, GatewayAwareInterface
 {
     use GatewayAwareTrait;

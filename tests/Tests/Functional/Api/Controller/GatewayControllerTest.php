@@ -3,12 +3,15 @@ declare(strict_types=1);
 
 namespace App\Tests\Functional\Api\Controller;
 
-use Makasim\Yadm\Storage;
 use Payum\Core\Model\GatewayConfigInterface;
 use App\Test\ClientTestCase;
 use App\Test\ResponseHelper;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
+/**
+ * Class GatewayControllerTest
+ * @package App\Tests\Functional\Api\Controller
+ */
 class GatewayControllerTest extends ClientTestCase
 {
     use ResponseHelper;
@@ -17,8 +20,7 @@ class GatewayControllerTest extends ClientTestCase
     {
         parent::setUp();
 
-        /** @var Storage $gatewayConfigStorage */
-        $gatewayConfigStorage = $this->getContainer()->get('payum.gateway_config_storage');
+        $gatewayConfigStorage = $this->getGatewayConfigStorage();
 
         /** @var GatewayConfigInterface $gatewayConfig */
         $gatewayConfig = $gatewayConfigStorage->create();

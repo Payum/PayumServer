@@ -27,9 +27,9 @@ use App\Model\SecurityToken;
 use App\Storage\PaymentStorage;
 use App\Storage\YadmStorage;
 use App\Util\StringUtil;
-use Silex\Application as SilexApplication;
-use Silex\ControllerCollection;
-use Silex\ServiceProviderInterface;
+//use Silex\Application as SilexApplication;
+//use Silex\ControllerCollection;
+//use Silex\ServiceProviderInterface;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -135,33 +135,33 @@ class ServiceProvider implements ServiceProviderInterface
 //
 //            return $builder;
 //        }));
-
-        $app['form.type.extensions'] = $app->share($app->extend('form.type.extensions', function ($extensions) use ($app) {
-            $extensions[] = new CreditCardExtension();
-
-            return $extensions;
-        }));
-
-        $app['form.types'] = $app->share($app->extend('form.types', function ($types) use ($app) {
-            $types[] = new ChooseGatewayType(function() use ($app) {
-                /** @var Payum $payum */
-                $payum = $app['payum'];
-
-                $choices = [];
-                foreach ($payum->getGateways() as $name => $gateway) {
-                    $choices[ucwords(str_replace(['_'], ' ', $name))] = $name;
-                }
-
-                return $choices;
-            });
-
-            return $types;
-        }));
-
-        $app['payum.reply_to_json_response_converter'] = $app->share(function ($app) {
-            return new ReplyToJsonResponseConverter();
-        });
-
+//
+//        $app['form.type.extensions'] = $app->share($app->extend('form.type.extensions', function ($extensions) use ($app) {
+//            $extensions[] = new CreditCardExtension();
+//
+//            return $extensions;
+//        }));
+//
+//        $app['form.types'] = $app->share($app->extend('form.types', function ($types) use ($app) {
+//            $types[] = new ChooseGatewayType(function() use ($app) {
+//                /** @var Payum $payum */
+//                $payum = $app['payum'];
+//
+//                $choices = [];
+//                foreach ($payum->getGateways() as $name => $gateway) {
+//                    $choices[ucwords(str_replace(['_'], ' ', $name))] = $name;
+//                }
+//
+//                return $choices;
+//            });
+//
+//            return $types;
+//        }));
+//
+//        $app['payum.reply_to_json_response_converter'] = $app->share(function ($app) {
+//            return new ReplyToJsonResponseConverter();
+//        });
+//
 //        $app['mongodb.client'] = $app->share(function ($app) {
 //            return new Client($app['mongodb.uri']);
 //        });

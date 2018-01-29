@@ -8,6 +8,7 @@ use function Makasim\Yadm\get_object_id;
 use function Makasim\Values\get_value;
 use MongoDB\BSON\ObjectId;
 use Makasim\Yadm\Storage;
+use MongoDB\Driver\Exception\InvalidArgumentException;
 use Payum\Core\Model\Identity;
 use Payum\Core\Storage\AbstractStorage;
 use Payum\Core\Storage\IdentityInterface;
@@ -76,11 +77,39 @@ class YadmStorage extends AbstractStorage
      */
     protected function doFind($id) : ?object
     {
+        $idProperty = $this->idProperty;
+
         if (static::DEFAULT_ID_PROPERTY === $this->idProperty) {
-            $id = new ObjectId($id);
+            try {
+                $id = new ObjectId($id);
+            } catch (InvalidArgumentException $e) {
+                // invalid id format, find by 'id' not by '_id'
+                $idProperty = 'id';
+            }
         }
 
-        return $this->storage->findOne([$this->idProperty => $id]);
+        return $this->storage->findOne([$idProperty => $id]);
+    }
+
+    /**
+     * @param string $id
+     *
+     * @return string
+     */
+    protected function detectIdProperty(string $id) : string
+    {
+        $idProperty = $this->idProperty;
+
+        if (static::DEFAULT_ID_PROPERTY === $this->idProperty) {
+            try {
+                $id = new ObjectId($id);
+            } catch (InvalidArgumentException $e) {
+                // invalid id format, find by 'id' not by '_id'
+                $idProperty = 'id';
+            }
+        }
+
+        return $idProperty;
     }
 
     /**
@@ -99,16 +128,26 @@ class YadmStorage extends AbstractStorage
      */
     protected function getModelId($model, $strict = true) : string
     {
-        if (static::DEFAULT_ID_PROPERTY === $this->idProperty) {
-            $id = get_object_id($model, true);
-        } else {
-            $id = get_value($model, $this->idProperty);
-        }
+        $id = $model->getId();
+
+//        if (static::DEFAULT_ID_PROPERTY === $this->idProperty) {
+//            $id = get_object_id($model, true);
+//        } else {
+//            $id = get_value($model, $this->idProperty);
+//        }
 
         if ($strict && false == $id) {
             throw new LogicException('The id is missing');
         }
 
         return (string) $id;
+    }
+
+    /**
+     * @return Storage
+     */
+    public function getStorage() : Storage
+    {
+        return $this->storage;
     }
 }
