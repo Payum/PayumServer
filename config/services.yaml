@@ -1,10 +1,15 @@
 imports:
     - { resource: services/payum.yaml }
+    - { resource: "@FrameworkBundle/Resources/config/form_csrf.xml" }
+    - { resource: "@FrameworkBundle/Resources/config/security_csrf.xml" }
+    - { resource: "@FrameworkBundle/Resources/config/form.xml" }
+    - { resource: "@FrameworkBundle/Resources/config/validator.xml" }
 
 # Put parameters here that don't need to change on each machine where the app is deployed
 # https://symfony.com/doc/current/best_practices/configuration.html#application-related-configuration
 parameters:
     locale: 'en'
+    form.type_extension.csrf.field_name: 'csrf'
 
 services:
     # default configuration for services in *this* file

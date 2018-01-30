@@ -26,9 +26,9 @@ class YadmStorageTest extends TestCase
     }
 
     /**
-     * @return YadmStorage
+     * @return void
      */
-    public function testCouldBeConstructedWithYadmStorageAsFirstArgument() : YadmStorage
+    public function testCouldBeConstructedWithYadmStorageAsFirstArgument() : void
     {
         $storageMock = $this->createMock(Storage::class);
 

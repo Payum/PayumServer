@@ -3,21 +3,22 @@ declare(strict_types=1);
 
 namespace App\Tests\Functional\Controller;
 
-use Makasim\Yadm\Storage;
-use Payum\Core\Payum;
 use App\Model\GatewayConfig;
 use App\Model\Payment;
 use App\Test\ClientTestCase;
 use App\Test\ResponseHelper;
 
+/**
+ * Class AuthorizeControllerTest
+ * @package App\Tests\Functional\Controller
+ */
 class AuthorizeControllerTest extends ClientTestCase
 {
     use ResponseHelper;
 
     public function testShouldAllowChooseGateway()
     {
-        /** @var Storage $gatewayConfigStorage */
-        $gatewayConfigStorage = $this->getContainer()->get('payum.gateway_config_storage');
+        $gatewayConfigStorage = $this->getGatewayConfigStorage();
 
         /** @var GatewayConfig $gatewayConfig */
         $gatewayConfig = $gatewayConfigStorage->create();
@@ -33,11 +34,7 @@ class AuthorizeControllerTest extends ClientTestCase
         $gatewayConfig->setConfig(['factory' => 'offline']);
         $gatewayConfigStorage->insert($gatewayConfig);
 
-        /** @var Payum $payum */
-        $payum = $this->getContainer()->get('payum');
-
-        /** @var Storage $storage */
-        $storage = $this->getContainer()->get('payum.payment_storage');
+        $storage = $this->getPaymentStorage();
 
         /** @var Payment $payment */
         $payment = $storage->create();
@@ -46,6 +43,7 @@ class AuthorizeControllerTest extends ClientTestCase
 
         $storage->insert($payment);
 
+        $payum = $this->getPayum();
         $token = $payum->getTokenFactory()->createAuthorizeToken('itDoesNotMatter', $payment, getenv('PAYUM_HTTP_HOST') . '');
 
         $crawler = $this->getClient()->request('GET', $token->getTargetUrl());

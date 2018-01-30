@@ -22,7 +22,6 @@ yadm:
             database: '%mongo_database%'
             hydrator_class: 'App\Yadm\Hydrator\GatewayConfigHydrator'
             storage_class: 'App\Storage\GatewayConfigStorage'
-            pessimistic_lock: true
 
         payment:
             class: 'App\Model\Payment'
@@ -30,7 +29,6 @@ yadm:
             database: '%mongo_database%'
             hydrator_class: 'App\Yadm\Hydrator\PaymentHydrator'
             storage_class: 'App\Storage\PaymentStorage'
-            pessimistic_lock: true
 
         security_token:
             class: 'App\Model\SecurityToken'
@@ -38,4 +36,3 @@ yadm:
             database: '%mongo_database%'
             hydrator_class: 'App\Yadm\Hydrator\SecurityTokenHydrator'
             storage_class: 'App\Storage\SecurityTokenStorage'
-            pessimistic_lock: true

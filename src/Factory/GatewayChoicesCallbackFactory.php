@@ -3,12 +3,11 @@ declare(strict_types=1);
 
 namespace App\Factory;
 
-use Makasim\Yadm\Storage;
+use App\Model\GatewayConfig;
 use Payum\Core\Model\GatewayConfigInterface;
 use Payum\Core\Payum;
 use App\Util\StringUtil;
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use Symfony\Component\OptionsResolver\Options;
 
 /**
  * Class GatewayChoicesCallbackFactory
@@ -23,7 +22,7 @@ class GatewayChoicesCallbackFactory
      */
     public static function create(ContainerInterface $container) : callable
     {
-        return function (Options $options) use ($container) {
+        return function () use ($container) : array {
             /** @var Payum $payum */
             $payum = $container->get('payum');
 
@@ -32,11 +31,8 @@ class GatewayChoicesCallbackFactory
                 $choices[ucwords(str_replace(['_'], ' ', $name))] = $name;
             }
 
-            $choices = call_user_func($choices, $options);
-
-            /** @var Storage $gatewayConfigStorage */
-            $gatewayConfigStorage = $container->get('payum.gateway_config_storage');
-            foreach ($gatewayConfigStorage->find([]) as $config) {
+            $gatewayConfigStorage = $payum->getStorage(GatewayConfig::class);
+            foreach ($gatewayConfigStorage->findBy([]) as $config) {
                 /** @var GatewayConfigInterface $config */
                 $choices[StringUtil::nameToTitle($config->getGatewayName())] = $config->getGatewayName();
             }

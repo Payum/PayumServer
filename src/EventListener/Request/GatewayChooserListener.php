@@ -98,7 +98,7 @@ class GatewayChooserListener implements EventSubscriberInterface
                 // the twig paths have to be initialized.
                 $this->payum->getGatewayFactory('core')->create();
 
-                throw new HttpResponse($this->twig->render('@PayumServer/chooseGateway.html.twig', [
+                throw new HttpResponse($this->twig->render('chooseGateway.html.twig', [
                     'form' => $form->createView(),
                     'payment' => $payment,
                     'layout' => '@PayumCore/layout.html.twig',

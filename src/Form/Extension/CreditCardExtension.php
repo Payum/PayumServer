@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 namespace App\Form\Extension;
 
 use Symfony\Component\Form\FormBuilderInterface;
@@ -10,6 +12,10 @@ use Symfony\Component\Form\FormView;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Payum\Core\Bridge\Symfony\Form\Type\CreditCardType as BaseCreditCardType;
 
+/**
+ * Class CreditCardExtension
+ * @package App\Form\Extension
+ */
 class CreditCardExtension implements FormTypeExtensionInterface
 {
     /**
@@ -42,8 +48,9 @@ class CreditCardExtension implements FormTypeExtensionInterface
             'format' => 'MM/yy/dd',
             'attr' => ['placeholder' => 'mm/yy'],
         ]);
-        $builder->get('expireAt')->addEventListener(FormEvents::PRE_SUBMIT, function(FormEvent $event) {
-            $event->setData($event->getData().'/01');
+
+        $builder->get('expireAt')->addEventListener(FormEvents::PRE_SUBMIT, function (FormEvent $event) {
+            $event->setData($event->getData() . '/01');
         });
     }
 

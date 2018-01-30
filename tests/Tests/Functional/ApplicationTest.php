@@ -11,6 +11,10 @@ use App\Model\Payment;
 use App\Storage\YadmStorage;
 use App\Test\WebTestCase;
 
+/**
+ * Class ApplicationTest
+ * @package App\Tests\Functional
+ */
 class ApplicationTest extends WebTestCase
 {
     public function testShouldAllowGetPayumBuilderService()

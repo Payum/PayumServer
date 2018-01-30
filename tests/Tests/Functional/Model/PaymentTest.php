@@ -3,16 +3,18 @@ declare(strict_types=1);
 
 namespace App\Tests\Functional\Model;
 
-use Makasim\Yadm\Storage;
 use App\Model\Payment;
 use App\Test\WebTestCase;
 
+/**
+ * Class PaymentTest
+ * @package App\Tests\Functional\Model
+ */
 class PaymentTest extends WebTestCase
 {
     public function testShouldAllowPersistPaymentToMongo()
     {
-        /** @var Storage $storage */
-        $storage = $this->getContainer()->get('payum.payment_storage');
+        $storage = $this->getPaymentStorage();
 
         /** @var Payment $payment */
         $payment = $storage->create();
@@ -47,8 +49,7 @@ class PaymentTest extends WebTestCase
 
     public function testShouldAllowStorePaymentsDetails()
     {
-        /** @var Storage $storage */
-        $storage = $this->getContainer()->get('payum.payment_storage');
+        $storage = $this->getPaymentStorage();
 
         /** @var Payment $payment */
         $payment = $storage->create();

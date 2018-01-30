@@ -33,6 +33,7 @@
         "paypal/rest-api-sdk-php": "^1.13",
         "payum/offline": "^1.5",
         "payum/omnipay-v3-bridge": "^1.0@alpha",
+        "omnipay/common": "^3.0@alpha",
         "payum/payum": "^1.5",
         "payum/payum-bundle": "^2.3",
         "php-http/guzzle6-adapter": "^1.1",
@@ -43,11 +44,11 @@
         "symfony/flex": "^1.0",
         "symfony/form": "^4.0",
         "symfony/framework-bundle": "^4.0",
-        "symfony/lts": "^4@dev",
         "symfony/security-csrf": "^4.0",
         "symfony/twig-bundle": "^4.0",
         "symfony/yaml": "^4.0",
-        "webmozart/json": "^1.2"
+        "webmozart/json": "^1.2",
+        "mikemccabe/json-patch-php": "dev-master as 0.1.1"
     },
     "require-dev": {
         "symfony/browser-kit": "^4.0",
@@ -107,6 +108,5 @@
             "dev-master": "1.0-dev"
         }
     },
-    "minimum-stability": "dev",
     "prefer-stable": true
 }
