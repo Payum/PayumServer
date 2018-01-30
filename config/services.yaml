@@ -1,15 +1,15 @@
-imports:
-    - { resource: services/payum.yaml }
-    - { resource: "@FrameworkBundle/Resources/config/form_csrf.xml" }
-    - { resource: "@FrameworkBundle/Resources/config/security_csrf.xml" }
-    - { resource: "@FrameworkBundle/Resources/config/form.xml" }
-    - { resource: "@FrameworkBundle/Resources/config/validator.xml" }
-
 # Put parameters here that don't need to change on each machine where the app is deployed
 # https://symfony.com/doc/current/best_practices/configuration.html#application-related-configuration
 parameters:
     locale: 'en'
-    form.type_extension.csrf.field_name: 'csrf'
+
+    genericTokenFactoryPaths:
+        capture: "%payum.capture_path%"
+        notify: "%payum.notify_path%"
+        authorize: "%payum.authorize_path%"
+        refund: "%payum.refund_path%"
+        cancel: "%payum.cancel_path%"
+        payout: "%payum.payout_path%"
 
 services:
     # default configuration for services in *this* file
@@ -20,17 +20,134 @@ services:
                             # fetching services directly from the container via $container->get() won't work.
                             # The best practice is to be explicit about your dependencies anyway.
 
-#    # makes classes in src/ available to be used as services
-#    # this creates a service per class whose id is the fully-qualified class name
-#    App\:
-#        resource: '../src/*'
-#        exclude: '../src/{Entity,Migrations,Tests,Deprecated}'
-#
-#    # controllers are imported separately to make sure services can be injected
-#    # as action arguments even if you don't extend any base controller class
-#    App\Controller\:
-#        resource: '../src/Controller'
-#        tags: ['controller.service_arguments']
-#
-#    # add more service definitions when explicit configuration is needed
-#    # please note that last definitions always *replace* previous ones
+    App\Storage\PaymentStorage:
+        public: true
+        alias: 'yadm.payment.storage'
+
+    App\Storage\PaymentTokenStorage:
+        public: true
+        alias: 'yadm.payment_token.storage'
+
+    App\Storage\GatewayConfigStorage:
+        public: true
+        alias: 'yadm.gateway_config.storage'
+
+    App\Action\CapturePaymentAction: ~
+    App\Action\AuthorizePaymentAction: ~
+    App\Action\ExecuteSameRequestWithPaymentDetailsAction: ~
+
+
+
+    App\Action\ObtainMissingDetailsAction:
+        class: App\Action\ObtainMissingDetailsAction
+        arguments:
+            - '@form.factory'
+            - '%payum.template.obtain_missing_details%'
+
+    api.view.gateway_config_to_json_converter:
+        class: App\Api\View\GatewayConfigToJsonConverter
+
+    app.gateway_schema_builder:
+        class: App\Schema\GatewaySchemaBuilder
+        arguments:
+            - '@payum'
+
+    App\JsonDecode: '@payum.json_decode'
+    payum.json_decode:
+        class: App\JsonDecode
+
+    Payum\Core\Payum: '@payum'
+
+    App\Schema\PaymentSchemaBuilder: '@app.payment_schema_builder'
+    app.payment_schema_builder:
+        class: App\Schema\PaymentSchemaBuilder
+
+    app.payment_form_definition_builder:
+        class: App\Schema\PaymentFormDefinitionBuilder
+        arguments:
+            - '@yadm.gateway_config.storage'
+
+    App\Schema\TokenSchemaBuilder: '@app.token_schema_builder'
+    app.token_schema_builder:
+        class: App\Schema\TokenSchemaBuilder
+
+    App\Api\View\PaymentToJsonConverter: '@api.view.payment_to_json_converter'
+    api.view.payment_to_json_converter:
+        class: App\Api\View\PaymentToJsonConverter
+        arguments:
+            - '@payum'
+
+    App\Api\View\TokenToJsonConverter: '@api.view.token_to_json_converter'
+    api.view.token_to_json_converter:
+        class: App\Api\View\TokenToJsonConverter
+
+    app.gateway_form_definition_builder:
+        class: App\Schema\GatewayFormDefinitionBuilder
+        arguments:
+            - '@payum'
+
+    app.reply_to_json_response_converter:
+        class: App\ReplyToJsonResponseConverter
+
+    # controller gateways
+    app.api.controller.gateway:
+        class: App\Api\Controller\GatewayController
+        public: true
+        arguments:
+            - '@Symfony\Component\Routing\Generator\UrlGeneratorInterface'
+            - '@yadm.gateway_config.storage'
+            - '@api.view.gateway_config_to_json_converter'
+            - '@app.gateway_schema_builder'
+            - '@payum.json_decode'
+
+    # controller schema gateways
+    app.schema.controller..gateways:
+        class: App\Schema\Controller\GatewaySchemaController
+        public: true
+        arguments:
+            - '@app.gateway_schema_builder'
+            - '@app.gateway_form_definition_builder'
+
+    # controller schema payments
+    app.schema.controller..payments:
+        class: App\Schema\Controller\PaymentSchemaController
+        public: true
+        arguments:
+            - '@app.payment_schema_builder'
+            - '@app.payment_form_definition_builder'
+
+    # controller schema tokens
+    app.schema.controller..tokens:
+        class: App\Schema\Controller\TokenSchemaController
+        public: true
+        arguments:
+            - '@app.token_schema_builder'
+
+    # controller payment
+    app.api.controller.payment:
+        class: App\Api\Controller\PaymentController
+        public: true
+
+    # controller payment
+    app.api.controller.token:
+        class: App\Api\Controller\TokenController
+        public: true
+
+    # event request
+    app.listener.choose_gateway:
+        class: App\EventListener\Request\GatewayChooserListener
+        tags:
+            - { name: kernel.event_subscriber }
+
+    App\Form\Type\ChooseGatewayType: '@app.server.form.type.choose_gateway_type'
+    app.server.form.type.choose_gateway_type:
+        class: App\Form\Type\ChooseGatewayType
+        arguments:
+            - '@app.gateway_choices_callback'
+
+    App\Factory\GatewayChoicesCallbackFactory: '@app.gateway_choices_callback'
+    app.gateway_choices_callback:
+        class: CLASS_SHOULD_NOT_BE_USED_CREATED_BY_FACTORY
+        factory: ['App\Factory\GatewayChoicesCallbackFactory', create]
+        arguments:
+            - '@service_container'

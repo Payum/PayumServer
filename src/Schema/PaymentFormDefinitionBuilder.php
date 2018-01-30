@@ -1,24 +1,31 @@
 <?php
+declare(strict_types=1);
+
 namespace App\Schema;
 
-use Payum\Core\Storage\StorageInterface;
+use App\Storage\GatewayConfigStorage;
 use Payum\ISO4217\Currency;
 use Payum\ISO4217\ISO4217;
 use App\Model\GatewayConfig;
 use App\Util\StringUtil;
 
+/**
+ * Class PaymentFormDefinitionBuilder
+ * @package App\Schema
+ */
 class PaymentFormDefinitionBuilder
 {
     /**
-     * @var StorageInterface
+     * @var GatewayConfigStorage
      */
     private $gatewayConfigStorage;
 
     /**
-     * @param StorageInterface $gatewayConfigStorage
+     * @param GatewayConfigStorage $gatewayConfigStorage
+     *
      * @internal param Payum $payum
      */
-    public function __construct(StorageInterface $gatewayConfigStorage)
+    public function __construct(GatewayConfigStorage $gatewayConfigStorage)
     {
         $this->gatewayConfigStorage = $gatewayConfigStorage;
     }
@@ -28,14 +35,15 @@ class PaymentFormDefinitionBuilder
      */
     public function buildNew()
     {
-        $titleMap = array_map(function(GatewayConfig $gatewayConfig) {
+        $gateways = iterator_to_array($this->gatewayConfigStorage->find([]));
+        $titleMap = array_map(function (GatewayConfig $gatewayConfig) {
             return [
                 'name' => StringUtil::nameToTitle($gatewayConfig->getGatewayName()),
                 'value' => $gatewayConfig->getGatewayName(),
             ];
-        }, $this->gatewayConfigStorage->findBy([]));
+        }, $gateways);
 
-        $currencyMap = array_map(function(Currency $currency) {
+        $currencyMap = array_map(function (Currency $currency) {
             return [
                 'name' => $currency->getName(),
                 'value' => $currency->getAlpha3(),
@@ -44,7 +52,7 @@ class PaymentFormDefinitionBuilder
         }, (new ISO4217())->findAll());
 
 
-        usort($currencyMap, function(array $left, array $right) {
+        usort($currencyMap, function (array $left, array $right) {
             if ('Popular' == $left['group'] && 'Popular' == $right['group']) {
                 return 0;
             }
@@ -61,12 +69,12 @@ class PaymentFormDefinitionBuilder
             [
                 "key" => 'currencyCode',
                 "type" => "select",
-                "titleMap" => $currencyMap
+                "titleMap" => $currencyMap,
             ],
             [
                 "key" => "gatewayName",
                 "type" => "select",
-                "titleMap" => $titleMap
+                "titleMap" => $titleMap,
             ],
             'clientEmail',
             'clientId',
@@ -77,7 +85,7 @@ class PaymentFormDefinitionBuilder
             [
                 'type' => 'submit',
                 'title' => 'Create',
-            ]
+            ],
         ];
     }
 }

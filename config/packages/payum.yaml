@@ -1,21 +1,27 @@
+parameters:
+    payum.template.obtain_missing_details: 'obtainMissingDetails.html.twig'
+
 payum:
     storages:
         App\Model\Payment: { yadm: ~ }
 
     security:
         token_storage:
-            App\Model\SecurityToken:
+            App\Model\PaymentToken:
                 yadm:
                     id_property: hash
 
     gateways:
-        offline:
-            factory: offline
-
-        stripe_checkout:
-            factory: stripe_checkout
-            publishable_key: "EDIT IT"
-            secret_key: "EDIT IT"
+        core:
+            payum.template.obtain_credit_card: 'obtainCreditCardWithJessepollakCard.html.twig'
+            payum.template.obtain_missing_details: '%payum.template.obtain_missing_details%'
+            payum.extension.update_payment_status: '@App\Extension\UpdatePaymentStatusExtension'
+            payum.prepend_extensions:
+                - '@payum.extension.update_payment_status'
+            payum.action.server.capture_payment: '@App\Action\CapturePaymentAction'
+            payum.action.server.authorize_payment: '@App\Action\AuthorizePaymentAction'
+            payum.action.server.execute_same_request_with_payment_details: '@App\Action\ExecuteSameRequestWithPaymentDetailsAction'
+            payum.action.server.obtain_missing_details: '@App\Action\ObtainMissingDetailsAction'
 
     dynamic_gateways:
         config_storage:

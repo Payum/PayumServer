@@ -13,27 +13,27 @@ use Symfony\Component\OptionsResolver\Options;
  */
 class GatewayFactoryChoicesCallbackFactory
 {
-    /**
-     * @param ContainerInterface $container
-     *
-     * @return callable
-     */
-    public static function create(ContainerInterface $container) : callable
-    {
-        return function (Options $options) use ($container) {
-            /** @var Payum $payum */
-            $payum = $container->get('payum');
-
-            $choices = [];
-            foreach ($payum->getGatewayFactories() as $name => $factory) {
-                if (in_array($name, ['omnipay', 'omnipay_direct', 'omnipay_offsite'])) {
-                    continue;
-                }
-
-                $choices[ucwords(str_replace(['_', 'omnipay'], ' ', $name))] = $name;
-            }
-
-            return $choices;
-        };
-    }
+//    /**
+//     * @param ContainerInterface $container
+//     *
+//     * @return callable
+//     */
+//    public static function create(ContainerInterface $container) : callable
+//    {
+//        return function (Options $options) use ($container) {
+//            /** @var Payum $payum */
+//            $payum = $container->get('payum');
+//
+//            $choices = [];
+//            foreach ($payum->getGatewayFactories() as $name => $factory) {
+//                if (in_array($name, ['omnipay', 'omnipay_direct', 'omnipay_offsite'])) {
+//                    continue;
+//                }
+//
+//                $choices[ucwords(str_replace(['_', 'omnipay'], ' ', $name))] = $name;
+//            }
+//
+//            return $choices;
+//        };
+//    }
 }

@@ -23,7 +23,7 @@ use App\Form\Extension\CreditCardExtension;
 use App\Form\Type\ChooseGatewayType;
 use App\Model\GatewayConfig;
 use App\Model\Payment;
-use App\Model\SecurityToken;
+use App\Model\PaymentToken;
 use App\Storage\PaymentStorage;
 use App\Storage\YadmStorage;
 use App\Util\StringUtil;
@@ -81,7 +81,7 @@ class ServiceProvider implements ServiceProviderInterface
 //            /** @var Database $db */
 //            $db = $app['mongodb.database'];
 //
-//            return new Storage($db->selectCollection('security_tokens'), new Hydrator(SecurityToken::class));
+//            return new Storage($db->selectCollection('payment_tokens'), new Hydrator(PaymentToken::class));
 //        });
 //
 //        $app['payum.builder'] = $app->share($app->extend('payum.builder', function (PayumBuilder $builder) use ($app) {
@@ -178,7 +178,7 @@ class ServiceProvider implements ServiceProviderInterface
 //        });
 //
 //
-//        $app['payum.gateway_choices_callback'] = $app->extend('payum.gateway_choices_callback', function (callable $choicesCallback) use ($app) {
+//        $app['app.gateway_choices_callback'] = $app->extend('app.gateway_choices_callback', function (callable $choicesCallback) use ($app) {
 //            return function(Options $options) use ($app, $choicesCallback) {
 //                $choices = call_user_func($choicesCallback, $options);
 //
@@ -194,12 +194,12 @@ class ServiceProvider implements ServiceProviderInterface
 //            };
 //        });
 //
-//        $app['payum.listener.choose_gateway'] = $app->share(function() use ($app) {
+//        $app['app.listener.choose_gateway'] = $app->share(function() use ($app) {
 //            return function(Request $request, Application $app) {
 //                /** @var Payum $payum */
 //                $payum = $app['payum'];
 //
-//                /** @var SecurityToken $token */
+//                /** @var PaymentToken $token */
 //                $token = $payum->getHttpRequestVerifier()->verify($request);
 //
 //                /** @var Payment $payment */
@@ -243,7 +243,7 @@ class ServiceProvider implements ServiceProviderInterface
 //
 //        $app->before(function(Request $request, Application $app) {
 //            if (0 === strpos($request->getPathInfo(), '/payment/capture') || 0 === strpos($request->getPathInfo(), '/payment/authorize')) {
-//                return call_user_func($app['payum.listener.choose_gateway'], $request, $app);
+//                return call_user_func($app['app.listener.choose_gateway'], $request, $app);
 //            }
 //        });
 
@@ -295,7 +295,7 @@ class ServiceProvider implements ServiceProviderInterface
 
             if ('application/vnd.payum+json' == $app['request']->headers->get('Accept')) {
                 /** @var ReplyToJsonResponseConverter $converter */
-                $converter = $app['payum.reply_to_json_response_converter'];
+                $converter = $app['app.reply_to_json_response_converter'];
 
                 return $converter->convert($e);
             }

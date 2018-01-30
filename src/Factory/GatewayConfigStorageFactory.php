@@ -7,7 +7,7 @@ use App\Model\GatewayConfig;
 use Makasim\Yadm\Storage;
 use Payum\Core\Bridge\Defuse\Security\DefuseCypher;
 use Payum\Core\Storage\CryptoStorageDecorator;
-use Payum\Core\Storage\StorageInterface;
+use App\Storage\GatewayConfigStorage;
 use App\Storage\YadmStorage;
 
 /**
@@ -19,9 +19,9 @@ class GatewayConfigStorageFactory
     /**
      * @param Storage $storage
      *
-     * @return StorageInterface
+     * @return GatewayConfigStorage
      */
-    public static function create(Storage $storage) : StorageInterface
+    public static function create(Storage $storage) : GatewayConfigStorage
     {
         $defuseSecret = getenv('DEFUSE_SECRET');
 

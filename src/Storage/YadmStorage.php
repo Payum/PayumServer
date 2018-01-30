@@ -81,9 +81,6 @@ class YadmStorage extends AbstractStorage
 
         if (static::DEFAULT_ID_PROPERTY === $this->idProperty) {
             try {
-//                if (is_array($id)) {
-//                    dump($id); exit;
-//                }
                 $id = new ObjectId($id);
             } catch (InvalidArgumentException $e) {
                 // invalid id format, find by 'id' not by '_id'
@@ -93,27 +90,6 @@ class YadmStorage extends AbstractStorage
 
         return $this->storage->findOne([$idProperty => $id]);
     }
-
-//    /**
-//     * @param string $id
-//     *
-//     * @return string
-//     */
-//    protected function detectIdProperty(string $id) : string
-//    {
-//        $idProperty = $this->idProperty;
-//
-//        if (static::DEFAULT_ID_PROPERTY === $this->idProperty) {
-//            try {
-//                $id = new ObjectId($id);
-//            } catch (InvalidArgumentException $e) {
-//                // invalid id format, find by 'id' not by '_id'
-//                $idProperty = 'id';
-//            }
-//        }
-//
-//        return $idProperty;
-//    }
 
     /**
      * {@inheritdoc}
@@ -144,13 +120,5 @@ class YadmStorage extends AbstractStorage
         }
 
         return (string) $id;
-    }
-
-    /**
-     * @return Storage
-     */
-    public function getStorage() : Storage
-    {
-        return $this->storage;
     }
 }

@@ -4,7 +4,7 @@ declare(strict_types=1);
 namespace App\Tests\Storage;
 
 use Makasim\Yadm\Storage;
-use Payum\Core\Storage\StorageInterface;
+use App\Storage\GatewayConfigStorage;
 use App\Storage\YadmStorage;
 use PHPUnit\Framework\TestCase;
 use ReflectionClass;
@@ -22,7 +22,7 @@ class YadmStorageTest extends TestCase
     {
         $rc = new ReflectionClass(YadmStorage::class);
 
-        $this->assertTrue($rc->implementsInterface(StorageInterface::class));
+        $this->assertTrue($rc->implementsInterface(GatewayConfigStorage::class));
     }
 
     /**

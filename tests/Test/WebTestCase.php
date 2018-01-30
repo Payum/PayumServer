@@ -3,10 +3,8 @@ declare(strict_types=1);
 
 namespace App\Test;
 
-use App\Model\GatewayConfig;
-use App\Model\Payment;
-use App\Model\SecurityToken;
-use App\Storage\YadmStorage;
+use App\Storage\GatewayConfigStorage;
+use App\Storage\PaymentTokenStorage;
 use Payum\Core\Payum;
 use Makasim\Values\HookStorage;
 use Makasim\Yadm\Storage;
@@ -48,7 +46,7 @@ abstract class WebTestCase extends SymfonyWebTestCase
         $storage->getCollection()->drop();
 
         /** @var Storage $storage */
-        $storage = $this->getTokenStorage();
+        $storage = $this->getPaymentTokenStorage();
         $storage->getCollection()->drop();
     }
 
@@ -83,36 +81,18 @@ abstract class WebTestCase extends SymfonyWebTestCase
         return $this->getContainer()->get('payum');
     }
 
-    /**
-     * @return Storage
-     */
-    protected function getGatewayConfigStorage() : Storage
+    protected function getGatewayConfigStorage() : GatewayConfigStorage
     {
-        /** @var YadmStorage $yadmStorage */
-        $yadmStorage = $this->getPayum()->getStorage(GatewayConfig::class);
-
-        return $yadmStorage->getStorage();
+        return $this->getContainer()->get(GatewayConfigStorage::class);
     }
 
-    /**
-     * @return Storage
-     */
-    protected function getPaymentStorage() : Storage
+    protected function getPaymentStorage() : PaymentStorage
     {
-        /** @var YadmStorage $yadmStorage */
-        $yadmStorage = $this->getPayum()->getStorage(Payment::class);
-
-        return $yadmStorage->getStorage();
+        return $this->getContainer()->get(PaymentStorage::class);
     }
 
-    /**
-     * @return Storage
-     */
-    protected function getTokenStorage() : Storage
+    protected function getPaymentTokenStorage() : PaymentTokenStorage
     {
-        /** @var YadmStorage $yadmStorage */
-        $yadmStorage = $this->getPayum()->getStorage(SecurityToken::class);
-
-        return $yadmStorage->getStorage();
+        return $this->getContainer()->get(PaymentTokenStorage::class);
     }
 }

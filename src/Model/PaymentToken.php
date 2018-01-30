@@ -10,10 +10,10 @@ use Payum\Core\Model\Token;
 use Payum\Core\Storage\IdentityInterface;
 
 /**
- * Class SecurityToken
+ * Class PaymentToken
  * @package App\Model
  */
-class SecurityToken extends Token
+class PaymentToken extends Token
 {
     use ValuesTrait;
 

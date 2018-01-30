@@ -30,9 +30,9 @@ yadm:
             hydrator_class: 'App\Yadm\Hydrator\PaymentHydrator'
             storage_class: 'App\Storage\PaymentStorage'
 
-        security_token:
-            class: 'App\Model\SecurityToken'
-            collection: 'security_tokens'
+        payment_token:
+            class: 'App\Model\PaymentToken'
+            collection: 'payment_tokens'
             database: '%mongo_database%'
-            hydrator_class: 'App\Yadm\Hydrator\SecurityTokenHydrator'
-            storage_class: 'App\Storage\SecurityTokenStorage'
+            hydrator_class: 'App\Yadm\Hydrator\PaymentTokenHydrator'
+            storage_class: 'App\Storage\PaymentTokenStorage'

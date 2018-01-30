@@ -8,7 +8,7 @@ use Payum\Core\Reply\HttpResponse;
 use App\Controller\GatewayChooserInterface;
 use App\Form\Type\ChooseGatewayType;
 use App\Model\Payment;
-use App\Model\SecurityToken;
+use App\Model\PaymentToken;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -80,7 +80,7 @@ class GatewayChooserListener implements EventSubscriberInterface
             return;
         }
 
-        /** @var SecurityToken $token */
+        /** @var PaymentToken $token */
         $token = $this->payum->getHttpRequestVerifier()->verify($this->request);
 
         /** @var Payment $payment */

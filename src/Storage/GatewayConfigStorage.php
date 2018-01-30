@@ -10,6 +10,7 @@ use MongoDB\Collection;
 /**
  * Class GatewayConfigStorage
  * @package App\Storage
+ * @method findOne(array $filter = [], array $options = []) : ?GatewayConfigInterface
  */
 class GatewayConfigStorage extends Storage
 {

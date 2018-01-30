@@ -9,112 +9,112 @@ gateway_all:
     path: /gateways/
     methods: [GET]
     defaults:
-        _controller: payum.api.controller.gateway:allAction
+        _controller: app.api.controller.gateway:allAction
 
 # gateway create
 gateway_create:
     path: /gateways/
     methods: [POST]
     defaults:
-        _controller: payum.api.controller.gateway:createAction
+        _controller: app.api.controller.gateway:createAction
 
 # gateway get
 gateway_get:
     path: /gateways/{name}
     methods: [GET]
     defaults:
-        _controller: payum.api.controller.gateway:getAction
+        _controller: app.api.controller.gateway:getAction
 
 # gateway delete
 gateway_delete:
     path: /gateways/{name}
     methods: [DELETE]
     defaults:
-        _controller: payum.api.controller.gateway:deleteAction
+        _controller: app.api.controller.gateway:deleteAction
 
 # payments all
 payment_all:
     path: /payments/
     methods: [GET]
     defaults:
-        _controller: payum.api.controller.payment:allAction
+        _controller: app.api.controller.payment:allAction
 
 # payments create
 payment_create:
     path: /payments/
     methods: [POST]
     defaults:
-        _controller: payum.api.controller.payment:createAction
+        _controller: app.api.controller.payment:createAction
 
 # payments get
 payment_get:
     path: /payments/{id}
     methods: [GET]
     defaults:
-        _controller: payum.api.controller.payment:getAction
+        _controller: app.api.controller.payment:getAction
 
 # payments delete
 payment_delete:
     path: /payments/{id}
     methods: [DELETE]
     defaults:
-        _controller: payum.api.controller.payment:deleteAction
+        _controller: app.api.controller.payment:deleteAction
 
 # tokens create
 token_create:
     path: /tokens/
     methods: [POST]
     defaults:
-        _controller: payum.api.controller.token:createAction
+        _controller: app.api.controller.token:createAction
 
 # schema/gateways default
-payum.schema.controller.gateways.default:
+app.schema.controller..gateways.default:
     path: /schema/gateways/default.json
     methods: [GET]
     defaults:
-        _controller: payum.schema.controller.gateways:getDefaultAction
+        _controller: app.schema.controller..gateways:getDefaultAction
 
 # schema/gateways form default
-payum.schema.controller.gateways.form.default:
+app.schema.controller..gateways.form.default:
     path: /schema/gateways/form/default.json
     methods: [GET]
     defaults:
-        _controller: payum.schema.controller.gateways:getDefaultFormAction
+        _controller: app.schema.controller..gateways:getDefaultFormAction
 
 # schema/gateways action
-payum.schema.controller.gateways.action:
+app.schema.controller..gateways.action:
     path: /schema/gateways/{name}.json
     methods: [GET]
     defaults:
-        _controller: payum.schema.controller.gateways:getAction
+        _controller: app.schema.controller..gateways:getAction
 
 # schema/gateways form action
-payum.schema.controller.gateways.form.action:
+app.schema.controller..gateways.form.action:
     path: /schema/gateways/form/{name}.json
     methods: [GET]
     defaults:
-        _controller: payum.schema.controller.gateways:getFormAction
+        _controller: app.schema.controller..gateways:getFormAction
 
 # schema/payments new
-payum.schema.controller.payments:
+app.schema.controller..payments:
     path: /schema/payments/new.json
     methods: [GET]
     defaults:
-        _controller: payum.schema.controller.payments:getNewAction
+        _controller: app.schema.controller..payments:getNewAction
 
 # schema/payments new form
-payum.schema.controller.payments.form:
+app.schema.controller..payments.form:
     path: /schema/payments/form/new.json
     methods: [GET]
     defaults:
-        _controller: payum.schema.controller.payments:getNewFormAction
+        _controller: app.schema.controller..payments:getNewFormAction
 
 # schema/tokens new
-payum.schema.controller.tokens:
+app.schema.controller..tokens:
     path: /schema/tokens/new.json
     methods: [GET]
     defaults:
-        _controller: payum.schema.controller.tokens:getNewAction
+        _controller: app.schema.controller..tokens:getNewAction
 
 # payum bundle
 payum_all:

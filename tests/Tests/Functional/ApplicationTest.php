@@ -6,7 +6,7 @@ namespace App\Tests\Functional;
 use Payum\Core\Payum;
 use Payum\Core\PayumBuilder;
 use Payum\Core\Security\GenericTokenFactory;
-use Payum\Core\Storage\StorageInterface;
+use App\Storage\GatewayConfigStorage;
 use App\Model\Payment;
 use App\Storage\YadmStorage;
 use App\Test\WebTestCase;
@@ -35,7 +35,7 @@ class ApplicationTest extends WebTestCase
     {
         $storage = $this->getContainer()->get('payum.yadm_gateway_config_storage');
 
-        $this->assertInstanceOf(StorageInterface::class, $storage);
+        $this->assertInstanceOf(GatewayConfigStorage::class, $storage);
         $this->assertInstanceOf(YadmStorage::class, $storage);
     }
 

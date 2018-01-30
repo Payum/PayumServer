@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace App\Schema;
 
-use Payum\Core\Storage\StorageInterface;
+use App\Storage\GatewayConfigStorage;
 use Payum\ISO4217\Currency;
 use Payum\ISO4217\ISO4217;
 use App\Model\GatewayConfig;
@@ -16,16 +16,14 @@ use App\Util\StringUtil;
 class PaymentSchemaBuilder
 {
     /**
-     * @var StorageInterface
+     * @var GatewayConfigStorage
      */
     private $gatewayConfigStorage;
 
     /**
-     * @param StorageInterface $gatewayConfigStorage
-     *
-     * @internal param Payum $payum
+     * @param GatewayConfigStorage $gatewayConfigStorage
      */
-    public function __construct(StorageInterface $gatewayConfigStorage)
+    public function __construct(GatewayConfigStorage $gatewayConfigStorage)
     {
         $this->gatewayConfigStorage = $gatewayConfigStorage;
     }
@@ -35,10 +33,10 @@ class PaymentSchemaBuilder
      */
     public function buildNew() : object
     {
+        $gateways = iterator_to_array($this->gatewayConfigStorage->find([]));
         $enum = array_map(function (GatewayConfig $gatewayConfig) {
             return $gatewayConfig->getGatewayName();
-        }, $this->gatewayConfigStorage->findBy([]));
-
+        }, $gateways);
 
         $currencyCodes = array_map(function (Currency $currency) {
             return $currency->getAlpha3();

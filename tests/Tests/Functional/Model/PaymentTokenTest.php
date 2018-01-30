@@ -3,27 +3,26 @@ declare(strict_types=1);
 
 namespace App\Tests\Functional\Model;
 
-use Makasim\Yadm\Storage;
 use Payum\Core\Model\Identity;
 use App\Model\Payment;
-use App\Model\SecurityToken;
+use App\Model\PaymentToken;
 use App\Test\WebTestCase;
 
 /**
- * Class SecurityTokenTest
+ * Class PaymentTokenTest
  * @package App\Tests\Functional\Model
  */
-class SecurityTokenTest extends WebTestCase
+class PaymentTokenTest extends WebTestCase
 {
-    public function testShouldAllowPersistSecurityTokenToMongo()
+    public function testShouldAllowPersistPaymentTokenToMongo()
     {
-        $storage = $this->getTokenStorage();
+        $storage = $this->getPaymentTokenStorage();
 
-        /** @var SecurityToken $token */
+        /** @var PaymentToken $token */
         $token = $storage->create();
 
         //guard
-        $this->assertInstanceOf(SecurityToken::class, $token);
+        $this->assertInstanceOf(PaymentToken::class, $token);
 
         $token->setHash(uniqid());
         $token->setTargetUrl('theTargetUrl');
@@ -33,10 +32,10 @@ class SecurityTokenTest extends WebTestCase
 
         $this->assertNotEmpty($token->getHash());
 
-        /** @var SecurityToken $foundToken */
+        /** @var PaymentToken $foundToken */
         $foundToken = $storage->findOne(['hash' => $token->getHash()]);
 
-        $this->assertInstanceOf(SecurityToken::class, $foundToken);
+        $this->assertInstanceOf(PaymentToken::class, $foundToken);
         $this->assertNotSame($token, $foundToken);
         $this->assertEquals($token->getHash(), $foundToken->getHash());
 
@@ -47,13 +46,13 @@ class SecurityTokenTest extends WebTestCase
 
     public function testShouldAllowStoreTokenDetails()
     {
-        $storage = $this->getTokenStorage();
+        $storage = $this->getPaymentTokenStorage();
 
-        /** @var SecurityToken $token */
+        /** @var PaymentToken $token */
         $token = $storage->create();
 
         //guard
-        $this->assertInstanceOf(SecurityToken::class, $token);
+        $this->assertInstanceOf(PaymentToken::class, $token);
 
         $token->setHash(uniqid());
         $token->setGatewayName('theGatewayName');
@@ -63,10 +62,10 @@ class SecurityTokenTest extends WebTestCase
 
         $this->assertNotEmpty($token->getHash());
 
-        /** @var SecurityToken $foundToken */
+        /** @var PaymentToken $foundToken */
         $foundToken = $storage->findOne(['hash' => $token->getHash()]);
 
-        $this->assertInstanceOf(SecurityToken::class, $foundToken);
+        $this->assertInstanceOf(PaymentToken::class, $foundToken);
         $this->assertNotSame($token, $foundToken);
         $this->assertEquals($token->getHash(), $foundToken->getHash());
 
@@ -88,13 +87,13 @@ class SecurityTokenTest extends WebTestCase
 
         $paymentStorage->insert($payment);
 
-        $tokenStorage = $this->getTokenStorage();
+        $tokenStorage = $this->getPaymentTokenStorage();
 
-        /** @var SecurityToken $token */
+        /** @var PaymentToken $token */
         $token = $tokenStorage->create();
 
         //guard
-        $this->assertInstanceOf(SecurityToken::class, $token);
+        $this->assertInstanceOf(PaymentToken::class, $token);
 
         $token->setHash(uniqid());
         $token->setGatewayName('theGatewayName');
@@ -104,10 +103,10 @@ class SecurityTokenTest extends WebTestCase
 
         $this->assertNotEmpty($token->getHash());
 
-        /** @var SecurityToken $foundToken */
+        /** @var PaymentToken $foundToken */
         $foundToken = $tokenStorage->findOne(['hash' => $token->getHash()]);
 
-        $this->assertInstanceOf(SecurityToken::class, $foundToken);
+        $this->assertInstanceOf(PaymentToken::class, $foundToken);
         $this->assertEquals('theGatewayName', $token->getGatewayName());
     }
 }

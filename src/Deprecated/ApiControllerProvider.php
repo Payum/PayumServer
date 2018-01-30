@@ -16,11 +16,11 @@ class ApiControllerProvider implements ServiceProviderInterface
      */
     public function register(SilexApplication $app)
     {
-//        $app['payum.api.controller.root'] = $app->share(function() {
+//        $app['app.api.controller.root'] = $app->share(function() {
 //            return new RootController();
 //        });
 //
-//        $app['payum.api.controller.payment'] = $app->share(function() use ($app) {
+//        $app['app.api.controller.payment'] = $app->share(function() use ($app) {
 //            return new PaymentController(
 //                $app['api.view.payment_to_json_converter'],
 //                $app['url_generator'],
@@ -30,7 +30,7 @@ class ApiControllerProvider implements ServiceProviderInterface
 //            );
 //        });
 //
-//        $app['payum.api.controller.token'] = $app->share(function() use ($app) {
+//        $app['app.api.controller.token'] = $app->share(function() use ($app) {
 //            return new TokenController(
 //                $app['payum'],
 //                $app['api.view.token_to_json_converter'],
@@ -39,7 +39,7 @@ class ApiControllerProvider implements ServiceProviderInterface
 //            );
 //        });
 //
-//        $app['payum.api.controller.gateway'] = $app->share(function() use ($app) {
+//        $app['app.api.controller.gateway'] = $app->share(function() use ($app) {
 //            return new GatewayController(
 //                $app['url_generator'],
 //                $app['payum.yadm_gateway_config_storage'],
@@ -49,27 +49,27 @@ class ApiControllerProvider implements ServiceProviderInterface
 //            );
 //        });
 //
-//        $app->get('/', 'payum.api.controller.root:rootAction')->bind('api_root');
+//        $app->get('/', 'app.api.controller.root:rootAction')->bind('api_root');
 //
 //        /** @var ControllerCollection $payments */
 //        $payments = $app['controllers_factory'];
-//        $payments->get('/{id}', 'payum.api.controller.payment:getAction')->bind('payment_get');
-//        $payments->delete('/{id}', 'payum.api.controller.payment:deleteAction')->bind('payment_delete');
-//        $payments->post('/', 'payum.api.controller.payment:createAction')->bind('payment_create');
-//        $payments->get('/', 'payum.api.controller.payment:allAction')->bind('payment_all');
+//        $payments->get('/{id}', 'app.api.controller.payment:getAction')->bind('payment_get');
+//        $payments->delete('/{id}', 'app.api.controller.payment:deleteAction')->bind('payment_delete');
+//        $payments->post('/', 'app.api.controller.payment:createAction')->bind('payment_create');
+//        $payments->get('/', 'app.api.controller.payment:allAction')->bind('payment_all');
 //        $app->mount('/payments', $payments);
 //
 //        /** @var ControllerCollection $gateways */
 //        $gateways = $app['controllers_factory'];
-//        $gateways->get('/', 'payum.api.controller.gateway:allAction')->bind('gateway_all');
-//        $gateways->get('/{name}', 'payum.api.controller.gateway:getAction')->bind('gateway_get');
-//        $gateways->delete('/{name}', 'payum.api.controller.gateway:deleteAction')->bind('gateway_delete');
-//        $gateways->post('/', 'payum.api.controller.gateway:createAction')->bind('gateway_create');
+//        $gateways->get('/', 'app.api.controller.gateway:allAction')->bind('gateway_all');
+//        $gateways->get('/{name}', 'app.api.controller.gateway:getAction')->bind('gateway_get');
+//        $gateways->delete('/{name}', 'app.api.controller.gateway:deleteAction')->bind('gateway_delete');
+//        $gateways->post('/', 'app.api.controller.gateway:createAction')->bind('gateway_create');
 //        $app->mount('/gateways', $gateways);
 //
 //        /** @var ControllerCollection $tokens */
 //        $tokens = $app['controllers_factory'];
-//        $tokens->post('/', 'payum.api.controller.token:createAction')->bind('token_create');
+//        $tokens->post('/', 'app.api.controller.token:createAction')->bind('token_create');
 //        $app->mount('/tokens', $tokens);
 
 
