@@ -1,10 +1,12 @@
 <?php
+declare(strict_types=1);
+
 namespace App\Tests\Functional\Schema\Controller;
 
-use App\Test\ClientTestCase;
 use App\Test\ResponseHelper;
+use App\Test\WebTestCase;
 
-class GatewayControllerTest extends ClientTestCase
+class GatewayControllerTest extends WebTestCase
 {
     use ResponseHelper;
 

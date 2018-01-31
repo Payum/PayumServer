@@ -3,17 +3,17 @@ declare(strict_types=1);
 
 namespace App\Tests\Functional\Controller;
 
+use App\Test\WebTestCase;
 use Makasim\Yadm\Storage;
 use App\Model\GatewayConfig;
 use App\Model\Payment;
-use App\Test\ClientTestCase;
 use App\Test\ResponseHelper;
 
 /**
  * Class CaptureControllerTest
  * @package App\Tests\Functional\Controller
  */
-class CaptureControllerTest extends ClientTestCase
+class CaptureControllerTest extends WebTestCase
 {
     use ResponseHelper;
 

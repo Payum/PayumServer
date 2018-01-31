@@ -3,8 +3,8 @@ declare(strict_types=1);
 
 namespace App\Tests\Functional\Api\Controller;
 
+use App\Test\WebTestCase;
 use Payum\Core\Model\GatewayConfigInterface;
-use App\Test\ClientTestCase;
 use App\Test\ResponseHelper;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
@@ -12,7 +12,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * Class GatewayControllerTest
  * @package App\Tests\Functional\Api\Controller
  */
-class GatewayControllerTest extends ClientTestCase
+class GatewayControllerTest extends WebTestCase
 {
     use ResponseHelper;
 

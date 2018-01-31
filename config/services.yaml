@@ -32,17 +32,28 @@ services:
         public: true
         alias: 'yadm.gateway_config.storage'
 
-    App\Action\CapturePaymentAction: ~
-    App\Action\AuthorizePaymentAction: ~
-    App\Action\ExecuteSameRequestWithPaymentDetailsAction: ~
+    App\Action\CapturePaymentAction:
+        public: true
+        class: App\Action\CapturePaymentAction
 
+    App\Action\AuthorizePaymentAction:
+        public: true
+        class: App\Action\AuthorizePaymentAction
 
+    App\Action\ExecuteSameRequestWithPaymentDetailsAction:
+        public: true
+        class: App\Action\ExecuteSameRequestWithPaymentDetailsAction
 
     App\Action\ObtainMissingDetailsAction:
+        public: true
         class: App\Action\ObtainMissingDetailsAction
         arguments:
             - '@form.factory'
             - '%payum.template.obtain_missing_details%'
+
+    App\Extension\UpdatePaymentStatusExtension:
+        public: true
+        class: App\Extension\UpdatePaymentStatusExtension
 
     api.view.gateway_config_to_json_converter:
         class: App\Api\View\GatewayConfigToJsonConverter

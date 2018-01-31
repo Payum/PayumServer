@@ -60,7 +60,7 @@ abstract class WebTestCase extends SymfonyWebTestCase
     /**
      * @return Client
      */
-    protected function getClient()
+    protected function getClient() : Client
     {
         return $this->client;
     }

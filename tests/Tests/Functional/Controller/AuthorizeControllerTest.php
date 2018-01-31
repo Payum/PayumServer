@@ -5,14 +5,14 @@ namespace App\Tests\Functional\Controller;
 
 use App\Model\GatewayConfig;
 use App\Model\Payment;
-use App\Test\ClientTestCase;
 use App\Test\ResponseHelper;
+use App\Test\WebTestCase;
 
 /**
  * Class AuthorizeControllerTest
  * @package App\Tests\Functional\Controller
  */
-class AuthorizeControllerTest extends ClientTestCase
+class AuthorizeControllerTest extends WebTestCase
 {
     use ResponseHelper;
 

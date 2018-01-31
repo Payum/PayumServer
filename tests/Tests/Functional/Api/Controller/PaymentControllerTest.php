@@ -3,9 +3,9 @@ declare(strict_types=1);
 
 namespace App\Tests\Functional\Api\Controller;
 
+use App\Test\WebTestCase;
 use Makasim\Yadm\Storage;
 use App\Model\Payment;
-use App\Test\ClientTestCase;
 use App\Test\ResponseHelper;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
@@ -13,7 +13,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * Class PaymentControllerTest
  * @package App\Tests\Functional\Api\Controller
  */
-class PaymentControllerTest extends ClientTestCase
+class PaymentControllerTest extends WebTestCase
 {
     use ResponseHelper;
 

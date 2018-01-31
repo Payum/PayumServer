@@ -3,17 +3,17 @@ declare(strict_types=1);
 
 namespace App\Tests\Functional\Api\Controller;
 
+use App\Test\WebTestCase;
 use Makasim\Yadm\Storage;
 use App\Model\GatewayConfig;
 use App\Model\Payment;
-use App\Test\ClientTestCase;
 use App\Test\ResponseHelper;
 
 /**
  * Class TokenControllerTest
  * @package App\Tests\Functional\Api\Controller
  */
-class TokenControllerTest extends ClientTestCase
+class TokenControllerTest extends WebTestCase
 {
     use ResponseHelper;
 
