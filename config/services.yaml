@@ -112,7 +112,7 @@ services:
             - '@payum.json_decode'
 
     # controller schema gateways
-    app.schema.controller..gateways:
+    app.schema.controller.gateways:
         class: App\Schema\Controller\GatewaySchemaController
         public: true
         arguments:
@@ -120,7 +120,7 @@ services:
             - '@app.gateway_form_definition_builder'
 
     # controller schema payments
-    app.schema.controller..payments:
+    app.schema.controller.payments:
         class: App\Schema\Controller\PaymentSchemaController
         public: true
         arguments:
@@ -128,7 +128,7 @@ services:
             - '@app.payment_form_definition_builder'
 
     # controller schema tokens
-    app.schema.controller..tokens:
+    app.schema.controller.tokens:
         class: App\Schema\Controller\TokenSchemaController
         public: true
         arguments:
