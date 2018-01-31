@@ -45,9 +45,9 @@ class CaptureControllerTest extends WebTestCase
 
         $storage->insert($payment);
 
-        $payum = $this->getPayum();
-
-        $token = $payum->getTokenFactory()->createCaptureToken('', $payment, getenv('PAYUM_HTTP_HOST') . '');
+        $token = $this->getPayum()
+            ->getTokenFactory()
+            ->createCaptureToken('', $payment, getenv('PAYUM_HTTP_HOST') . '');
 
         $crawler = $this->getClient()->request('GET', $token->getTargetUrl());
 
@@ -83,8 +83,6 @@ class CaptureControllerTest extends WebTestCase
         ]);
         $gatewayConfigStorage->insert($gatewayConfig);
 
-        $payum = $this->getPayum();
-
         /** @var Storage $storage */
         $storage = $this->getPaymentStorage();
 
@@ -95,7 +93,9 @@ class CaptureControllerTest extends WebTestCase
 
         $storage->insert($payment);
 
-        $token = $payum->getTokenFactory()->createCaptureToken('be2bill', $payment, getenv('PAYUM_HTTP_HOST') . '');
+        $token = $this->getPayum()
+            ->getTokenFactory()
+            ->createCaptureToken('be2bill', $payment, getenv('PAYUM_HTTP_HOST') . '');
 
         $crawler = $this->getClient()->request('GET', $token->getTargetUrl());
 

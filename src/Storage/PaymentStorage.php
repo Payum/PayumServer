@@ -9,9 +9,6 @@ use MongoDB\Collection;
 use App\Model\Payment;
 use Traversable;
 
-/**
- * @method Payment create
- */
 class PaymentStorage extends Storage
 {
     /**

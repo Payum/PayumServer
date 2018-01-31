@@ -16,25 +16,25 @@ use App\Storage\YadmStorage;
  */
 class GatewayConfigStorageFactory
 {
-    /**
-     * @param Storage $storage
-     *
-     * @return GatewayConfigStorage
-     */
-    public static function create(Storage $storage) : GatewayConfigStorage
-    {
-        $defuseSecret = getenv('DEFUSE_SECRET');
-
-        if ($defuseSecret) {
-            $payumCypher = new DefuseCypher($defuseSecret);
-        }
-
-        $gatewayConfigStorage = new YadmStorage($storage, YadmStorage::DEFAULT_ID_PROPERTY, GatewayConfig::class);
-
-        if (isset($payumCypher)) {
-            $gatewayConfigStorage = new CryptoStorageDecorator($gatewayConfigStorage, $payumCypher);
-        }
-
-        return $gatewayConfigStorage;
-    }
+//    /**
+//     * @param Storage $storage
+//     *
+//     * @return GatewayConfigStorage
+//     */
+//    public static function create(Storage $storage) : GatewayConfigStorage
+//    {
+//        $defuseSecret = getenv('DEFUSE_SECRET');
+//
+//        if ($defuseSecret) {
+//            $payumCypher = new DefuseCypher($defuseSecret);
+//        }
+//
+//        $gatewayConfigStorage = new YadmStorage($storage, YadmStorage::DEFAULT_ID_PROPERTY, GatewayConfig::class);
+//
+//        if (isset($payumCypher)) {
+//            $gatewayConfigStorage = new CryptoStorageDecorator($gatewayConfigStorage, $payumCypher);
+//        }
+//
+//        return $gatewayConfigStorage;
+//    }
 }

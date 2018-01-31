@@ -43,8 +43,9 @@ class AuthorizeControllerTest extends WebTestCase
 
         $storage->insert($payment);
 
-        $payum = $this->getPayum();
-        $token = $payum->getTokenFactory()->createAuthorizeToken('itDoesNotMatter', $payment, getenv('PAYUM_HTTP_HOST') . '');
+        $token = $this->getPayum()
+            ->getTokenFactory()
+            ->createAuthorizeToken('itDoesNotMatter', $payment, getenv('PAYUM_HTTP_HOST'));
 
         $crawler = $this->getClient()->request('GET', $token->getTargetUrl());
 

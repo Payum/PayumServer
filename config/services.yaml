@@ -150,15 +150,28 @@ services:
         tags:
             - { name: kernel.event_subscriber }
 
+    # form
     App\Form\Type\ChooseGatewayType: '@app.server.form.type.choose_gateway_type'
     app.server.form.type.choose_gateway_type:
         class: App\Form\Type\ChooseGatewayType
         arguments:
             - '@app.gateway_choices_callback'
 
-    App\Factory\GatewayChoicesCallbackFactory: '@app.gateway_choices_callback'
     app.gateway_choices_callback:
         class: CLASS_SHOULD_NOT_BE_USED_CREATED_BY_FACTORY
-        factory: ['App\Factory\GatewayChoicesCallbackFactory', create]
+        factory: ['App\Factory\GatewayChoicesCallbackFactory', createCallback]
         arguments:
             - '@service_container'
+
+    app.gateway_choices_array:
+        class: CLASS_SHOULD_NOT_BE_USED_CREATED_BY_FACTORY
+        factory: ['App\Factory\GatewayChoicesCallbackFactory', createArray]
+        arguments:
+            - '@service_container'
+
+    Payum\Core\Bridge\Symfony\Form\Type\GatewayChoiceType:
+        class: Payum\Core\Bridge\Symfony\Form\Type\GatewayChoiceType
+        arguments:
+            - '@app.gateway_choices_array'
+        tags:
+            - { name: form.type }
