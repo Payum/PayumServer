@@ -21,10 +21,8 @@ PHP 7.2+ Payment processing server. Setup once and rule them all. [Here](https:/
 6. Check result at [configured host](http://payum-server-symfony.local:8080)
 
 ## Test local server
-1. Setup `TEST_PAYUM_MONGO_URI` in `phpunit.xml.dist`
-2. Setup `PAYUM_HTTP_HOST` in `phpunit.xml.dist`
-3. Setup `PAYUM_SERVER_NAME` in `phpunit.xml.dist`
-3. Setup `PAYUM_NGINX_PORT` in `phpunit.xml.dist`
+1. Copy `.test.env.dist` to `.test.env`
+2. Run `bin/phpunit`
 
 ## Docker registry
 
