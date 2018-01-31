@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 namespace App;
 
 class InvalidJsonException extends \LogicException
@@ -18,10 +20,7 @@ class InvalidJsonException extends \LogicException
         $this->errors = $errors;
     }
 
-    /**
-     * @return array
-     */
-    public function getErrors()
+    public function getErrors() : array
     {
         return $this->errors;
     }

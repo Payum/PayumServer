@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 namespace App;
 
 use Webmozart\Json\JsonDecoder;
@@ -6,6 +8,13 @@ use Webmozart\Json\JsonValidator;
 
 class JsonDecode
 {
+    /**
+     * @param $content
+     * @param $schema
+     *
+     * @return mixed
+     * @throws \Webmozart\Json\ValidationFailedException
+     */
     public function decode($content, $schema)
     {
         $data = (new JsonDecoder())->decode($content);
@@ -22,7 +31,7 @@ class JsonDecode
         return $decoder->decode($content);
     }
 
-    private function parseErrors(array $errors)
+    private function parseErrors(array $errors) : array
     {
         $parsedErrors = [];
         foreach ($errors as $error) {

@@ -8,7 +8,8 @@ use Makasim\Yadm\Storage;
 use MongoDB\Collection;
 
 /**
- * @method PaymentTokenStorage create
+ * Class PaymentTokenStorage
+ * @package App\Storage
  */
 class PaymentTokenStorage extends Storage
 {

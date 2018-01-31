@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 namespace App;
 
 use Payum\Core\Exception\LogicException;
@@ -13,7 +15,7 @@ class ReplyToJsonResponseConverter
     /**
      * {@inheritDoc}
      */
-    public function convert(ReplyInterface $reply)
+    public function convert(ReplyInterface $reply) : JsonResponse
     {
         $headers = $statusCode = $content = null;
 
@@ -23,11 +25,11 @@ class ReplyToJsonResponseConverter
             $statusCode = $response->getStatusCode();
             $headers = $response->headers->all();
             $content = $response->getContent();
-        } else if ($reply instanceof HttpPostRedirect) {
+        } elseif ($reply instanceof HttpPostRedirect) {
             $statusCode = $reply->getStatusCode();
             $headers = $reply->getHeaders();
             $content = $this->preparePostRedirectContent($reply);
-        } else if ($reply instanceof HttpResponse) {
+        } elseif ($reply instanceof HttpResponse) {
             $statusCode = $reply->getStatusCode();
             $headers = $reply->getHeaders();
             $content = $reply->getContent();
@@ -43,7 +45,7 @@ class ReplyToJsonResponseConverter
 
         $fixedHeaders = [];
         foreach ($headers as $name => $value) {
-            $fixedHeaders[str_replace('- ','-',ucwords(str_replace('-','- ',$name)))] = $value;
+            $fixedHeaders[str_replace('- ', '-', ucwords(str_replace('-', '- ', $name)))] = $value;
         }
         $fixedHeaders['Content-Type'] = 'application/vnd.payum+json';
 
@@ -55,12 +57,12 @@ class ReplyToJsonResponseConverter
             ],
             $statusCode,
             [
-                'X-Status-Code' => $statusCode
+                'X-Status-Code' => $statusCode,
             ]
         );
     }
 
-    protected function preparePostRedirectContent(HttpPostRedirect $reply)
+    protected function preparePostRedirectContent(HttpPostRedirect $reply) : string
     {
         $formInputs = '';
         foreach ($reply->getFields() as $name => $value) {
@@ -68,7 +70,7 @@ class ReplyToJsonResponseConverter
                     '<input type="hidden" name="%1$s" value="%2$s" />',
                     htmlspecialchars($name, ENT_QUOTES, 'UTF-8'),
                     htmlspecialchars($value, ENT_QUOTES, 'UTF-8')
-                )."\n";
+                ) . "\n";
         }
 
         $layout = <<<'HTML'
