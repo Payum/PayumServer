@@ -13,6 +13,7 @@ services:
 
 before_install:
     - echo "extension = mongodb.so" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
+    - cp .test.env.dist .test.env
 
 install:
     - composer install
