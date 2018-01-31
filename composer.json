@@ -37,7 +37,6 @@
         "payum/payum": "^1.5",
         "payum/payum-bundle": "^2.3",
         "php-http/guzzle6-adapter": "^1.1",
-        "sensiolabs/security-checker": "^4.1",
         "sofort/sofortlib-php": "^3.3",
         "stripe/stripe-php": "^5.9",
         "symfony/console": "^4.0",
@@ -51,6 +50,7 @@
         "mikemccabe/json-patch-php": "dev-master as 0.1.1"
     },
     "require-dev": {
+        "sensiolabs/security-checker": "^4.1",
         "symfony/browser-kit": "^4.0",
         "symfony/css-selector": "^4.0",
         "symfony/dotenv": "^4.0",
@@ -87,7 +87,7 @@
         "auto-scripts": {
             "cache:clear": "symfony-cmd",
             "assets:install --symlink --relative %PUBLIC_DIR%": "symfony-cmd",
-            "security-checker security:check": "script"
+            "security-checker security:check --end-point=http://security.sensiolabs.org/check_lock": "script"
         },
         "post-install-cmd": [
             "@auto-scripts"
