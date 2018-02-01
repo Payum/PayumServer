@@ -8,10 +8,6 @@ use App\Model\Payment;
 use App\Test\ResponseHelper;
 use App\Test\WebTestCase;
 
-/**
- * Class AuthorizeControllerTest
- * @package App\Tests\Functional\Controller
- */
 class AuthorizeControllerTest extends WebTestCase
 {
     use ResponseHelper;
@@ -53,8 +49,8 @@ class AuthorizeControllerTest extends WebTestCase
         $this->assertClientResponseContentHtml();
 
         $this->assertGreaterThan(0, count($crawler->filter('.payum-choose-gateway')));
-        $this->assertContains('FooGateway', $crawler->text());
-        $this->assertContains('BarGateway', $crawler->text());
+        $this->assertContains('Foo Gateway', $crawler->text());
+        $this->assertContains('Bar Gateway', $crawler->text());
 
         $form = $crawler->filter('form')->form();
 

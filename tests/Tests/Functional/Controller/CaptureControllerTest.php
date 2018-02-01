@@ -9,10 +9,6 @@ use App\Model\GatewayConfig;
 use App\Model\Payment;
 use App\Test\ResponseHelper;
 
-/**
- * Class CaptureControllerTest
- * @package App\Tests\Functional\Controller
- */
 class CaptureControllerTest extends WebTestCase
 {
     use ResponseHelper;
@@ -47,7 +43,7 @@ class CaptureControllerTest extends WebTestCase
 
         $token = $this->getPayum()
             ->getTokenFactory()
-            ->createCaptureToken('', $payment, getenv('PAYUM_HTTP_HOST') . '');
+            ->createCaptureToken('', $payment, getenv('PAYUM_HTTP_HOST'));
 
         $crawler = $this->getClient()->request('GET', $token->getTargetUrl());
 
@@ -55,8 +51,8 @@ class CaptureControllerTest extends WebTestCase
         $this->assertClientResponseContentHtml();
 
         $this->assertGreaterThan(0, count($crawler->filter('.payum-choose-gateway')));
-        $this->assertContains('FooGateway', $crawler->text());
-        $this->assertContains('BarGateway', $crawler->text());
+        $this->assertContains('Foo Gateway', $crawler->text());
+        $this->assertContains('Bar Gateway', $crawler->text());
 
         $form = $crawler->filter('form')->form();
         $form['gatewayName'] = 'BarGateway';

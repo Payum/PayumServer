@@ -6,14 +6,6 @@ parameters:
     router.request_context.host: '%env(PAYUM_SERVER_NAME)%'
     request_listener.http_port: '%env(PAYUM_NGINX_PORT)%'
 
-    genericTokenFactoryPaths:
-        capture: "%payum.capture_path%"
-        notify: "%payum.notify_path%"
-        authorize: "%payum.authorize_path%"
-        refund: "%payum.refund_path%"
-        cancel: "%payum.cancel_path%"
-        payout: "%payum.payout_path%"
-
 services:
     # default configuration for services in *this* file
     _defaults:
@@ -54,6 +46,16 @@ services:
             - '@form.factory'
             - '%payum.template.obtain_missing_details%'
 
+    App\Action\ObtainMissingDetailsForBe2BillAction:
+        public: true
+        class: App\Action\ObtainMissingDetailsForBe2BillAction
+        arguments:
+            - '@form.factory'
+            - '%payum.template.obtain_missing_details%'
+        tags:
+            - { name: payum.action, factory: be2bill_offsite, gateway: be2bill }
+            - { name: payum.action, factory: be2bill_direct, gateway: be2bill }
+
     App\Extension\UpdatePaymentStatusExtension:
         public: true
         class: App\Extension\UpdatePaymentStatusExtension
@@ -66,8 +68,8 @@ services:
         arguments:
             - '@payum'
 
-    App\JsonDecode: '@payum.json_decode'
-    payum.json_decode:
+    App\JsonDecode: '@app.json_decode'
+    app.json_decode:
         class: App\JsonDecode
 
     Payum\Core\Payum: '@payum'
@@ -113,7 +115,7 @@ services:
             - '@yadm.gateway_config.storage'
             - '@api.view.gateway_config_to_json_converter'
             - '@app.gateway_schema_builder'
-            - '@payum.json_decode'
+            - '@app.json_decode'
 
     # controller schema gateways
     app.schema.controller.gateways:
