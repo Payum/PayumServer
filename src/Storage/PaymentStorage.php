@@ -21,11 +21,6 @@ class PaymentStorage extends Storage
      */
     private $collection;
 
-    /**
-     * @param Collection $collection
-     * @param Hydrator $hydrator
-     * @param null $pessimisticLock
-     */
     public function __construct(Collection $collection, Hydrator $hydrator, $pessimisticLock = null)
     {
         parent::__construct($collection, $hydrator, $pessimisticLock);
@@ -38,7 +33,7 @@ class PaymentStorage extends Storage
      * @param array $data
      * @param Payment|null $model
      *
-     * @return Payment | object
+     * @return Payment | \object
      */
     public function hydrate(array $data, $model = null) : Payment
     {
@@ -48,9 +43,9 @@ class PaymentStorage extends Storage
     /**
      * @param string $id
      *
-     * @return Payment | null | object
+     * @return Payment | null | \object
      */
-    public function findById($id) : ?Payment
+    public function findById(string $id) : ?Payment
     {
         return $this->findOne(['id' => $id]);
     }

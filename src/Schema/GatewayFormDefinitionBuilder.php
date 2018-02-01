@@ -7,10 +7,6 @@ use Payum\Core\GatewayFactoryInterface;
 use Payum\Core\Payum;
 use App\Util\StringUtil;
 
-/**
- * Class GatewayFormDefinitionBuilder
- * @package App\Schema
- */
 class GatewayFormDefinitionBuilder
 {
     /**
@@ -18,17 +14,11 @@ class GatewayFormDefinitionBuilder
      */
     private $payum;
 
-    /**
-     * @param Payum $payum
-     */
     public function __construct(Payum $payum)
     {
         $this->payum = $payum;
     }
 
-    /**
-     * @return array
-     */
     public function buildDefault() : array
     {
         $titleMap = [];
@@ -72,12 +62,7 @@ class GatewayFormDefinitionBuilder
         ];
     }
 
-    /**
-     * @param $name
-     *
-     * @return array
-     */
-    public function build($name) : array
+    public function build(string $name) : array
     {
         $definition = $this->buildDefault();
 

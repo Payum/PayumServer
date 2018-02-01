@@ -1,14 +1,11 @@
 <?php
+declare(strict_types=1);
+
 namespace App\Util;
 
 final class StringUtil
 {
-    /**
-     * @param string $camelCase
-     *
-     * @return string
-     */
-    public static function camelCaseToWords($camelCase)
+    public static function camelCaseToWords(string $camelCase) : string
     {
         $regExp = '/
           (?<=[a-z])
@@ -20,22 +17,12 @@ final class StringUtil
         return implode(' ', preg_split($regExp, $camelCase));
     }
 
-    /**
-     * @param string $lowerCase
-     *
-     * @return string
-     */
-    public static function lowerCaseToWords($lowerCase)
+    public static function lowerCaseToWords(string $lowerCase) : string
     {
         return str_replace('_', ' ', $lowerCase);
     }
 
-    /**
-     * @param string $name
-     *
-     * @return string
-     */
-    public static function nameToTitle($name)
+    public static function nameToTitle(string $name) : string
     {
         return ucfirst(self::lowerCaseToWords(self::camelCaseToWords($name)));
     }

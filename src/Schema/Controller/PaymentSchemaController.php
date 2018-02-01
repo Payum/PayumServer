@@ -22,10 +22,6 @@ class PaymentSchemaController
      */
     private $formDefinitionBuilder;
 
-    /**
-     * @param PaymentSchemaBuilder $paymentSchemaBuilder
-     * @param PaymentFormDefinitionBuilder $paymentFormDefinitionBuilder
-     */
     public function __construct(
         PaymentSchemaBuilder $paymentSchemaBuilder,
         PaymentFormDefinitionBuilder $paymentFormDefinitionBuilder
@@ -34,9 +30,6 @@ class PaymentSchemaController
         $this->formDefinitionBuilder = $paymentFormDefinitionBuilder;
     }
 
-    /**
-     * @return JsonResponse
-     */
     public function getNewAction() : JsonResponse
     {
         return new JsonResponse($this->schemaBuilder->buildNew(), 200, [
@@ -44,9 +37,6 @@ class PaymentSchemaController
         ]);
     }
 
-    /**
-     * @return JsonResponse
-     */
     public function getNewFormAction() : JsonResponse
     {
         return new JsonResponse($this->formDefinitionBuilder->buildNew());

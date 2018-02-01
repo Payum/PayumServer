@@ -14,10 +14,6 @@ use App\Schema\TokenSchemaBuilder;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 
-/**
- * Class TokenController
- * @package App\Api\Controller
- */
 class TokenController
 {
     use ForwardExtensionTrait;
@@ -42,12 +38,6 @@ class TokenController
      */
     private $jsonDecode;
 
-    /**
-     * @param Payum $payum
-     * @param TokenToJsonConverter $tokenToJsonConverter
-     * @param TokenSchemaBuilder $tokenSchemaBuilder
-     * @param JsonDecode $jsonDecode
-     */
     public function __construct(
         Payum $payum,
         TokenToJsonConverter $tokenToJsonConverter,
@@ -64,6 +54,7 @@ class TokenController
      * @param Request $request
      *
      * @return JsonResponse
+     * @throws \Webmozart\Json\ValidationFailedException
      */
     public function createAction(Request $request) : JsonResponse
     {

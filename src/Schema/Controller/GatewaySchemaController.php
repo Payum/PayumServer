@@ -8,10 +8,6 @@ use App\Schema\GatewayFormDefinitionBuilder;
 use App\Schema\GatewaySchemaBuilder;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
-/**
- * Class GatewaySchemaController
- * @package App\Schema\Controller
- */
 class GatewaySchemaController
 {
     use ForwardExtensionTrait;
@@ -26,10 +22,6 @@ class GatewaySchemaController
      */
     private $formDefinitionBuilder;
 
-    /**
-     * @param GatewaySchemaBuilder $schemaBuilder
-     * @param GatewayFormDefinitionBuilder $formDefinitionBuilder
-     */
     public function __construct(
         GatewaySchemaBuilder $schemaBuilder,
         GatewayFormDefinitionBuilder $formDefinitionBuilder
@@ -38,9 +30,6 @@ class GatewaySchemaController
         $this->formDefinitionBuilder = $formDefinitionBuilder;
     }
 
-    /**
-     * @return JsonResponse
-     */
     public function getDefaultAction() : JsonResponse
     {
         return new JsonResponse($this->schemaBuilder->buildDefault(), 200, [
@@ -48,20 +37,11 @@ class GatewaySchemaController
         ]);
     }
 
-    /**
-     * @return JsonResponse
-     */
     public function getDefaultFormAction() : JsonResponse
     {
         return new JsonResponse($this->formDefinitionBuilder->buildDefault());
     }
 
-    /**
-     *
-     * @param string $name
-     *
-     * @return JsonResponse
-     */
     public function getAction(string $name) : JsonResponse
     {
         return new JsonResponse($this->schemaBuilder->build($name), 200, [
@@ -69,11 +49,6 @@ class GatewaySchemaController
         ]);
     }
 
-    /**
-     * @param string $name
-     *
-     * @return JsonResponse
-     */
     public function getFormAction(string $name) : JsonResponse
     {
         return new JsonResponse($this->formDefinitionBuilder->build($name));

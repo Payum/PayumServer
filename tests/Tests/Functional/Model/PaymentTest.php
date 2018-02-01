@@ -6,10 +6,6 @@ namespace App\Tests\Functional\Model;
 use App\Model\Payment;
 use App\Test\WebTestCase;
 
-/**
- * Class PaymentTest
- * @package App\Tests\Functional\Model
- */
 class PaymentTest extends WebTestCase
 {
     public function testShouldAllowPersistPaymentToMongo()

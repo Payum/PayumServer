@@ -18,10 +18,6 @@ use Symfony\Component\HttpKernel\Event\FilterControllerEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
 use Twig\Environment;
 
-/**
- * Class GatewayChooserListener
- * @package App\EventListener\Request
- */
 class GatewayChooserListener implements EventSubscriberInterface
 {
     /**

@@ -5,15 +5,8 @@ namespace App\Api\Controller;
 
 use Symfony\Component\HttpFoundation\JsonResponse;
 
-/**
- * Class RootController
- * @package App\Api\Controller
- */
 class RootController
 {
-    /**
-     * @return JsonResponse
-     */
     public function rootAction() : JsonResponse
     {
         return new JsonResponse([

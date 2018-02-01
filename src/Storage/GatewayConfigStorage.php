@@ -8,22 +8,10 @@ use Makasim\Yadm\Hydrator;
 use MongoDB\Collection;
 
 /**
- * Class GatewayConfigStorage
- * @package App\Storage
  * @method findOne(array $filter = [], array $options = []) : ?GatewayConfigInterface
  */
 class GatewayConfigStorage extends Storage
 {
-    /**
-     * @var Hydrator
-     */
-    private $hydrator;
-
-    /**
-     * @var Collection
-     */
-    private $collection;
-
     /**
      * @param Collection $collection
      * @param Hydrator $hydrator
@@ -32,8 +20,5 @@ class GatewayConfigStorage extends Storage
     public function __construct(Collection $collection, Hydrator $hydrator, $pessimisticLock = null)
     {
         parent::__construct($collection, $hydrator, $pessimisticLock);
-
-        $this->hydrator = $hydrator;
-        $this->collection = $collection;
     }
 }

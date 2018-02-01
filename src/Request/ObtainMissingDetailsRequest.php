@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 namespace App\Request;
 
 use Payum\Core\Security\TokenInterface;
@@ -16,28 +18,18 @@ class ObtainMissingDetailsRequest
      */
     private $token;
 
-    /**
-     * @param Payment $payment
-     * @param TokenInterface $token
-     */
-    public function __construct(Payment $payment, TokenInterface $token = null)
+    public function __construct(Payment $payment, ?TokenInterface $token)
     {
         $this->payment = $payment;
         $this->token = $token;
     }
 
-    /**
-     * @return Payment
-     */
-    public function getPayment()
+    public function getPayment() : Payment
     {
         return $this->payment;
     }
 
-    /**
-     * @return TokenInterface
-     */
-    public function getToken()
+    public function getToken() : TokenInterface
     {
         return $this->token;
     }

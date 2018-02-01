@@ -10,10 +10,6 @@ use Payum\Core\Request\GetHumanStatus;
 use Payum\Core\Request\GetStatusInterface;
 use App\Model\Payment;
 
-/**
- * Class UpdatePaymentStatusExtension
- * @package App\Extension
- */
 class UpdatePaymentStatusExtension implements ExtensionInterface
 {
     /**

@@ -9,10 +9,6 @@ use Payum\ISO4217\ISO4217;
 use App\Model\GatewayConfig;
 use App\Util\StringUtil;
 
-/**
- * Class PaymentFormDefinitionBuilder
- * @package App\Schema
- */
 class PaymentFormDefinitionBuilder
 {
     /**
@@ -20,20 +16,12 @@ class PaymentFormDefinitionBuilder
      */
     private $gatewayConfigStorage;
 
-    /**
-     * @param GatewayConfigStorage $gatewayConfigStorage
-     *
-     * @internal param Payum $payum
-     */
     public function __construct(GatewayConfigStorage $gatewayConfigStorage)
     {
         $this->gatewayConfigStorage = $gatewayConfigStorage;
     }
 
-    /**
-     * @return array
-     */
-    public function buildNew()
+    public function buildNew() : array
     {
         $gateways = iterator_to_array($this->gatewayConfigStorage->find([]));
         $titleMap = array_map(function (GatewayConfig $gatewayConfig) {
@@ -50,7 +38,6 @@ class PaymentFormDefinitionBuilder
                 'group' => in_array($currency->getAlpha3(), ['USD', 'EUR', 'GBP', 'JPY', 'CNY']) ? 'Popular' : 'Other',
             ];
         }, (new ISO4217())->findAll());
-
 
         usort($currencyMap, function (array $left, array $right) {
             if ('Popular' == $left['group'] && 'Popular' == $right['group']) {

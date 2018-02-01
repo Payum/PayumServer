@@ -1,8 +1,9 @@
 <?php
+declare(strict_types=1);
+
 namespace App\Api\View;
 
 use Payum\Core\Registry\GatewayRegistryInterface;
-use Payum\Core\Request\GetHumanStatus;
 use App\Model\Payment;
 
 class PaymentToJsonConverter
@@ -20,12 +21,7 @@ class PaymentToJsonConverter
         $this->registry = $registry;
     }
 
-    /**
-     * @param Payment $payment
-     *
-     * @return array
-     */
-    public function convert(Payment $payment)
+    public function convert(Payment $payment) : array
     {
         $normalizedPayment = [
             'id' => $payment->getId(),

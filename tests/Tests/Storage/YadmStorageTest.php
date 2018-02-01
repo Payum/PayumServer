@@ -9,10 +9,6 @@ use Payum\Core\Storage\StorageInterface;
 use PHPUnit\Framework\TestCase;
 use ReflectionClass;
 
-/**
- * Class YadmStorageTest
- * @package App\Tests\Storage
- */
 class YadmStorageTest extends TestCase
 {
     /**

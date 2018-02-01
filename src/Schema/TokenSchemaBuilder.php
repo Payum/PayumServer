@@ -5,16 +5,9 @@ namespace App\Schema;
 
 use App\Util\StringUtil;
 
-/**
- * Class TokenSchemaBuilder
- * @package App\Schema
- */
 class TokenSchemaBuilder
 {
-    /**
-     * @return object
-     */
-    public function buildNew()
+    public function buildNew() : object
     {
         return (object) [
             '$schema' => 'http://json-schema.org/schema#',

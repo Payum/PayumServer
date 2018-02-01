@@ -10,9 +10,6 @@ class InvalidJsonException extends \LogicException
      */
     private $errors;
 
-    /**
-     * @param array $errors
-     */
     public function __construct(array $errors)
     {
         parent::__construct('Given json is not valid.');

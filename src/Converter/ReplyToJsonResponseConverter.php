@@ -17,7 +17,7 @@ class ReplyToJsonResponseConverter
      */
     public function convert(ReplyInterface $reply) : JsonResponse
     {
-        $headers = $statusCode = $content = null;
+        $content = null;
 
         if ($reply instanceof SymfonyHttpResponse) {
             $response = $reply->getResponse();

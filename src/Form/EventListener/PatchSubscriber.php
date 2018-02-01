@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * Copyright (c) 2011 Arnaud Le Blanc, all rights reserved
  */
@@ -11,6 +12,8 @@ use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormInterface;
 
 /**
+ * @todo remove?
+ * 
  * Changes Form->bind() behavior so that it treats not set values as if they
  * were sent unchanged.
  *
@@ -28,7 +31,7 @@ class PatchSubscriber implements EventSubscriberInterface
         $unbindClientData = $this->unbind($event->getForm());
 
         if (is_array($unbindClientData)) {
-            $clientData = array_replace($unbindClientData, $clientData ?: array());
+            $clientData = array_replace($unbindClientData, $clientData ?: []);
         }
 
         $event->setData($clientData);
@@ -42,7 +45,7 @@ class PatchSubscriber implements EventSubscriberInterface
     protected function unbind(FormInterface $form)
     {
         if (count($form) > 0) {
-            $clientData = array();
+            $clientData = [];
             foreach ($form as $name => $childForm) {
                 $clientData[$name] = $this->unbind($childForm);
             }
@@ -58,8 +61,8 @@ class PatchSubscriber implements EventSubscriberInterface
      */
     public static function getSubscribedEvents()
     {
-        return array(
+        return [
             FormEvents::PRE_SUBMIT => 'onPreSubmit',
-        );
+        ];
     }
 }

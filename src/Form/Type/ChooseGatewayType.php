@@ -11,10 +11,6 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\NotBlank;
 
-/**
- * Class ChooseGatewayType
- * @package App\Form\Type
- */
 class ChooseGatewayType extends AbstractType
 {
     /**
@@ -22,9 +18,6 @@ class ChooseGatewayType extends AbstractType
      */
     private $gatewayChoices;
 
-    /**
-     * @param callable $gatewayChoices
-     */
     public function __construct(callable $gatewayChoices)
     {
         $this->gatewayChoices = $gatewayChoices;

@@ -9,15 +9,14 @@ use Payum\Core\Model\GatewayConfigInterface;
 use Payum\Core\Security\CryptedInterface;
 use Payum\Core\Security\CypherInterface;
 
-/**
- * Class GatewayConfig
- * @package App\Model
- */
 class GatewayConfig implements GatewayConfigInterface, CryptedInterface
 {
     use ValuesTrait;
     use CastTrait;
 
+    /**
+     * @var array
+     */
     private $decryptedConfig = [];
 
     /**

@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 namespace App\Model;
 
 use Makasim\Values\ValuesTrait;
@@ -10,50 +12,32 @@ class Payer
         getValue as public;
     }
 
-    /**
-     * @return string
-     */
-    public function getId()
+    public function getId() : ?string
     {
         return $this->getValue('id');
     }
 
-    /**
-     * @param string $id
-     */
-    public function setId($id)
+    public function setId(string $id) : void
     {
         $this->setValue('id', $id);
     }
 
-    /**
-     * @return string
-     */
-    public function getEmail()
+    public function getEmail() : ?string
     {
         return $this->getValue('email');
     }
 
-    /**
-     * @param string $email
-     */
-    public function setEmail($email)
+    public function setEmail(string $email) : void
     {
         $this->setValue('email', $email);
     }
 
-    /**
-     * @param string $firstName
-     */
-    public function setFirstName($firstName)
+    public function setFirstName(string $firstName) : void
     {
         $this->setValue('firstName', $firstName);
     }
 
-    /**
-     * @return string
-     */
-    public function getFirstName()
+    public function getFirstName() : string
     {
         return $this->getValue('firstName');
     }

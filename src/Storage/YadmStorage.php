@@ -13,10 +13,6 @@ use Payum\Core\Model\Identity;
 use Payum\Core\Storage\AbstractStorage;
 use Payum\Core\Storage\IdentityInterface;
 
-/**
- * Class YadmStorage
- * @package App\Storage
- */
 class YadmStorage extends AbstractStorage
 {
     const DEFAULT_ID_PROPERTY = '_id';
@@ -31,11 +27,6 @@ class YadmStorage extends AbstractStorage
      */
     private $idProperty;
 
-    /**
-     * @param Storage $storage
-     * @param string $idProperty
-     * @param string $modelClass
-     */
     public function __construct(Storage $storage, string $idProperty, string $modelClass)
     {
         parent::__construct($modelClass);
@@ -100,7 +91,7 @@ class YadmStorage extends AbstractStorage
     }
 
     /**
-     * @param object $model
+     * @param \object $model
      * @param bool $strict
      *
      * @return string

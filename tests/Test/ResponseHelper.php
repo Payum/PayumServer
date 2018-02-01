@@ -13,10 +13,8 @@ trait ResponseHelper
      */
     abstract public function getClient();
 
-    public function assertResponseStatusSuccess($response)
+    public function assertResponseStatusSuccess(Response $response)
     {
-        /** @var $response Response */
-
         $this->assertInstanceOf(Response::class, $response);
         $this->assertGreaterThanOrEqual(200, $response->getStatusCode(), $this->getMessage($response));
         $this->assertLessThan(300, $response->getStatusCode(), $this->getMessage($response));
@@ -27,10 +25,8 @@ trait ResponseHelper
         $this->assertResponseStatusSuccess($this->getClient()->getResponse());
     }
 
-    public function assertResponseStatusRedirection($response)
+    public function assertResponseStatusRedirection(Response $response)
     {
-        /** @var $response Response */
-
         $this->assertInstanceOf(Response::class, $response);
         $this->assertGreaterThanOrEqual(300, $response->getStatusCode(), $this->getMessage($response));
         $this->assertLessThan(400, $response->getStatusCode(), $this->getMessage($response));
@@ -41,10 +37,8 @@ trait ResponseHelper
         $this->assertResponseStatusClientError($this->getClient()->getResponse());
     }
 
-    public function assertResponseStatusClientError($response)
+    public function assertResponseStatusClientError(Response $response)
     {
-        /** @var $response Response */
-
         $this->assertInstanceOf(Response::class, $response);
         $this->assertGreaterThanOrEqual(400, $response->getStatusCode(), $this->getMessage($response));
         $this->assertLessThan(500, $response->getStatusCode(), $this->getMessage($response));
@@ -55,19 +49,15 @@ trait ResponseHelper
         $this->assertResponseStatusRedirection($this->getClient()->getResponse());
     }
 
-    public function assertResponseRedirection($response, $expectedUrl)
+    public function assertResponseRedirection(Response $response, $expectedUrl)
     {
-        /** @var $response Response */
-
         $this->assertInstanceOf(Response::class, $response);
         $this->assertResponseStatusRedirection($response);
         $this->assertEquals($expectedUrl, $response->headers->get('Location'));
     }
 
-    public function assertResponseRedirectionStartsWith($response, $expectedUrl)
+    public function assertResponseRedirectionStartsWith(Response $response, $expectedUrl)
     {
-        /** @var $response Response */
-
         $this->assertInstanceOf(Response::class, $response);
         $this->assertResponseStatusRedirection($response);
         $this->assertStringStartsWith($expectedUrl, urldecode($response->headers->get('Location')));
@@ -109,10 +99,8 @@ trait ResponseHelper
         $this->assertResponseStatus($this->getClient()->getResponse(), $expectedStatus);
     }
 
-    public function assertResponseContentHtml($response)
+    public function assertResponseContentHtml(Response $response)
     {
-        /** @var $response Response */
-
         $this->assertInstanceOf(Response::class, $response);
         $this->assertEquals('text/html; charset=UTF-8', $response->headers->get('Content-Type'), $this->getMessage($response));
     }
@@ -122,10 +110,8 @@ trait ResponseHelper
         $this->assertResponseContentHtml($this->getClient()->getResponse());
     }
 
-    public function assertResponseStatus($response, $expectedStatus)
+    public function assertResponseStatus(Response $response, $expectedStatus)
     {
-        /** @var $response Response */
-
         $this->assertInstanceOf(Response::class, $response);
         $this->assertEquals($expectedStatus, $response->getStatusCode(), $this->getMessage($response));
     }
@@ -135,10 +121,8 @@ trait ResponseHelper
         $this->assertResponseContentJson($this->getClient()->getResponse());
     }
 
-    public function assertResponseContentJson($response)
+    public function assertResponseContentJson(Response $response)
     {
-        /** @var $response Response */
-
         $this->assertInstanceOf(Response::class, $response);
         $this->assertEquals('application/json', $response->headers->get('Content-Type'));
         $this->assertNotNull(
@@ -152,10 +136,8 @@ trait ResponseHelper
         $this->assertResponseContentJsonSchema($this->getClient()->getResponse());
     }
 
-    public function assertResponseContentJsonSchema($response)
+    public function assertResponseContentJsonSchema(Response $response)
     {
-        /** @var $response Response */
-
         $this->assertInstanceOf(Response::class, $response);
         $this->assertEquals('application/schema+json', $response->headers->get('Content-Type'));
         $this->assertNotNull(
@@ -164,17 +146,15 @@ trait ResponseHelper
         );
     }
 
-    public function getResponseJsonContent($response, $assoc = false)
+    public function getResponseJsonContent(Response $response, $assoc = false)
     {
-        /** @var $response Response */
-
         $this->assertInstanceOf(Response::class, $response);
 
         return json_decode($response->getContent(), $assoc);
     }
 
     /**
-     * @return array|object
+     * @return array | \object
      */
     public function getClientResponseJsonContent($assoc = false)
     {

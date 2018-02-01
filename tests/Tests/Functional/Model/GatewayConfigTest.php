@@ -7,10 +7,6 @@ use Makasim\Yadm\Storage;
 use App\Model\GatewayConfig;
 use App\Test\WebTestCase;
 
-/**
- * Class GatewayConfigTest
- * @package App\Tests\Functional\Model
- */
 class GatewayConfigTest extends WebTestCase
 {
     public function testShouldAllowPersistGatewayConfigToMongo()

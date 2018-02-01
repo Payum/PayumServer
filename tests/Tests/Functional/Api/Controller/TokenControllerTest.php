@@ -9,10 +9,6 @@ use App\Model\GatewayConfig;
 use App\Model\Payment;
 use App\Test\ResponseHelper;
 
-/**
- * Class TokenControllerTest
- * @package App\Tests\Functional\Api\Controller
- */
 class TokenControllerTest extends WebTestCase
 {
     use ResponseHelper;

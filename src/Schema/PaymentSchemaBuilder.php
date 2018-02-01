@@ -9,10 +9,6 @@ use Payum\ISO4217\ISO4217;
 use App\Model\GatewayConfig;
 use App\Util\StringUtil;
 
-/**
- * Class PaymentSchemaBuilder
- * @package App\Schema
- */
 class PaymentSchemaBuilder
 {
     /**
@@ -20,17 +16,11 @@ class PaymentSchemaBuilder
      */
     private $gatewayConfigStorage;
 
-    /**
-     * @param GatewayConfigStorage $gatewayConfigStorage
-     */
     public function __construct(GatewayConfigStorage $gatewayConfigStorage)
     {
         $this->gatewayConfigStorage = $gatewayConfigStorage;
     }
 
-    /**
-     * @return object
-     */
     public function buildNew() : object
     {
         $gateways = iterator_to_array($this->gatewayConfigStorage->find([]));

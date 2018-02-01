@@ -19,10 +19,6 @@ use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Response;
 
-/**
- * Class ObtainMissingDetailsAction
- * @package App\Action
- */
 class ObtainMissingDetailsAction implements ActionInterface, GatewayAwareInterface
 {
     use GatewayAwareTrait;
@@ -37,11 +33,7 @@ class ObtainMissingDetailsAction implements ActionInterface, GatewayAwareInterfa
      */
     protected $templateName;
 
-    /**
-     * @param FormFactoryInterface $formFactory
-     * @param string $templateName
-     */
-    public function __construct(FormFactoryInterface $formFactory, $templateName)
+    public function __construct(FormFactoryInterface $formFactory, string $templateName)
     {
         $this->formFactory = $formFactory;
         $this->templateName = $templateName;
@@ -92,23 +84,11 @@ class ObtainMissingDetailsAction implements ActionInterface, GatewayAwareInterfa
         return $request instanceof ObtainMissingDetailsRequest;
     }
 
-    /**
-     * @param Payment $payment
-     * @param TokenInterface $token
-     *
-     * @return FormInterface
-     */
     protected function createPaymentForm(Payment $payment, TokenInterface $token = null) : FormInterface
     {
         return $this->createPaymentFormBuilder($payment, $token)->getForm();
     }
 
-    /**
-     * @param Payment $payment
-     * @param TokenInterface $token
-     *
-     * @return FormBuilderInterface
-     */
     protected function createPaymentFormBuilder(Payment $payment, TokenInterface $token = null) : FormBuilderInterface
     {
         return $this->formFactory->createNamedBuilder('', FormType::class, $payment, [

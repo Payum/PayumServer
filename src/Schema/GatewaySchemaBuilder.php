@@ -6,10 +6,6 @@ namespace App\Schema;
 use Payum\Core\Payum;
 use App\Util\StringUtil;
 
-/**
- * Class GatewaySchemaBuilder
- * @package App\Schema
- */
 class GatewaySchemaBuilder
 {
     /**
@@ -17,17 +13,11 @@ class GatewaySchemaBuilder
      */
     private $payum;
 
-    /**
-     * @param Payum $payum
-     */
     public function __construct(Payum $payum)
     {
         $this->payum = $payum;
     }
 
-    /**
-     * @return object
-     */
     public function buildDefault() : object
     {
         return (object) [
@@ -49,12 +39,7 @@ class GatewaySchemaBuilder
         ];
     }
 
-    /**
-     * @param $name
-     *
-     * @return object
-     */
-    public function build($name) : object
+    public function build(string $name) : object
     {
         $config = $this->payum->getGatewayFactory($name)->createConfig();
 

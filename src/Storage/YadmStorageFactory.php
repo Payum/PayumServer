@@ -10,10 +10,6 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\DependencyInjection\Reference;
 
-/**
- * Class YadmStorageFactory
- * @package App\Storage
- */
 class YadmStorageFactory extends AbstractStorageFactory
 {
     /**
@@ -41,11 +37,7 @@ class YadmStorageFactory extends AbstractStorageFactory
     }
 
     /**
-     * @param ContainerBuilder $container
-     * @param string $modelClass
-     * @param array $config
-     *
-     * @return Definition
+     * {@inheritdoc}
      */
     protected function createStorage(ContainerBuilder $container, $modelClass, array $config) : Definition
     {

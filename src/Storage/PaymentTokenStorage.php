@@ -7,22 +7,8 @@ use Makasim\Yadm\Hydrator;
 use Makasim\Yadm\Storage;
 use MongoDB\Collection;
 
-/**
- * Class PaymentTokenStorage
- * @package App\Storage
- */
 class PaymentTokenStorage extends Storage
 {
-    /**
-     * @var Hydrator
-     */
-    private $hydrator;
-
-    /**
-     * @var Collection
-     */
-    private $collection;
-
     /**
      * @param Collection $collection
      * @param Hydrator $hydrator
@@ -31,8 +17,5 @@ class PaymentTokenStorage extends Storage
     public function __construct(Collection $collection, Hydrator $hydrator, $pessimisticLock = null)
     {
         parent::__construct($collection, $hydrator, $pessimisticLock);
-
-        $this->hydrator = $hydrator;
-        $this->collection = $collection;
     }
 }

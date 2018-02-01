@@ -4,8 +4,7 @@ declare(strict_types=1);
 namespace App\Controller;
 
 /**
- * Interface GatewayChooserInterface used for determine is GatewayChooser required for this controller
- * @package App\Controller
+ * Determine is App\EventListener\Request\GatewayChooserListener required for this class
  */
 interface GatewayChooserInterface
 {

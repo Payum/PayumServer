@@ -19,10 +19,6 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Generator\UrlGenerator;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
-/**
- * Class GatewayController
- * @package App\Api\Controller
- */
 class GatewayController
 {
     use ForwardExtensionTrait;
@@ -52,13 +48,6 @@ class GatewayController
      */
     private $jsonDecode;
 
-    /**
-     * @param UrlGeneratorInterface $urlGenerator
-     * @param GatewayConfigStorage $gatewayConfigStorage
-     * @param GatewayConfigToJsonConverter $gatewayConfigToJsonConverter
-     * @param GatewaySchemaBuilder $schemaBuilder
-     * @param JsonDecode $jsonDecode
-     */
     public function __construct(
         UrlGeneratorInterface $urlGenerator,
         GatewayConfigStorage $gatewayConfigStorage,
@@ -77,6 +66,7 @@ class GatewayController
      * @param Request $request
      *
      * @return JsonResponse
+     * @throws \Webmozart\Json\ValidationFailedException
      */
     public function createAction(Request $request) : JsonResponse
     {
@@ -122,9 +112,6 @@ class GatewayController
         );
     }
 
-    /**
-     * @return JsonResponse
-     */
     public function allAction() : JsonResponse
     {
         $convertedGatewayConfigs = [];
@@ -137,11 +124,6 @@ class GatewayController
         return new JsonResponse(['gateways' => $convertedGatewayConfigs]);
     }
 
-    /**
-     * @param string $name
-     *
-     * @return JsonResponse
-     */
     public function getAction(string $name) : JsonResponse
     {
         $gatewayConfig = $this->findGatewayConfigByName($name);
@@ -151,11 +133,6 @@ class GatewayController
         ]);
     }
 
-    /**
-     * @param string $name
-     *
-     * @return Response
-     */
     public function deleteAction(string $name) : Response
     {
         $gatewayConfig = $this->findGatewayConfigByName($name);
@@ -165,11 +142,6 @@ class GatewayController
         return new Response('', 204);
     }
 
-    /**
-     * @param string $name
-     *
-     * @return GatewayConfigInterface
-     */
     protected function findGatewayConfigByName(string $name) : GatewayConfigInterface
     {
         if (false == $name) {

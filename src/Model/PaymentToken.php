@@ -9,10 +9,6 @@ use Payum\Core\Model\Identity;
 use Payum\Core\Model\Token;
 use Payum\Core\Storage\IdentityInterface;
 
-/**
- * Class PaymentToken
- * @package App\Model
- */
 class PaymentToken extends Token
 {
     use ValuesTrait;
@@ -20,9 +16,9 @@ class PaymentToken extends Token
     /**
      * {@inheritdoc}
      *
-     * @return IdentityInterface|null
+     * @return IdentityInterface | null
      */
-    public function getDetails()
+    public function getDetails() : ?Identity
     {
         return new Identity(
             $this->getValue('paymentId'),
@@ -35,7 +31,7 @@ class PaymentToken extends Token
      *
      * @param IdentityInterface $details
      */
-    public function setDetails($details)
+    public function setDetails($details) : void
     {
         if (false == $details instanceof IdentityInterface) {
             throw new LogicException('Only instance of identity supported as token details');
@@ -45,10 +41,7 @@ class PaymentToken extends Token
         $this->setValue('paymentClass', $details->getClass());
     }
 
-    /**
-     * @return string
-     */
-    public function getId()
+    public function getId() : string
     {
         return $this->getValue('id');
     }
@@ -56,7 +49,7 @@ class PaymentToken extends Token
     /**
      * {@inheritdoc}
      */
-    public function getHash()
+    public function getHash() : ?string
     {
         return $this->getValue('hash');
     }
@@ -64,7 +57,7 @@ class PaymentToken extends Token
     /**
      * {@inheritdoc}
      */
-    public function setHash($hash)
+    public function setHash($hash) : void
     {
         $this->setValue('hash', $hash);
         $this->setValue('id', $hash);
@@ -73,7 +66,7 @@ class PaymentToken extends Token
     /**
      * {@inheritdoc}
      */
-    public function getTargetUrl()
+    public function getTargetUrl() : string
     {
         return $this->getValue('targetUrl');
     }
@@ -81,7 +74,7 @@ class PaymentToken extends Token
     /**
      * {@inheritdoc}
      */
-    public function setTargetUrl($targetUrl)
+    public function setTargetUrl($targetUrl) : void
     {
         $this->setValue('targetUrl', $targetUrl);
     }
@@ -89,7 +82,7 @@ class PaymentToken extends Token
     /**
      * {@inheritdoc}
      */
-    public function getAfterUrl()
+    public function getAfterUrl() : string
     {
         return $this->getValue('afterUrl');
     }
@@ -97,7 +90,7 @@ class PaymentToken extends Token
     /**
      * {@inheritdoc}
      */
-    public function setAfterUrl($afterUrl)
+    public function setAfterUrl($afterUrl) : void
     {
         $this->setValue('afterUrl', $afterUrl);
     }
@@ -105,7 +98,7 @@ class PaymentToken extends Token
     /**
      * {@inheritdoc}
      */
-    public function getGatewayName()
+    public function getGatewayName() : ?string
     {
         return $this->getValue('gatewayName');
     }
@@ -113,7 +106,7 @@ class PaymentToken extends Token
     /**
      * {@inheritdoc}
      */
-    public function setGatewayName($gatewayName)
+    public function setGatewayName($gatewayName) : void
     {
         $this->setValue('gatewayName', $gatewayName);
     }

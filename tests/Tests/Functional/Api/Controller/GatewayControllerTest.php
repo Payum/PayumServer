@@ -6,12 +6,7 @@ namespace App\Tests\Functional\Api\Controller;
 use App\Test\WebTestCase;
 use Payum\Core\Model\GatewayConfigInterface;
 use App\Test\ResponseHelper;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
-/**
- * Class GatewayControllerTest
- * @package App\Tests\Functional\Api\Controller
- */
 class GatewayControllerTest extends WebTestCase
 {
     use ResponseHelper;
@@ -186,8 +181,6 @@ class GatewayControllerTest extends WebTestCase
         $this->getClient()->request('DELETE', '/gateways/stripe_checkout');
         $this->assertClientResponseStatus(204);
 
-        // @todo roll back expectException
-//        $this->expectException(NotFoundHttpException::class);
         $this->getClient()->request('GET', '/gateways/stripe_checkout');
         $this->assertClientResponseStatus(404);
     }

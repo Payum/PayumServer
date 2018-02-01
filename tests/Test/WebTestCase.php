@@ -13,10 +13,6 @@ use Symfony\Bundle\FrameworkBundle\Client;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase as SymfonyWebTestCase;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
-/**
- * Class WebTestCase
- * @package App\Test
- */
 abstract class WebTestCase extends SymfonyWebTestCase
 {
     /**

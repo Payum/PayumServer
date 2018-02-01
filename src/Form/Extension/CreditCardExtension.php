@@ -12,10 +12,6 @@ use Symfony\Component\Form\FormView;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Payum\Core\Bridge\Symfony\Form\Type\CreditCardType as BaseCreditCardType;
 
-/**
- * Class CreditCardExtension
- * @package App\Form\Extension
- */
 class CreditCardExtension implements FormTypeExtensionInterface
 {
     /**

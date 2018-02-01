@@ -3,16 +3,13 @@ declare(strict_types=1);
 
 namespace App\Model;
 
+use DateTime;
 use Makasim\Values\CastTrait;
 use Makasim\Values\ObjectsTrait;
 use Makasim\Values\ValuesTrait;
 use Payum\Core\Model\CreditCardInterface;
 use Payum\Core\Request\GetHumanStatus;
 
-/**
- * Class Payment
- * @package App\Model
- */
 class Payment
 {
     use ValuesTrait {
@@ -23,212 +20,137 @@ class Payment
     use CastTrait;
 
     /**
-     * @return string
-     */
-    public function getId()
-    {
-        return $this->getValue('id');
-    }
-
-    /**
-     * @param string $id
-     */
-    public function setId($id)
-    {
-        $this->setValue('id', $id);
-    }
-
-    /**
-     * @return string
-     */
-    public function getStatus()
-    {
-        return $this->getValue('status', GetHumanStatus::STATUS_NEW);
-    }
-
-    /**
-     * @param string $status
-     */
-    public function setStatus($status)
-    {
-        $this->setValue('status', $status);
-    }
-
-    /**
      * @var CreditCardInterface
      */
     protected $creditCard;
 
-    /**
-     * {@inheritdoc}
-     */
+    public function getId() : ?string
+    {
+        return $this->getValue('id');
+    }
+
+    public function setId(string $id) : void
+    {
+        $this->setValue('id', $id);
+    }
+
+    public function getStatus() : string
+    {
+        return $this->getValue('status', GetHumanStatus::STATUS_NEW);
+    }
+
+    public function setStatus($status) : void
+    {
+        $this->setValue('status', $status);
+    }
+
     public function getDetails()
     {
         return $this->getValue('details', [], 'array');
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function setDetails($details)
+    public function setDetails($details) : void
     {
         $this->setValue('details', (array) $details);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getNumber()
     {
         return $this->getValue('number');
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function setNumber($number)
+    public function setNumber($number) : void
     {
         $this->setValue('number', $number);
     }
 
-    /**
-     * @return \DateTime
-     */
-    public function getCreatedAt()
+    public function getCreatedAt() : DateTime
     {
-        return $this->getValue('createdAt', null, \DateTime::class);
+        return $this->getValue('createdAt', null, DateTime::class);
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function setCreatedAt(\DateTime $createdAt)
+    public function setCreatedAt(DateTime $createdAt) : void
     {
         $this->setValue('createdAt', $createdAt);
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function getDescription()
+    public function getDescription() : ?string
     {
         return $this->getValue('description');
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function setDescription($description)
+    public function setDescription(string $description) : void
     {
         $this->setValue('description', $description);
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function getClientEmail()
+    public function getClientEmail() : string
     {
         return $this->getValue('clientEmail');
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function setClientEmail($clientEmail)
+    public function setClientEmail(string $clientEmail) : void
     {
         $this->setValue('clientEmail', $clientEmail);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getClientId()
     {
         return $this->getValue('clientId');
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function setClientId($clientId)
+    public function setClientId($clientId) : void
     {
         $this->setValue('clientId', $clientId);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getTotalAmount()
     {
         return $this->getValue('totalAmount', null, 'int');
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function setTotalAmount($totalAmount)
+    public function setTotalAmount($totalAmount) : void
     {
         $this->setValue('totalAmount', $totalAmount);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getCurrencyCode()
     {
         return $this->getValue('currencyCode');
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function setCurrencyCode($currencyCode)
+    public function setCurrencyCode($currencyCode) : void
     {
         $this->setValue('currencyCode', $currencyCode);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getCreditCard()
     {
         return $this->creditCard;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function setCreditCard(CreditCardInterface $creditCard)
+    public function setCreditCard(CreditCardInterface $creditCard) : void
     {
         $this->creditCard = $creditCard;
     }
 
-    /**
-     * @return string
-     */
-    public function getGatewayName()
+    public function getGatewayName() : ?string
     {
         return $this->getValue('gatewayName');
     }
 
-    /**
-     * @param string $gatewayName
-     */
-    public function setGatewayName($gatewayName)
+    public function setGatewayName(?string $gatewayName) : void
     {
         $this->setValue('gatewayName', $gatewayName);
     }
 
-    /**
-     * @param Payer $payer
-     */
-    public function setPayer(Payer $payer)
+    public function setPayer(Payer $payer) : void
     {
         $this->setObject('payer', $payer);
     }
 
     /**
-     * @return Payer | object
+     * @return Payer | \object
      */
     public function getPayer() : Payer
     {

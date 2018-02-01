@@ -7,12 +7,7 @@ use App\Test\WebTestCase;
 use Makasim\Yadm\Storage;
 use App\Model\Payment;
 use App\Test\ResponseHelper;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
-/**
- * Class PaymentControllerTest
- * @package App\Tests\Functional\Api\Controller
- */
 class PaymentControllerTest extends WebTestCase
 {
     use ResponseHelper;
@@ -63,8 +58,6 @@ class PaymentControllerTest extends WebTestCase
         $this->getClient()->request('DELETE', '/payments/' . $payment->getId());
         $this->assertClientResponseStatus(204);
 
-        // @todo roll back expectException
-//        $this->expectException(NotFoundHttpException::class);
         $this->getClient()->request('GET', '/payments/' . $payment->getId());
         $this->assertClientResponseStatus(404);
     }

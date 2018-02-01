@@ -3,12 +3,12 @@ declare(strict_types=1);
 
 namespace App\EventListener\Response;
 
-use Payum\Bundle\PayumBundle\EventListener;
+use Payum\Bundle\PayumBundle\EventListener\ReplyToHttpResponseListener as BundleReplyToHttpResponseListener;
 use Payum\Core\Bridge\Symfony\ReplyToSymfonyResponseConverter;
 use Payum\Core\Reply\ReplyInterface;
 use Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent;
 
-class ReplyToHttpResponseListener extends EventListener\ReplyToHttpResponseListener
+class ReplyToHttpResponseListener extends BundleReplyToHttpResponseListener
 {
     /**
      * @var ReplyToSymfonyResponseConverter

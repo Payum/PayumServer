@@ -16,10 +16,6 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
-/**
- * Class PaymentController
- * @package App\Api\Controller
- */
 class PaymentController
 {
     use ForwardExtensionTrait;
@@ -49,13 +45,6 @@ class PaymentController
      */
     private $paymentStorage;
 
-    /**
-     * @param PaymentToJsonConverter $paymentToJsonConverter
-     * @param UrlGeneratorInterface $urlGenerator
-     * @param PaymentStorage $paymentStorage
-     * @param PaymentSchemaBuilder $paymentSchemaBuilder
-     * @param JsonDecode $jsonDecode
-     */
     public function __construct(
         PaymentToJsonConverter $paymentToJsonConverter,
         UrlGeneratorInterface $urlGenerator,
@@ -74,6 +63,7 @@ class PaymentController
      * @param Request $request
      *
      * @return JsonResponse
+     * @throws \Webmozart\Json\ValidationFailedException
      */
     public function createAction(Request $request) : JsonResponse
     {
@@ -105,11 +95,6 @@ class PaymentController
         );
     }
 
-    /**
-     * @param string $id
-     *
-     * @return Response
-     */
     public function deleteAction(string $id) : Response
     {
         $this->forward404Unless($payment = $this->paymentStorage->findOne(['id' => $id]));
@@ -121,11 +106,6 @@ class PaymentController
         return new Response('', 204);
     }
 
-    /**
-     * @param string $id
-     *
-     * @return JsonResponse
-     */
     public function getAction(string $id) : JsonResponse
     {
         $this->forward404Unless($payment = $this->paymentStorage->findById($id));
@@ -135,9 +115,6 @@ class PaymentController
         ]);
     }
 
-    /**
-     * @return JsonResponse
-     */
     public function allAction() : JsonResponse
     {
         $jsonPayments = [];

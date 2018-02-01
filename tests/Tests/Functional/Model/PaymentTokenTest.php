@@ -8,10 +8,6 @@ use App\Model\Payment;
 use App\Model\PaymentToken;
 use App\Test\WebTestCase;
 
-/**
- * Class PaymentTokenTest
- * @package App\Tests\Functional\Model
- */
 class PaymentTokenTest extends WebTestCase
 {
     public function testShouldAllowPersistPaymentTokenToMongo()

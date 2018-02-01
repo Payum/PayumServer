@@ -12,10 +12,6 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\Kernel as BaseKernel;
 use Symfony\Component\Routing\RouteCollectionBuilder;
 
-/**
- * Class Kernel
- * @package App
- */
 class Kernel extends BaseKernel
 {
     use MicroKernelTrait;
@@ -23,7 +19,7 @@ class Kernel extends BaseKernel
     const CONFIG_EXTS = '.{php,xml,yaml,yml}';
 
     /**
-     * @return string
+     * {@inheritdoc}
      */
     public function getCacheDir() : string
     {
@@ -31,7 +27,7 @@ class Kernel extends BaseKernel
     }
 
     /**
-     * @return string
+     * {@inheritdoc}
      */
     public function getLogDir() : string
     {
@@ -52,10 +48,7 @@ class Kernel extends BaseKernel
     }
 
     /**
-     * @param ContainerBuilder $container
-     * @param LoaderInterface $loader
-     *
-     * @throws \Exception
+     * {@inheritdoc}
      */
     protected function configureContainer(ContainerBuilder $container, LoaderInterface $loader) : void
     {
