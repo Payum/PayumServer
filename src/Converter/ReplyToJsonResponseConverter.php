@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace App;
+namespace App\Converter;
 
 use Payum\Core\Exception\LogicException;
 use Payum\Core\Reply\HttpPostRedirect;

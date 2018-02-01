@@ -3,6 +3,9 @@
 parameters:
     locale: 'en'
 
+    router.request_context.host: '%env(PAYUM_SERVER_NAME)%'
+    request_listener.http_port: '%env(PAYUM_NGINX_PORT)%'
+
     genericTokenFactoryPaths:
         capture: "%payum.capture_path%"
         notify: "%payum.notify_path%"
@@ -97,8 +100,9 @@ services:
         arguments:
             - '@payum'
 
+    # converter
     app.reply_to_json_response_converter:
-        class: App\ReplyToJsonResponseConverter
+        class: App\Converter\ReplyToJsonResponseConverter
 
     # controller gateways
     app.api.controller.gateway:
@@ -145,10 +149,17 @@ services:
         public: true
 
     # event request
-    app.listener.choose_gateway:
+    app.subscriber.choose_gateway:
         class: App\EventListener\Request\GatewayChooserListener
         tags:
             - { name: kernel.event_subscriber }
+
+    payum.listener.reply_to_http_response:
+        class: App\EventListener\Response\ReplyToHttpResponseListener
+        arguments:
+            - '@payum.converter.reply_to_http_response'
+        tags:
+            - { name: kernel.event_listener, event: kernel.exception, method: onKernelException, priority: 128 }
 
     # form
     App\Form\Type\ChooseGatewayType: '@app.server.form.type.choose_gateway_type'

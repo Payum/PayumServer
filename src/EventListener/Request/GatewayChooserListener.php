@@ -3,12 +3,13 @@ declare(strict_types=1);
 
 namespace App\EventListener\Request;
 
+use App\Storage\PaymentStorage;
 use Payum\Core\Payum;
 use Payum\Core\Reply\HttpResponse;
 use App\Controller\GatewayChooserInterface;
 use App\Form\Type\ChooseGatewayType;
-use App\Model\Payment;
 use App\Model\PaymentToken;
+use Psr\Container\ContainerInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -43,7 +44,13 @@ class GatewayChooserListener implements EventSubscriberInterface
      */
     private $twig;
 
+    /**
+     * @var ContainerInterface
+     */
+    private $container;
+
     public function __construct(
+        ContainerInterface $container,
         Payum $payum,
         RequestStack $requestStack,
         FormFactoryInterface $formFactory,
@@ -53,6 +60,7 @@ class GatewayChooserListener implements EventSubscriberInterface
         $this->request = $requestStack->getCurrentRequest();
         $this->formFactory = $formFactory;
         $this->twig = $twig;
+        $this->container = $container;
     }
 
     /**
@@ -83,8 +91,8 @@ class GatewayChooserListener implements EventSubscriberInterface
         /** @var PaymentToken $token */
         $token = $this->payum->getHttpRequestVerifier()->verify($this->request);
 
-        /** @var Payment $payment */
-        $payment = $this->payum->getStorage(Payment::class)->find($token->getDetails()->getId());
+        $paymentStorage = $this->container->get(PaymentStorage::class);
+        $payment = $paymentStorage->findById($token->getDetails()->getId());
 
         if (false == $payment->getGatewayName()) {
             $form = $this->formFactory->createNamed('', ChooseGatewayType::class, $payment, [
@@ -93,7 +101,7 @@ class GatewayChooserListener implements EventSubscriberInterface
 
             $form->handleRequest($this->request);
             if ($form->isSubmitted() && $form->isValid()) {
-                $this->payum->getStorage($payment)->update($payment);
+                $paymentStorage->update($payment);
             } else {
                 // the twig paths have to be initialized.
                 $this->payum->getGatewayFactory('core')->create();

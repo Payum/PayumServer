@@ -30,10 +30,11 @@
         "fp/klarna-invoice": "^0.1.2",
         "klarna/checkout": "^4.0",
         "makasim/yadm-bundle": "dev-master@dev",
+        "mikemccabe/json-patch-php": "dev-master as 0.1.1",
+        "omnipay/common": "^3.0@alpha",
         "paypal/rest-api-sdk-php": "^1.13",
         "payum/offline": "^1.5",
         "payum/omnipay-v3-bridge": "^1.0@alpha",
-        "omnipay/common": "^3.0@alpha",
         "payum/payum": "^1.5",
         "payum/payum-bundle": "^2.3",
         "php-http/guzzle6-adapter": "^1.1",
@@ -46,8 +47,7 @@
         "symfony/security-csrf": "^4.0",
         "symfony/twig-bundle": "^4.0",
         "symfony/yaml": "^4.0",
-        "webmozart/json": "^1.2",
-        "mikemccabe/json-patch-php": "dev-master as 0.1.1"
+        "webmozart/json": "^1.2"
     },
     "require-dev": {
         "sensiolabs/security-checker": "^4.1",

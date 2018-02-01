@@ -194,7 +194,7 @@ class ServiceProvider implements ServiceProviderInterface
 //            };
 //        });
 //
-//        $app['app.listener.choose_gateway'] = $app->share(function() use ($app) {
+//        $app['app.subscriber.choose_gateway'] = $app->share(function() use ($app) {
 //            return function(Request $request, Application $app) {
 //                /** @var Payum $payum */
 //                $payum = $app['payum'];
@@ -243,7 +243,7 @@ class ServiceProvider implements ServiceProviderInterface
 //
 //        $app->before(function(Request $request, Application $app) {
 //            if (0 === strpos($request->getPathInfo(), '/payment/capture') || 0 === strpos($request->getPathInfo(), '/payment/authorize')) {
-//                return call_user_func($app['app.listener.choose_gateway'], $request, $app);
+//                return call_user_func($app['app.subscriber.choose_gateway'], $request, $app);
 //            }
 //        });
 
