@@ -11,3 +11,4 @@
 .phpunit
 /phpunit.xml
 ###< symfony/phpunit-bridge ###
+docker-compose.yml
