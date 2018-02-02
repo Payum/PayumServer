@@ -29,7 +29,7 @@
         "defuse/php-encryption": "^2.1",
         "fp/klarna-invoice": "^0.1.2",
         "klarna/checkout": "^4.0",
-        "makasim/yadm-bundle": "dev-master@dev",
+        "makasim/yadm-bundle": "^0.2.1",
         "mikemccabe/json-patch-php": "dev-master as 0.1.1",
         "omnipay/common": "^3.0@alpha",
         "paypal/rest-api-sdk-php": "^1.13",

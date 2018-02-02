@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "4fafb3faa26282f35949e4a286623b22",
+    "content-hash": "ff69985f3be0d27b77a5d0390e520069",
     "packages": [
         {
             "name": "authorizenet/authorizenet",
@@ -1737,16 +1737,16 @@
         },
         {
             "name": "makasim/yadm",
-            "version": "0.3.8",
+            "version": "0.3.11",
             "source": {
                 "type": "git",
                 "url": "https://github.com/makasim/yadm.git",
-                "reference": "2dd5ed42620632311c64a3352b3b24f6100f7b9b"
+                "reference": "cc34f30bac9e8c74a99c04c25f6ba5e41a64747b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/makasim/yadm/zipball/2dd5ed42620632311c64a3352b3b24f6100f7b9b",
-                "reference": "2dd5ed42620632311c64a3352b3b24f6100f7b9b",
+                "url": "https://api.github.com/repos/makasim/yadm/zipball/cc34f30bac9e8c74a99c04c25f6ba5e41a64747b",
+                "reference": "cc34f30bac9e8c74a99c04c25f6ba5e41a64747b",
                 "shasum": ""
             },
             "require": {
@@ -1789,26 +1789,26 @@
                 "odm",
                 "storage"
             ],
-            "time": "2017-10-25T12:23:27+00:00"
+            "time": "2018-02-02T08:25:03+00:00"
         },
         {
             "name": "makasim/yadm-bundle",
-            "version": "dev-master",
+            "version": "0.2.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/makasim/yadm-bundle.git",
-                "reference": "1d914b6985890eb12c8aa2235ac75beb7d4aaeed"
+                "reference": "bb8249550ef5c1b839a378b06002d590646c9cf7"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/makasim/yadm-bundle/zipball/1d914b6985890eb12c8aa2235ac75beb7d4aaeed",
-                "reference": "1d914b6985890eb12c8aa2235ac75beb7d4aaeed",
+                "url": "https://api.github.com/repos/makasim/yadm-bundle/zipball/bb8249550ef5c1b839a378b06002d590646c9cf7",
+                "reference": "bb8249550ef5c1b839a378b06002d590646c9cf7",
                 "shasum": ""
             },
             "require": {
                 "doctrine/common": "^2.7",
                 "doctrine/data-fixtures": "^1.2",
-                "makasim/yadm": "^0.3",
+                "makasim/yadm": "^0.3.10",
                 "php": ">=7.0"
             },
             "type": "symfony-bundle",
@@ -1829,7 +1829,7 @@
             "license": [
                 "MIT"
             ],
-            "time": "2017-06-09T07:53:18+00:00"
+            "time": "2018-02-02T08:20:52+00:00"
         },
         {
             "name": "mikemccabe/json-patch-php",
@@ -5862,7 +5862,6 @@
     ],
     "minimum-stability": "stable",
     "stability-flags": {
-        "makasim/yadm-bundle": 20,
         "mikemccabe/json-patch-php": 20,
         "omnipay/common": 15,
         "payum/omnipay-v3-bridge": 15
