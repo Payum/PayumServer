@@ -53,24 +53,18 @@ abstract class WebTestCase extends SymfonyWebTestCase
         $this->client = null;
     }
 
-    /**
-     * @return Client
-     */
     protected function getClient() : Client
     {
         return $this->client;
     }
 
-    /**
-     * @return ContainerInterface
-     */
     protected function getContainer() : ContainerInterface
     {
         return $this->getClient()->getContainer();
     }
 
     /**
-     * @return Payum | object
+     * @return Payum | \object
      */
     protected function getPayum() : Payum
     {

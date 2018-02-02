@@ -56,9 +56,14 @@ services:
             - { name: payum.action, factory: be2bill_offsite, gateway: be2bill }
             - { name: payum.action, factory: be2bill_direct, gateway: be2bill }
 
+    # extension
     App\Extension\UpdatePaymentStatusExtension:
         public: true
         class: App\Extension\UpdatePaymentStatusExtension
+
+    App\Form\Extension\CreditCardExtension:
+        public: true
+        class: App\Form\Extension\CreditCardExtension
 
     api.view.gateway_config_to_json_converter:
         class: App\Api\View\GatewayConfigToJsonConverter
