@@ -1,0 +1,131 @@
+# home
+api_root:
+    path: /
+    methods: [GET]
+    controller: App\Api\Controller\RootController::rootAction
+
+# gateway all
+gateway_all:
+    path: /gateways/
+    methods: [GET]
+    defaults:
+        _controller: app.api.controller.gateway:allAction
+
+# gateway create
+gateway_create:
+    path: /gateways/
+    methods: [POST]
+    defaults:
+        _controller: app.api.controller.gateway:createAction
+
+# gateway get
+gateway_get:
+    path: /gateways/{name}
+    methods: [GET]
+    defaults:
+        _controller: app.api.controller.gateway:getAction
+
+# gateway delete
+gateway_delete:
+    path: /gateways/{name}
+    methods: [DELETE]
+    defaults:
+        _controller: app.api.controller.gateway:deleteAction
+
+# payments all
+payment_all:
+    path: /payments/
+    methods: [GET]
+    defaults:
+        _controller: app.api.controller.payment:allAction
+
+# payments create
+payment_create:
+    path: /payments/
+    methods: [POST]
+    defaults:
+        _controller: app.api.controller.payment:createAction
+
+# payments get
+payment_get:
+    path: /payments/{id}
+    methods: [GET]
+    defaults:
+        _controller: app.api.controller.payment:getAction
+
+# payments delete
+payment_delete:
+    path: /payments/{id}
+    methods: [DELETE]
+    defaults:
+        _controller: app.api.controller.payment:deleteAction
+
+# tokens create
+token_create:
+    path: /tokens/
+    methods: [POST]
+    defaults:
+        _controller: app.api.controller.token:createAction
+
+# schema/gateways default
+app.schema.controller.gateways.default:
+    path: /schema/gateways/default.json
+    methods: [GET]
+    defaults:
+        _controller: app.schema.controller.gateways:getDefaultAction
+
+# schema/gateways form default
+app.schema.controller.gateways.form.default:
+    path: /schema/gateways/form/default.json
+    methods: [GET]
+    defaults:
+        _controller: app.schema.controller.gateways:getDefaultFormAction
+
+# schema/gateways action
+app.schema.controller.gateways.action:
+    path: /schema/gateways/{name}.json
+    methods: [GET]
+    defaults:
+        _controller: app.schema.controller.gateways:getAction
+
+# schema/gateways form action
+app.schema.controller.gateways.form.action:
+    path: /schema/gateways/form/{name}.json
+    methods: [GET]
+    defaults:
+        _controller: app.schema.controller.gateways:getFormAction
+
+# schema/payments new
+app.schema.controller.payments:
+    path: /schema/payments/new.json
+    methods: [GET]
+    defaults:
+        _controller: app.schema.controller.payments:getNewAction
+
+# schema/payments new form
+app.schema.controller.payments.form:
+    path: /schema/payments/form/new.json
+    methods: [GET]
+    defaults:
+        _controller: app.schema.controller.payments:getNewFormAction
+
+# schema/tokens new
+app.schema.controller.tokens:
+    path: /schema/tokens/new.json
+    methods: [GET]
+    defaults:
+        _controller: app.schema.controller.tokens:getNewAction
+
+# payum bundle
+payum_all:
+    resource: "@PayumBundle/Resources/config/routing/all.xml"
+
+payum_capture_do:
+    path: /payment/capture/{payum_token}
+    defaults:
+        _controller: App\Controller\CaptureController::doAction
+
+payum_authorize_do:
+    path: /payment/authorize/{payum_token}
+    defaults:
+        _controller: App\Controller\AuthorizeController::doAction

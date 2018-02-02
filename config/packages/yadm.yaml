@@ -1,0 +1,23 @@
+parameters:
+    mongodb.uri: "%env(PAYUM_MONGO_URI)%"
+
+yadm:
+    mongo_uri: "%mongodb.uri%"
+    models:
+        gateway_config:
+            class: 'App\Model\GatewayConfig'
+            collection: 'gateway_configs'
+            hydrator_class: 'App\Yadm\Hydrator\GatewayConfigHydrator'
+            storage_class: 'App\Storage\GatewayConfigStorage'
+
+        payment:
+            class: 'App\Model\Payment'
+            collection: 'payments'
+            hydrator_class: 'App\Yadm\Hydrator\PaymentHydrator'
+            storage_class: 'App\Storage\PaymentStorage'
+
+        payment_token:
+            class: 'App\Model\PaymentToken'
+            collection: 'payment_tokens'
+            hydrator_class: 'App\Yadm\Hydrator\PaymentTokenHydrator'
+            storage_class: 'App\Storage\PaymentTokenStorage'
