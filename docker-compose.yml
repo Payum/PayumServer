@@ -18,7 +18,7 @@ services:
           - "dockerhost:172.17.0.1"
 
     nginx:
-        build: ./docker/dev/nginx
+        image: nginx:1.13.8-alpine
         volumes:
             - ./public:/var/www/public
             - ./docker/dev/nginx/site.conf:/etc/nginx/conf.d/site.conf
