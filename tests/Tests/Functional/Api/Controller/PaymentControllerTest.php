@@ -68,7 +68,7 @@ class PaymentControllerTest extends WebTestCase
      */
     public function shouldAllowCreatePayment()
     {
-        $this->getClient()->postJson('/payments/', [
+        $this->getClient()->postJson('/payments', [
             'totalAmountInput' => 1.23,
             'currencyCode' => 'USD',
             'clientEmail' => 'foo@example.com',

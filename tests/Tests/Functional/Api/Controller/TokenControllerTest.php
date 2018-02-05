@@ -16,7 +16,7 @@ class TokenControllerTest extends WebTestCase
 
     public function testShouldNotAllowCreateTokenWithNotSupportedType()
     {
-        $this->getClient()->postJson('/tokens/', [
+        $this->getClient()->postJson('/tokens', [
             'type' => 'notSupportedType',
             'paymentId' => 'aPaymentId',
             'afterUrl' => getenv('PAYUM_HTTP_HOST') . '/afterUrl',
@@ -50,7 +50,7 @@ class TokenControllerTest extends WebTestCase
 
         $storage->insert($payment);
 
-        $this->getClient()->postJson('/tokens/', [
+        $this->getClient()->postJson('/tokens', [
             'type' => 'capture',
             'paymentId' => $payment->getId(),
             'afterUrl' => getenv('PAYUM_HTTP_HOST') . '/afterUrl',
@@ -97,7 +97,7 @@ class TokenControllerTest extends WebTestCase
 
         $storage->insert($payment);
 
-        $this->getClient()->postJson('/tokens/', [
+        $this->getClient()->postJson('/tokens', [
             'type' => 'authorize',
             'paymentId' => $payment->getId(),
             'afterUrl' => getenv('PAYUM_HTTP_HOST') . '/afterUrl',

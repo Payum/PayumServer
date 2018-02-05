@@ -6,6 +6,14 @@ parameters:
     router.request_context.host: '%env(PAYUM_SERVER_NAME)%'
     request_listener.http_port: '%env(PAYUM_NGINX_PORT)%'
 
+    vnd_routes:
+        - '%payum.capture_path%'
+        - '%payum.notify_path%'
+        - '%payum.authorize_path%'
+        - '%payum.refund_path%'
+        - '%payum.cancel_path%'
+        - '%payum.payout_path%'
+
 services:
     # default configuration for services in *this* file
     _defaults:
@@ -161,12 +169,27 @@ services:
         tags:
             - { name: kernel.event_subscriber }
 
+    # event response
     payum.listener.reply_to_http_response:
         class: App\EventListener\Response\ReplyToHttpResponseListener
         arguments:
             - '@payum.converter.reply_to_http_response'
         tags:
             - { name: kernel.event_listener, event: kernel.exception, method: onKernelException, priority: 128 }
+
+    app.listener.reply_to_http_response:
+        class: App\EventListener\Response\VndHeaderListener
+        arguments:
+            - '@router'
+            - '%vnd_routes%'
+        tags:
+            - { name: kernel.event_listener, event: kernel.response, method: onKernelResponse }
+
+    # event response
+    app.listener.json_output_exception:
+        class: App\EventListener\Exception\JsonOutputExceptionListener
+        tags:
+            - { name: kernel.event_listener, event: kernel.exception, method: onKernelException, priority: -100 }
 
     # form
     App\Form\Type\ChooseGatewayType: '@app.server.form.type.choose_gateway_type'

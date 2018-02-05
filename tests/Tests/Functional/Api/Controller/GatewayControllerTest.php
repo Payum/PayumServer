@@ -41,7 +41,7 @@ class GatewayControllerTest extends WebTestCase
      */
     public function shouldAllowCreateGateway()
     {
-        $this->getClient()->postJson('/gateways/', [
+        $this->getClient()->postJson('/gateways', [
             'gatewayName' => 'aGateway',
             'factoryName' => 'offline',
         ]);
@@ -60,7 +60,7 @@ class GatewayControllerTest extends WebTestCase
         $this->assertEquals('offline', $content->gateway->factoryName);
 
         $this->assertStringStartsWith(
-            getenv('PAYUM_HTTP_HOST') . '/gateways/',
+            getenv('PAYUM_HTTP_HOST') . '/gateways',
             $this->getClient()->getResponse()->headers->get('Location')
         );
     }
@@ -70,14 +70,14 @@ class GatewayControllerTest extends WebTestCase
      */
     public function shouldNotAllowCreateGatewayIfOneWithSameNameAlreadyExists()
     {
-        $this->getClient()->postJson('/gateways/', [
+        $this->getClient()->postJson('/gateways', [
             'gatewayName' => 'aUniqueGateway',
             'factoryName' => 'offline',
         ]);
 
         $this->assertClientResponseStatus(201);
 
-        $this->getClient()->postJson('/gateways/', [
+        $this->getClient()->postJson('/gateways', [
             'gatewayName' => 'aUniqueGateway',
             'factoryName' => 'offline',
         ]);
@@ -90,7 +90,7 @@ class GatewayControllerTest extends WebTestCase
      */
     public function shouldAllowGetAllGateways()
     {
-        $this->getClient()->request('GET', '/gateways/');
+        $this->getClient()->request('GET', '/gateways');
 
         $this->assertClientResponseStatus(200);
         $this->assertClientResponseContentJson();

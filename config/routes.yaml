@@ -6,14 +6,14 @@ api_root:
 
 # gateway all
 gateway_all:
-    path: /gateways/
+    path: /gateways
     methods: [GET]
     defaults:
         _controller: app.api.controller.gateway:allAction
 
 # gateway create
 gateway_create:
-    path: /gateways/
+    path: /gateways
     methods: [POST]
     defaults:
         _controller: app.api.controller.gateway:createAction
@@ -34,14 +34,14 @@ gateway_delete:
 
 # payments all
 payment_all:
-    path: /payments/
+    path: /payments
     methods: [GET]
     defaults:
         _controller: app.api.controller.payment:allAction
 
 # payments create
 payment_create:
-    path: /payments/
+    path: /payments
     methods: [POST]
     defaults:
         _controller: app.api.controller.payment:createAction
@@ -62,7 +62,7 @@ payment_delete:
 
 # tokens create
 token_create:
-    path: /tokens/
+    path: /tokens
     methods: [POST]
     defaults:
         _controller: app.api.controller.token:createAction
