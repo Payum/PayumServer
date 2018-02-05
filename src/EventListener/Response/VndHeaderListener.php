@@ -4,7 +4,6 @@ declare(strict_types=1);
 namespace App\EventListener\Response;
 
 use Payum\Core\Reply\HttpResponse;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
 use Symfony\Component\Routing\Router;
 
@@ -16,33 +15,21 @@ class VndHeaderListener
     private $router;
 
     /**
-     * @var ContainerInterface
+     * @var array
      */
-    private $container;
+    private $routes;
 
-    public function __construct(Router $router, ContainerInterface $container)
+    public function __construct(Router $router, array $routes)
     {
         $this->router = $router;
-        $this->container = $container;
-    }
-
-    private function getRoutes() : array
-    {
-        return [
-            $this->container->getParameter('payum.capture_path'),
-            $this->container->getParameter('payum.notify_path'),
-            $this->container->getParameter('payum.authorize_path'),
-            $this->container->getParameter('payum.refund_path'),
-            $this->container->getParameter('payum.cancel_path'),
-            $this->container->getParameter('payum.payout_path'),
-        ];
+        $this->routes = $routes;
     }
 
     public function onKernelResponse(FilterResponseEvent $event) : void
     {
         $route = $event->getRequest()->get('_route');
 
-        if (!in_array($route, $this->getRoutes())) {
+        if (!in_array($route, $this->routes)) {
             return;
         }
 
