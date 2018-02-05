@@ -11,9 +11,7 @@ use App\Api\View\TokenToJsonConverter;
 use App\Controller\ForwardExtensionTrait;
 use App\InvalidJsonException;
 use App\JsonDecode;
-use App\Model\Payment;
 use App\Schema\TokenSchemaBuilder;
-use Psr\Container\ContainerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -42,13 +40,13 @@ class TokenController
     private $jsonDecode;
 
     /**
-     * @var ContainerInterface
+     * @var PaymentStorage
      */
-    private $container;
+    private $paymentStorage;
 
     public function __construct(
         Payum $payum,
-        ContainerInterface $container,
+        PaymentStorage $paymentStorage,
         TokenToJsonConverter $tokenToJsonConverter,
         TokenSchemaBuilder $tokenSchemaBuilder,
         JsonDecode $jsonDecode
@@ -57,7 +55,7 @@ class TokenController
         $this->tokenToJsonConverter = $tokenToJsonConverter;
         $this->schemaBuilder = $tokenSchemaBuilder;
         $this->jsonDecode = $jsonDecode;
-        $this->container = $container;
+        $this->paymentStorage = $paymentStorage;
     }
 
     /**
@@ -77,8 +75,7 @@ class TokenController
             return new JsonResponse(['errors' => $e->getErrors()], 400);
         }
 
-        /** @var Payment $payment */
-        $payment = $this->container->get(PaymentStorage::class)->findById($data['paymentId']);
+        $payment = $this->paymentStorage->findById($data['paymentId']);
 
         if (!$payment) {
             return new JsonResponse(['errors' => [
