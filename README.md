@@ -4,7 +4,7 @@
 [![Total Downloads](https://poser.pugx.org/payum/payum-server/d/total.png)](https://packagist.org/packages/payum/payum-server)
 [![Latest Stable Version](https://poser.pugx.org/payum/payum-server/version.png)](https://packagist.org/packages/payum/payum-server)
 
-PHP 7.2+ Payment processing server. Setup once and rule them all. [Here](https://medium.com/@maksim_ka2/your-personal-payment-processing-server-abcc8ed76804#.23mlps63n) you can find a good introduction to what it does and what problems it solves.
+PHP 7.1+ Payment processing server. Setup once and rule them all. [Here](https://medium.com/@maksim_ka2/your-personal-payment-processing-server-abcc8ed76804#.23mlps63n) you can find a good introduction to what it does and what problems it solves.
 
 ## Try it online:
 
@@ -12,13 +12,28 @@ PHP 7.2+ Payment processing server. Setup once and rule them all. [Here](https:/
 * Backend: [https://server-ui.payum.forma-pro.com](https://server-ui.payum.forma-pro.com/#!/app/settings?api=https:%2F%2Fserver.payum.forma-pro.com)
 * Server: https://server.payum.forma-pro.com
 
-## Run local server for development
-1. You need to have installed `docker` and `docker-compose`
-2. Copy .env file `cp .env.dist .env`
-3. Run build container and up `docker-compose down && docker-compose build && docker-compose up`
-4. Go inside php-fpm container `docker-compose exec php-fpm /bin/ash`
-5. Run composer `composer install`
-6. Check result at [configured host](http://payum-server-symfony.local:8080)
+## Run local server
+
+Create docker-compose.yml file:
+
+```yaml
+version: '2'
+services:
+  payum-server:
+    image: payum/server
+    environment:
+      - PAYUM_MONGO_URI=mongodb://mongo:27017/payum_server
+      - PAYUM_DEBUG=1
+    links:
+      - mongo
+    ports:
+      - "8080:80"
+
+  mongo:
+    image: mongo
+```
+
+and run `docker-compose up`. You server will be at `localhost:8080` port.
 
 ## Test local server
 1. Copy `.test.env.dist` to `.test.env`

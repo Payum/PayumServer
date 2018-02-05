@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace App\Tests\Functional\Controller;
 
 use App\Test\WebTestCase;
+use App\Util\UUID;
 use Makasim\Yadm\Storage;
 use App\Model\GatewayConfig;
 use App\Model\Payment;
@@ -37,7 +38,7 @@ class CaptureControllerTest extends WebTestCase
         /** @var Payment $payment */
         $payment = $storage->create();
         $payment->setGatewayName(null);
-        $payment->setId(uniqid());
+        $payment->setId(UUID::generate());
 
         $storage->insert($payment);
 
@@ -85,7 +86,7 @@ class CaptureControllerTest extends WebTestCase
         /** @var Payment $payment */
         $payment = $storage->create();
         $payment->setGatewayName('be2bill');
-        $payment->setId(uniqid());
+        $payment->setId(UUID::generate());
 
         $storage->insert($payment);
 

@@ -5,6 +5,7 @@ namespace App\Tests\Functional\Model;
 
 use App\Model\Payment;
 use App\Test\WebTestCase;
+use App\Util\UUID;
 
 class PaymentTest extends WebTestCase
 {
@@ -19,7 +20,7 @@ class PaymentTest extends WebTestCase
         $this->assertInstanceOf(Payment::class, $payment);
         $this->assertNull($payment->getId());
 
-        $payment->setId(uniqid());
+        $payment->setId(UUID::generate());
         $payment->setClientEmail('theClientEmail');
         $payment->setClientId('theClientId');
         $payment->setTotalAmount(123);
@@ -53,7 +54,7 @@ class PaymentTest extends WebTestCase
         //guard
         $this->assertInstanceOf(Payment::class, $payment);
 
-        $payment->setId(uniqid());
+        $payment->setId(UUID::generate());
         $payment->setClientEmail('theClientEmail');
         $payment->setDetails(['foo' => 'bar']);
         $payment->setDetails(['bar' => ['foo' => 'baz']]);

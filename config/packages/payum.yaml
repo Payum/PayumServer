@@ -3,7 +3,9 @@ parameters:
 
 payum:
     storages:
-        App\Model\Payment: { yadm: ~ }
+        App\Model\Payment:
+            yadm:
+                id_property: id
 
     security:
         token_storage:
@@ -25,4 +27,6 @@ payum:
 
     dynamic_gateways:
         config_storage:
-            App\Model\GatewayConfig: { yadm: ~ }
+            App\Model\GatewayConfig:
+                yadm:
+                    id_property: id

@@ -2,7 +2,7 @@
     "name": "payum/payum-server",
     "type": "project",
     "license": "MIT",
-    "description": "PHP 7.2+ Payment processing server. Setup once and rule them all",
+    "description": "PHP 7.1+ Payment processing server. Setup once and rule them all",
     "homepage": "https://github.com/Payum",
     "authors": [
         {
@@ -23,7 +23,7 @@
         }
     ],
     "require": {
-        "php": "^7.2",
+        "php": "^7.1",
         "ext-iconv": "*",
         "authorizenet/authorizenet": "^1.9",
         "defuse/php-encryption": "^2.1",
@@ -31,6 +31,7 @@
         "klarna/checkout": "^4.0",
         "makasim/yadm-bundle": "^0.2.1",
         "mikemccabe/json-patch-php": "dev-master as 0.1.1",
+        "nelmio/cors-bundle": "^1.5",
         "omnipay/common": "^3.0@alpha",
         "paypal/rest-api-sdk-php": "^1.13",
         "payum/offline": "^1.5",
@@ -38,6 +39,7 @@
         "payum/payum": "^1.5",
         "payum/payum-bundle": "^2.3",
         "php-http/guzzle6-adapter": "^1.1",
+        "ramsey/uuid": "^3.7",
         "sofort/sofortlib-php": "^3.3",
         "stripe/stripe-php": "^5.9",
         "symfony/console": "^4.0",

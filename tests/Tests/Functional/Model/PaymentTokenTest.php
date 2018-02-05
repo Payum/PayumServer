@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\Tests\Functional\Model;
 
+use App\Util\UUID;
 use Payum\Core\Model\Identity;
 use App\Model\Payment;
 use App\Model\PaymentToken;
@@ -20,7 +21,7 @@ class PaymentTokenTest extends WebTestCase
         //guard
         $this->assertInstanceOf(PaymentToken::class, $token);
 
-        $token->setHash(uniqid());
+        $token->setHash(UUID::generate());
         $token->setTargetUrl('theTargetUrl');
         $token->setAfterUrl('theAfterUrl');
 
@@ -50,7 +51,7 @@ class PaymentTokenTest extends WebTestCase
         //guard
         $this->assertInstanceOf(PaymentToken::class, $token);
 
-        $token->setHash(uniqid());
+        $token->setHash(UUID::generate());
         $token->setGatewayName('theGatewayName');
         $token->setDetails($identity = new Identity('anId', 'stdClass'));
 
@@ -78,7 +79,7 @@ class PaymentTokenTest extends WebTestCase
         /** @var Payment $payment */
         $payment = $paymentStorage->create();
 
-        $payment->setId(uniqid());
+        $payment->setId(UUID::generate());
         $payment->setGatewayName('theGatewayName');
 
         $paymentStorage->insert($payment);
@@ -91,7 +92,7 @@ class PaymentTokenTest extends WebTestCase
         //guard
         $this->assertInstanceOf(PaymentToken::class, $token);
 
-        $token->setHash(uniqid());
+        $token->setHash(UUID::generate());
         $token->setGatewayName('theGatewayName');
         $token->setDetails($identity = new Identity($payment->getId(), $payment));
 

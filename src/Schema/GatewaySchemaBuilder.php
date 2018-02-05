@@ -18,7 +18,7 @@ class GatewaySchemaBuilder
         $this->payum = $payum;
     }
 
-    public function buildDefault() : object
+    public function buildDefault()
     {
         return (object) [
             '$schema' => 'http://json-schema.org/schema#',
@@ -39,7 +39,7 @@ class GatewaySchemaBuilder
         ];
     }
 
-    public function build(string $name) : object
+    public function build(string $name)
     {
         $config = $this->payum->getGatewayFactory($name)->createConfig();
 

@@ -1,0 +1,7 @@
+nelmio_cors:
+    paths:
+        '^/payment/':
+            allow_origin: ['*']
+            allow_methods: ['POST', 'PUT', 'GET', 'DELETE']
+            allow_headers: ['Content-Type', 'Accept']
+            max_age: 3600

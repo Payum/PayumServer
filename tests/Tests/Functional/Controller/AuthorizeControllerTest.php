@@ -7,6 +7,7 @@ use App\Model\GatewayConfig;
 use App\Model\Payment;
 use App\Test\ResponseHelper;
 use App\Test\WebTestCase;
+use App\Util\UUID;
 
 class AuthorizeControllerTest extends WebTestCase
 {
@@ -35,7 +36,7 @@ class AuthorizeControllerTest extends WebTestCase
         /** @var Payment $payment */
         $payment = $storage->create();
         $payment->setGatewayName(null);
-        $payment->setId(uniqid());
+        $payment->setId(UUID::generate());
 
         $storage->insert($payment);
 

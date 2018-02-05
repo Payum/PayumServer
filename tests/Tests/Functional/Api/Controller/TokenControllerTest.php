@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace App\Tests\Functional\Api\Controller;
 
 use App\Test\WebTestCase;
+use App\Util\UUID;
 use Makasim\Yadm\Storage;
 use App\Model\GatewayConfig;
 use App\Model\Payment;
@@ -24,7 +25,7 @@ class TokenControllerTest extends WebTestCase
         $this->assertClientResponseStatus(400);
         $this->assertClientResponseContentJson();
 
-        $content = $this->getClientResponseJsonContent();
+        $this->getClientResponseJsonContent();
     }
 
     public function testShouldAllowCreateCaptureToken()
@@ -45,7 +46,7 @@ class TokenControllerTest extends WebTestCase
         /** @var Payment $payment */
         $payment = $storage->create();
         $payment->setGatewayName('offline');
-        $payment->setId(uniqid());
+        $payment->setId(UUID::generate());
 
         $storage->insert($payment);
 
@@ -92,7 +93,7 @@ class TokenControllerTest extends WebTestCase
         /** @var Payment $payment */
         $payment = $storage->create();
         $payment->setGatewayName('offline');
-        $payment->setId(uniqid());
+        $payment->setId(UUID::generate());
 
         $storage->insert($payment);
 
