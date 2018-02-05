@@ -5,13 +5,14 @@ namespace App\Test;
 
 use Symfony\Component\DomCrawler\Crawler;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Bundle\FrameworkBundle\Client;
 
 trait ResponseHelper
 {
     /**
-     * @return Client
+     * @return Client | \App\Test\Client
      */
-    abstract public function getClient();
+    abstract public function getClient() : Client;
 
     public function assertResponseStatusSuccess(Response $response)
     {

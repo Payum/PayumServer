@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace App\Tests\Functional\Api\Controller;
 
 use App\Test\WebTestCase;
+use App\Util\UUID;
 use Makasim\Yadm\Storage;
 use App\Model\Payment;
 use App\Test\ResponseHelper;
@@ -21,7 +22,7 @@ class PaymentControllerTest extends WebTestCase
         $storage = $this->getPaymentStorage();
 
         $payment = new Payment();
-        $payment->setId(uniqid());
+        $payment->setId(UUID::generate());
         $payment->setClientEmail('theExpectedPayment');
         $storage->insert($payment);
 
@@ -44,7 +45,7 @@ class PaymentControllerTest extends WebTestCase
     public function shouldAllowDeletePayment()
     {
         $payment = new Payment();
-        $payment->setId(uniqid());
+        $payment->setId(UUID::generate());
         $payment->setClientEmail('theExpectedPayment');
 
         /** @var Storage $storage */

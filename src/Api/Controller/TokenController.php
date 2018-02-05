@@ -3,6 +3,8 @@ declare(strict_types=1);
 
 namespace App\Api\Controller;
 
+use App\Model\PaymentToken;
+use App\Storage\PaymentStorage;
 use Payum\Core\Payum;
 use Payum\Core\Registry\RegistryInterface;
 use App\Api\View\TokenToJsonConverter;
@@ -11,6 +13,7 @@ use App\InvalidJsonException;
 use App\JsonDecode;
 use App\Model\Payment;
 use App\Schema\TokenSchemaBuilder;
+use Psr\Container\ContainerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -38,8 +41,14 @@ class TokenController
      */
     private $jsonDecode;
 
+    /**
+     * @var ContainerInterface
+     */
+    private $container;
+
     public function __construct(
         Payum $payum,
+        ContainerInterface $container,
         TokenToJsonConverter $tokenToJsonConverter,
         TokenSchemaBuilder $tokenSchemaBuilder,
         JsonDecode $jsonDecode
@@ -48,6 +57,7 @@ class TokenController
         $this->tokenToJsonConverter = $tokenToJsonConverter;
         $this->schemaBuilder = $tokenSchemaBuilder;
         $this->jsonDecode = $jsonDecode;
+        $this->container = $container;
     }
 
     /**
@@ -68,7 +78,9 @@ class TokenController
         }
 
         /** @var Payment $payment */
-        if (false == $payment = $this->payum->getStorage(Payment::class)->find($data['paymentId'])) {
+        $payment = $this->container->get(PaymentStorage::class)->findById($data['paymentId']);
+
+        if (!$payment) {
             return new JsonResponse(['errors' => [
                 'paymentId' => [
                     sprintf('Payment with id %s could not be found', $data['paymentId']),
@@ -77,13 +89,17 @@ class TokenController
         }
 
         if ($data['type'] === 'capture') {
+            /** @var PaymentToken $token */
             $token = $this->payum->getTokenFactory()->createCaptureToken('', $payment, $data['afterUrl'], [
                 'payum_token' => null,
                 'paymentId' => $payment->getId(),
             ]);
 
             return new JsonResponse(['token' => $this->tokenToJsonConverter->convert($token)], 201);
-        } elseif ($data['type'] === 'authorize') {
+        }
+
+        if ($data['type'] === 'authorize') {
+            /** @var PaymentToken $token */
             $token = $this->payum->getTokenFactory()->createAuthorizeToken('', $payment, $data['afterUrl'], [
                 'payum_token' => null,
                 'paymentId' => $payment->getId(),
