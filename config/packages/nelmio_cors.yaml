@@ -5,3 +5,9 @@ nelmio_cors:
             allow_methods: ['POST', 'PUT', 'GET', 'DELETE']
             allow_headers: ['Content-Type', 'Accept']
             max_age: 3600
+
+        '^/*':
+            allow_origin: ['%env(PAYUM_UI_HOST)%']
+            allow_methods: ['POST', 'PUT', 'GET', 'DELETE']
+            allow_headers: ['Content-Type', 'Accept']
+            max_age: 3600
