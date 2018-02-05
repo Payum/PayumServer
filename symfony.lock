@@ -107,6 +107,15 @@
     "mongodb/mongodb": {
         "version": "1.2.0"
     },
+    "nelmio/cors-bundle": {
+        "version": "1.5",
+        "recipe": {
+            "repo": "github.com/symfony/recipes",
+            "branch": "master",
+            "version": "1.5",
+            "ref": "7b6cbc842f8cd3d550815247d12294f6f304a8c4"
+        }
+    },
     "omnipay/common": {
         "version": "v3.0-alpha.1"
     },
