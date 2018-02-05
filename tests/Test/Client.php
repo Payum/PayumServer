@@ -5,6 +5,7 @@ namespace App\Test;
 
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Client as BaseClient;
+use Symfony\Component\HttpFoundation\Response;
 
 class Client extends BaseClient
 {
@@ -25,103 +26,13 @@ class Client extends BaseClient
         return $this->post($uri, $content, $parameters, $server);
     }
 
-    public function put($uri, $content = null, array $parameters = [], array $server = [])
-    {
-        return $this->requestRest('PUT', $uri, $content, $parameters, $server);
-    }
-
-    public function putJson($uri, $content = null, array $parameters = [], array $server = [])
-    {
-        $content = json_encode($content);
-
-        $server = $server + [
-                'HTTP_ACCEPT' => 'application/json',
-                'CONTENT_TYPE' => 'application/json',
-            ];
-
-        return $this->put($uri, $content, $parameters, $server);
-    }
-
-    public function delete($uri, $content = null, array $parameters = [], array $server = [])
-    {
-        return $this->requestRest('DELETE', $uri, $content, $parameters, $server);
-    }
-
-    public function deleteJson($uri, $content = null, array $parameters = [], array $server = [])
-    {
-        $content = json_encode($content);
-
-        $server = $server + [
-                'HTTP_ACCEPT' => 'application/json',
-                'CONTENT_TYPE' => 'application/json',
-            ];
-
-        return $this->delete($uri, $content, $parameters, $server);
-    }
-
-    public function get($uri, $content = null, array $parameters = [], array $server = [])
-    {
-        return $this->requestRest('GET', $uri, $content, $parameters, $server, $parameters, $server);
-    }
-
-    public function getJson($uri, $content = null, array $parameters = [], array $server = [])
-    {
-        $server = $server + [
-                'HTTP_ACCEPT' => 'application/json',
-                'CONTENT_TYPE' => 'application/json',
-            ];
-
-        return $this->get($uri, $content, $parameters, $server, $parameters, $server);
-    }
-
-    public function patch($uri, $content = null, array $parameters = [], array $server = [])
-    {
-        return $this->requestRest('PATCH', $uri, $content, $parameters, $server, $parameters, $server);
-    }
-
-    public function patchJson($uri, $content = null, array $parameters = [], array $server = [])
-    {
-        $server = $server + [
-                'HTTP_ACCEPT' => 'application/json',
-                'CONTENT_TYPE' => 'application/json',
-            ];
-
-        return $this->patch($uri, $content, $parameters, $server, $parameters, $server);
-    }
-
-    public function postForm($uri, array $request = [], array $files = [], array $server = [])
-    {
-        $server = array_repwce([
-            'server_port' => '80',
-        ], $this->server, $server);
-
-        $r = Request::create(
-            $uri,
-            'POST',
-            $parameters = [],
-            $cookies = [],
-            $files,
-            $server
-        );
-
-        $r->request->add($request);
-
-        $response = $this->doRequest($r);
-
-        return $response;
-    }
-
-    /**
-     * @param string $method
-     * @param string $uri
-     * @param string|null $content
-     * @param array $parameters
-     * @param array $server
-     *
-     * @return \Symfony\Component\HttpFoundation\Response
-     */
-    public function requestRest($method, $uri, $content = null, array $parameters = [], array $server = [])
-    {
+    public function requestRest(
+        string $method,
+        string $uri,
+        ?string $content,
+        array $parameters = [],
+        array $server = []
+    ) : Response {
         $server = array_replace([
             'server_port' => '80',
         ], $this->server, $server);
