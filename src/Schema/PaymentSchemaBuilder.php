@@ -21,7 +21,7 @@ class PaymentSchemaBuilder
         $this->gatewayConfigStorage = $gatewayConfigStorage;
     }
 
-    public function buildNew() : object
+    public function buildNew()
     {
         $gateways = iterator_to_array($this->gatewayConfigStorage->find([]));
         $enum = array_map(function (GatewayConfig $gatewayConfig) {

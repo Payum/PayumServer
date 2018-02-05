@@ -7,7 +7,7 @@ use App\Util\StringUtil;
 
 class TokenSchemaBuilder
 {
-    public function buildNew() : object
+    public function buildNew()
     {
         return (object) [
             '$schema' => 'http://json-schema.org/schema#',
