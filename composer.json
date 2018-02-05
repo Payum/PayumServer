@@ -23,7 +23,7 @@
         }
     ],
     "require": {
-        "php": "^7.2",
+        "php": "^7.1",
         "ext-iconv": "*",
         "authorizenet/authorizenet": "^1.9",
         "defuse/php-encryption": "^2.1",
@@ -38,6 +38,7 @@
         "payum/payum": "^1.5",
         "payum/payum-bundle": "^2.3",
         "php-http/guzzle6-adapter": "^1.1",
+        "ramsey/uuid": "^3.7",
         "sofort/sofortlib-php": "^3.3",
         "stripe/stripe-php": "^5.9",
         "symfony/console": "^4.0",
