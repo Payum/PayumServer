@@ -301,33 +301,33 @@ class ServiceProvider implements ServiceProviderInterface
             }
         }, $priority = -7);
 
-        $app->error(function (\Exception $e, $code) use ($app) {
-            if ('OPTIONS' === $app['request']->getMethod()) {
-                return;
-            }
-
-            if (
-                'json' == $app['request']->getContentType() ||
-                'application/vnd.payum+json' == $app['request']->headers->get('Accept')
-            ) {
-                return new JsonResponse(
-                    [
-                        'exception' => get_class($e),
-                        'message' => $e->getMessage(),
-                        'code' => $e->getCode(),
-                        'file' => $e->getFile(),
-                        'line' => $e->getLine(),
-                        'stackTrace' => $e->getTraceAsString(),
-                    ],
-                    200,
-                    [
-                        'Content-Type' => 'application/vnd.payum+json',
-                    ]
-                );
-            }
-        }, $priority = -100);
+//        $app->error(function (\Exception $e, $code) use ($app) {
+//            if ('OPTIONS' === $app['request']->getMethod()) {
+//                return;
+//            }
+//
+//            if (
+//                'json' == $app['request']->getContentType() ||
+//                'application/vnd.payum+json' == $app['request']->headers->get('Accept')
+//            ) {
+//                return new JsonResponse(
+//                    [
+//                        'exception' => get_class($e),
+//                        'message' => $e->getMessage(),
+//                        'code' => $e->getCode(),
+//                        'file' => $e->getFile(),
+//                        'line' => $e->getLine(),
+//                        'stackTrace' => $e->getTraceAsString(),
+//                    ],
+//                    200,
+//                    [
+//                        'Content-Type' => 'application/vnd.payum+json',
+//                    ]
+//                );
+//            }
+//        }, $priority = -100);
     }
-
+//
 //    /**
 //     * {@inheritDoc}
 //     */
