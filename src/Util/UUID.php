@@ -7,11 +7,6 @@ use Ramsey\Uuid\Uuid as RamseyUuid;
 
 class UUID
 {
-    /**
-     * Generate 24-character hexadecimal string.
-     *
-     * @return string
-     */
     public static function generate() : string
     {
         return RamseyUuid::uuid4()->toString();
