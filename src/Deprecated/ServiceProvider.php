@@ -246,44 +246,44 @@ class ServiceProvider implements ServiceProviderInterface
 //                return call_user_func($app['app.subscriber.choose_gateway'], $request, $app);
 //            }
 //        });
-
-        $app->after($app["cors"]);
-
-        /** @var ControllerCollection $payment */
-        $payment = $app['payum.payments_controller_collection'];
-        $payment->after(function (Request $request, Response $response) use ($app) {
-            if ('OPTIONS' == $request->getMethod()) {
-                return;
-            }
-
-            if ('application/vnd.payum+json' == $response->headers->get('Content-Type')) {
-                return;
-            }
-            if ('application/json' == $response->headers->get('Content-Type')) {
-                return;
-            }
-
-            if ('application/vnd.payum+json' == $request->headers->get('Accept')) {
-                throw new HttpResponse($response);
-            }
-        });
-
-        $payment->after(function (Request $request, Response $response) use ($app) {
-            if ('OPTIONS' == $request->getMethod()) {
-                return;
-            }
-
-            if ('application/vnd.payum+json' == $response->headers->get('Content-Type')) {
-                return;
-            }
-            if ('application/json' == $response->headers->get('Content-Type')) {
-                return;
-            }
-
-            if ('application/vnd.payum+json' == $request->headers->get('Accept')) {
-                throw new HttpResponse($response);
-            }
-        });
+//
+//        $app->after($app["cors"]);
+//
+//        /** @var ControllerCollection $payment */
+//        $payment = $app['payum.payments_controller_collection'];
+//        $payment->after(function (Request $request, Response $response) use ($app) {
+//            if ('OPTIONS' == $request->getMethod()) {
+//                return;
+//            }
+//
+//            if ('application/vnd.payum+json' == $response->headers->get('Content-Type')) {
+//                return;
+//            }
+//            if ('application/json' == $response->headers->get('Content-Type')) {
+//                return;
+//            }
+//
+//            if ('application/vnd.payum+json' == $request->headers->get('Accept')) {
+//                throw new HttpResponse($response);
+//            }
+//        });
+//
+//        $payment->after(function (Request $request, Response $response) use ($app) {
+//            if ('OPTIONS' == $request->getMethod()) {
+//                return;
+//            }
+//
+//            if ('application/vnd.payum+json' == $response->headers->get('Content-Type')) {
+//                return;
+//            }
+//            if ('application/json' == $response->headers->get('Content-Type')) {
+//                return;
+//            }
+//
+//            if ('application/vnd.payum+json' == $request->headers->get('Accept')) {
+//                throw new HttpResponse($response);
+//            }
+//        });
 
         $app->error(function (\Exception $e, $code) use ($app) {
             if ('OPTIONS' === $app['request']->getMethod()) {

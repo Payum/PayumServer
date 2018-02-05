@@ -161,12 +161,20 @@ services:
         tags:
             - { name: kernel.event_subscriber }
 
+    # event response
     payum.listener.reply_to_http_response:
         class: App\EventListener\Response\ReplyToHttpResponseListener
         arguments:
             - '@payum.converter.reply_to_http_response'
         tags:
             - { name: kernel.event_listener, event: kernel.exception, method: onKernelException, priority: 128 }
+
+    app.listener.reply_to_http_response:
+        class: App\EventListener\Response\VndHeaderListener
+        arguments:
+            - '@router'
+        tags:
+            - { name: kernel.event_listener, event: kernel.response, method: onKernelResponse }
 
     # form
     App\Form\Type\ChooseGatewayType: '@app.server.form.type.choose_gateway_type'
